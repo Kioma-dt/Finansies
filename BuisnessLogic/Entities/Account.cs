@@ -14,5 +14,19 @@
 
         public Guid UserId {  get; set; }
         public User? User { get; set; }
+
+        public void AddToBalance(decimal amount)
+        {
+            Balance += amount;
+        }
+        public void RemoveFromBalance(decimal amount) 
+        {
+            if (Balance < amount)
+            {
+                throw new Exception("Not Enough Money!");
+            }
+
+            Balance -= amount;
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace BuisnessLogic.Repositories
     public interface IFamilyMemberRepository
     {
         Task Add(FamilyMember familyMember);
-        Task<FamilyMember> GetById(int id);
+        Task<FamilyMember?> GetById(Guid id);
     }
 
 }
