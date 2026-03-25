@@ -18,7 +18,6 @@ namespace BuisnessLogic.Entities
         public Guid CategoryId { get; set; }
         public Category? Category { get; set; }
 
-        public Guid TransactionTagId { get; set; }
         public List<TransactionTag> TransactionTags { get; set; } = new();
 
         public Guid FamilyMemberId { get; set; }
