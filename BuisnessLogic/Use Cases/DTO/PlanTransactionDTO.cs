@@ -13,10 +13,8 @@ namespace BuisnessLogic.Use_Cases.DTO
 
         public Guid AccountId { get; set; }
 
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
 
-        //public List<TransactionTag> TransactionTags { get; set; } = new();
-
-        public Guid FamilyMemberId { get; set; }
+        public Guid? FamilyMemberId { get; set; }
     }
 }

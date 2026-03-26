@@ -14,21 +14,24 @@ namespace BuisnessLogic.Use_Cases
             _registerTransaction = registerTransaction;
         }
 
-        public async Task Execute(Guid plannedTrabsactionId, DateTime date)
+        public async Task Execute(DTO.ConfirmTransactionDTO dto)
         {
-            var plannedTransaction = await _plannedTransactionRepository.GetById(plannedTrabsactionId);
+            var plannedTransaction = await _plannedTransactionRepository.GetById(dto.PlannedTransactioId);
 
-            await _registerTransaction.Execute(new DTO.RegisterTransactionDTO
+            await _registerTransaction.Execute(new DTO.RegisterTransactionDTO()
             {
                 Amount = plannedTransaction.Amount,
                 Description = plannedTransaction.Description,
-                Date = date,
+                Date = dto.Date,
                 Type = plannedTransaction.Type,
                 AccountId = plannedTransaction.AccountId,
                 CategoryId = plannedTransaction.CategoryId,
                 FamilyMemberId = plannedTransaction.FamilyMemberId
 
             });
+
+            plannedTransaction.Status = PlannedTransactionStatus.Confirmed;
+            await _plannedTransactionRepository.Update(plannedTransaction);
         }
     }
 }

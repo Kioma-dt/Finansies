@@ -1,11 +1,10 @@
-﻿using System.Transactions;
-
+﻿using BuisnessLogic.Entities;
 namespace BuisnessLogic.Repositories
 {
     public interface ITransactionRepository
     {
-        Task Add(BuisnessLogic.Entities.Transaction transaction);
-        Task Update(BuisnessLogic.Entities.Transaction transaction);
+        Task Add(Transaction transaction);
+        Task Update(Transaction transaction);
     }
 
 }

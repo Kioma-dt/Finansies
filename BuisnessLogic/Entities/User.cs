@@ -2,8 +2,8 @@
 {
     public class User
     {
-        public Guid Id { get; private set; }
-        public string Name { get; private set; } = String.Empty;
+        public Guid Id { get; set; }
+        public string Name { get; set; } = String.Empty;
 
         public List<Account> Accounts { get; } = new();
         public List<Budget> Budgets { get; } = new();

@@ -2,6 +2,7 @@
 {
     public class ConfirmTransactionDTO
     {
-        public Guid Id { get; set; }
+        public Guid PlannedTransactioId { get; set; }
+        public DateTime Date { get; set; }
     }
 }

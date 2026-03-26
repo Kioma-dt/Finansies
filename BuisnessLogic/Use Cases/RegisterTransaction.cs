@@ -2,13 +2,12 @@
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using BuisnessLogic.Use_Cases.DTO;
-using System.Threading.Tasks;
 
 namespace BuisnessLogic.Use_Cases
 {
     public interface IRegisterTransaction
     {
-        Task Execute(RegisterTransactionDTO dto);
+        Task<Transaction> Execute(RegisterTransactionDTO dto);
     }
     public class RegisterTransaction : IRegisterTransaction
     {
@@ -25,11 +24,9 @@ namespace BuisnessLogic.Use_Cases
             _familyMemberRepository = familyMemberRepository;
         }
 
-        public async Task Execute(RegisterTransactionDTO dto)
+        public async Task<Transaction> Execute(RegisterTransactionDTO dto)
         {
             var account = await _accountRepository.GetById(dto.AccountId);
-            var category = await _categoryRepository.GetById(dto.CategoryId);
-            var familyMemeber = await _familyMemberRepository.GetById(dto.FamilyMemberId);
 
             if (dto.Type == Enums.TransactionType.Expense)
             {
@@ -40,7 +37,19 @@ namespace BuisnessLogic.Use_Cases
                 account.AddToBalance(dto.Amount);
             }
 
-            await _transactionRepository.Add(new Entities.Transaction
+            Category? category = null;
+            FamilyMember? familyMember = null;
+
+            if (dto.CategoryId is not null) 
+            {
+                category = category = await _categoryRepository.GetById(dto.CategoryId.Value);
+            }
+            if (dto.FamilyMemberId is not null)
+            {
+                familyMember = await _familyMemberRepository.GetById(dto.FamilyMemberId.Value);
+            }
+
+            var transaction = new Transaction
             {
                 Amount = dto.Amount,
                 Description = dto.Description,
@@ -50,14 +59,18 @@ namespace BuisnessLogic.Use_Cases
                 AccountId = account.Id,
                 Account = account,
 
-                CategoryId = category.Id,
+                CategoryId = dto.CategoryId,
                 Category = category,
 
-                FamilyMemberId = familyMemeber.Id,
-                FamilyMember = familyMemeber
-            });
+                FamilyMemberId = dto.FamilyMemberId,
+                FamilyMember = familyMember
+            };
+
+            await _transactionRepository.Add(transaction);
 
             await _accountRepository.Update(account);
+
+            return transaction;
         }
     }
 }
