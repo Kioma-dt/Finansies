@@ -1,9 +1,12 @@
-﻿namespace BuisnessLogic.Repositories
+﻿using BuisnessLogic.Entities;
+
+namespace BuisnessLogic.Repositories
 {
     public interface IPlannedTransactionRepository
     {
-        Task Add(BuisnessLogic.Entities.PlannedTransaction plannedTransaction);
-        Task Update(BuisnessLogic.Entities.PlannedTransaction plannedTransaction);
+        Task<PlannedTransaction> GetById(Guid id);
+        Task Add(PlannedTransaction plannedTransaction);
+        Task Update(PlannedTransaction plannedTransaction);
     }
 
 }

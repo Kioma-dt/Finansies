@@ -5,13 +5,13 @@ namespace BuisnessLogic.Entities
 {
     public class Budget
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = String.Empty;
-        public decimal Limit { get; set; } = 0;
-        public TransactionType TransactionType {  get; set; }
-        public List<IFilter> Filters { get; set; } = new();
+        public Guid Id { get; private set; }
+        public string Name { get; private set; } = String.Empty;
+        public decimal Limit { get; private set; } = 0;
+        public TransactionType TransactionType {  get; private set; }
+        public List<IFilter> Filters { get; } = new();
 
-        public Guid UserId { get; set; }
-        public User? User { get; set; }
+        public Guid UserId { get; private set; }
+        public User? User { get; private set; }
     }
 }

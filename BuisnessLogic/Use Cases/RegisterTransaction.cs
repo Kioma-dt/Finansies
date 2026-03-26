@@ -2,10 +2,15 @@
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using BuisnessLogic.Use_Cases.DTO;
+using System.Threading.Tasks;
 
 namespace BuisnessLogic.Use_Cases
 {
-    public class RegisterTransaction
+    public interface IRegisterTransaction
+    {
+        Task Execute(RegisterTransactionDTO dto);
+    }
+    public class RegisterTransaction : IRegisterTransaction
     {
         readonly ITransactionRepository _transactionRepository;
         readonly IAccountRepository _accountRepository;

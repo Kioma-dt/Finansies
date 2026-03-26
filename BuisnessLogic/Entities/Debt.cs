@@ -4,21 +4,22 @@ namespace BuisnessLogic.Entities
 {
     public class Debt
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = String.Empty;
+        public Guid Id { get; private set; }
+        public string Name { get; private set; } = String.Empty;
 
-        public decimal TotalAmount { get; set; }
-        public decimal RemainingAmount { get; set; }
-        public double InterestRate { get; set; }
-        public DebtType Type { get; set; }
+        public decimal TotalAmount { get; private set; }
+        public decimal RemainingAmount { get; private set; }
+        public double InterestRate { get; private set; } = 0;
+        public DebtType Type { get; private set; }
 
-        public DateTime StartDate {  get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime StartDate { get; private set; }
+        public DateTime LastPaidDate { get; private set; }
+        public DateTime EndDate { get; private set; }
 
-        public Guid CategoryId { get; set; }
-        public Category? Category { get; set; }
+        public Guid? CategoryId { get; private set; } = null;
+        public Category? Category { get; private set; } = null;
 
-        public Guid UserId { get; set; }
-        public User? User { get; set; }
+        public Guid UserId { get; private set; }
+        public User? User { get; private set; }
     }
 }

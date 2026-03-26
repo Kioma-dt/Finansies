@@ -2,15 +2,15 @@
 {
     public class User
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = String.Empty;
+        public Guid Id { get; private set; }
+        public string Name { get; private set; } = String.Empty;
 
-        public List<Account> Accounts { get; set; } = new();
-        public List<Budget> Budgets { get; set; } = new();
-        public List<Category> Categories { get; set; } = new();
-        public List<Debt> Debts { get; set; } = new();
-        public List<FamilyMember> FamilyMembers { get; set; } = new();
-        public List<TransactionTag> TransactionTags { get; set; } = new();
-        public List<Transfer> Transfers { get; set; } = new();
+        public List<Account> Accounts { get; } = new();
+        public List<Budget> Budgets { get; } = new();
+        public List<Category> Categories { get; } = new();
+        public List<Debt> Debts { get; } = new();
+        public List<FamilyMember> FamilyMembers { get; } = new();
+        public List<TransactionTag> TransactionTags { get; } = new();
+        public List<Transfer> Transfers { get; } = new();
     }
 }
