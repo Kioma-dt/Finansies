@@ -5,6 +5,7 @@ namespace BuisnessLogic.Repositories
     public interface ITransactionRepository
     {
         Task<IEnumerable<Transaction>> GetAll();
+        Task<Transaction> GetById(Guid id);
         Task<IEnumerable<Transaction>> GetWithFilters(IEnumerable<IFilter> filters);
         Task<IEnumerable<Transaction>> GetWithFilters(IFilter filter);
         Task Add(Transaction transaction);

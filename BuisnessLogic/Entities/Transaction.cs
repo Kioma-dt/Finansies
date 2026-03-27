@@ -20,5 +20,15 @@ namespace BuisnessLogic.Entities
 
         public Guid? FamilyMemberId { get; set; } = null;
         public FamilyMember? FamilyMember { get; set; } = null;
+
+        public void AddTag(TransactionTag tag)
+        {
+            if (TransactionTags.Contains(tag))
+            {
+                throw new Exception("Transaction is Already Tagged");
+            }
+
+            TransactionTags.Add(tag);
+        }
     }
 }

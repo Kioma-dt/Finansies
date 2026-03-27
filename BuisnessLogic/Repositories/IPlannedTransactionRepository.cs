@@ -8,5 +8,4 @@ namespace BuisnessLogic.Repositories
         Task Add(PlannedTransaction plannedTransaction);
         Task Update(PlannedTransaction plannedTransaction);
     }
-
 }
