@@ -31,5 +31,20 @@ namespace BuisnessLogic.Entities
         {
             TotalAmount = newAmount;
         }
+        public void MakeAPayment(decimal amount, DateTime date)
+        {
+            if (amount < 0)
+            {
+                throw new Exception("Negative Amount");
+            }
+
+            if (PaidAmount + amount > TotalAmount)
+            {
+                throw new Exception("Debt is OverPaing");
+            }
+
+            PaidAmount += amount;
+            LastPaidDate = date;
+        }
     }
 }
