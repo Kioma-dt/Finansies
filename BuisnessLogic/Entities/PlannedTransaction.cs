@@ -1,4 +1,5 @@
 ﻿using BuisnessLogic.Enums;
+using System.Diagnostics.Contracts;
 
 namespace BuisnessLogic.Entities
 {
@@ -22,5 +23,18 @@ namespace BuisnessLogic.Entities
 
         public Guid? FamilyMemberId { get; set; } = null;
         public FamilyMember? FamilyMember { get; set; } = null;
+
+        public void Conirm()
+        {
+            Status = PlannedTransactionStatus.Confirmed;
+        }
+
+        public void Update(DateTime date)
+        {
+            if(Status != PlannedTransactionStatus.Confirmed && date >= PlannedDate)
+            {
+                Status = PlannedTransactionStatus.WaitingForConfirm;
+            }
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace BuisnessLogic.Use_Cases
 
             });
 
-            plannedTransaction.Status = PlannedTransactionStatus.Confirmed;
+            plannedTransaction.Conirm();
             await _plannedTransactionRepository.Update(plannedTransaction);
         }
     }
