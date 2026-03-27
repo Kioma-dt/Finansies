@@ -1,4 +1,5 @@
 ﻿using BuisnessLogic.Entities;
+using System.Linq;
 
 namespace BuisnessLogic.Filters
 {
@@ -12,7 +13,10 @@ namespace BuisnessLogic.Filters
         }
         public bool Apply(Transaction transaction)
         {
-            return transaction.TransactionTagId == _transactionTagId;
+            return transaction
+                .TransactionTags
+                .Select(t => t.Id)
+                .Contains(_transactionTagId);
         }
     }
 }

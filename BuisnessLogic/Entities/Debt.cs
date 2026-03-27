@@ -27,9 +27,14 @@ namespace BuisnessLogic.Entities
         public Guid UserId { get; set; }
         public User? User { get; set; }
 
-        public void ChangeTotalAmount(decimal newAmount)
+        public void CalculateInterest(decimal amount)
         {
-            TotalAmount = newAmount;
+            if (amount < 0)
+            {
+                throw new Exception("Negative Amount");
+            }
+
+            TotalAmount += amount;
         }
         public void MakeAPayment(decimal amount, DateTime date)
         {

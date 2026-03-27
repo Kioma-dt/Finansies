@@ -17,10 +17,19 @@
 
         public void AddToBalance(decimal amount)
         {
+            if(amount < 0)
+            {
+                throw new Exception("Amount is Negative!");
+            }
             Balance += amount;
         }
         public void RemoveFromBalance(decimal amount) 
         {
+            if (amount < 0)
+            {
+                throw new Exception("Amount is Negative!");
+            }
+
             if (Balance < amount)
             {
                 throw new Exception("Not Enough Money!");

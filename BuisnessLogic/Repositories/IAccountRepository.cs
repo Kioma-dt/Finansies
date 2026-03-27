@@ -8,5 +8,4 @@ namespace BuisnessLogic.Repositories
         Task<Account> GetById (Guid id);
         Task Update(Account account);
     }
-
 }

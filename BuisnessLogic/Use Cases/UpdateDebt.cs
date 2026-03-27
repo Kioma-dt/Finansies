@@ -33,8 +33,10 @@ namespace BuisnessLogic.Use_Cases
                                                   debt.FixedAddition,
                                                   debt.StartDate,
                                                   dto.Date);
+            
+            var interests = debt.TotalAmount - new_amount;
 
-            debt.ChangeTotalAmount(new_amount);
+            debt.CalculateInterest(interests);
 
             await _debtRepository.Update(debt);
         }
