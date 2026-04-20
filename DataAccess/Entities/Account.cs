@@ -1,10 +1,12 @@
-﻿namespace BuisnessLogic.Entities
+﻿namespace DataAccess.Entities
 {
     public class Account
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = String.Empty;
         public decimal Balance { get; set; }
+
+        public Guid? ParentId { get; set; } = null;
         public Account? Parent { get; set; } = null;
 
         public List<Transaction> Transactions { get; } = new();

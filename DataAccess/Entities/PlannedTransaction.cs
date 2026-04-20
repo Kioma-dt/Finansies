@@ -1,7 +1,7 @@
-﻿using BuisnessLogic.Enums;
+﻿using DataAccess.Enums;
 using System.Diagnostics.Contracts;
 
-namespace BuisnessLogic.Entities
+namespace DataAccess.Entities
 {
     public class PlannedTransaction
     {

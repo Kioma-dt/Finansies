@@ -1,7 +1,7 @@
-﻿using BuisnessLogic.Entities;
+﻿using DataAccess.Entities;
 using System.Linq;
 
-namespace BuisnessLogic.Filters
+namespace DataAccess.Filters
 {
     public class TransactionTagFilter : IFilter
     {

@@ -1,6 +1,6 @@
-﻿using BuisnessLogic.Enums;
+﻿using DataAccess.Enums;
 
-namespace BuisnessLogic.Entities
+namespace DataAccess.Entities
 {
     public class Transaction
     {

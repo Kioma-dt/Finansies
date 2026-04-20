@@ -1,6 +1,6 @@
-﻿using BuisnessLogic.Entities;
+﻿using DataAccess.Entities;
 
-namespace BuisnessLogic.Filters
+namespace DataAccess.Filters
 {
     public class AccounFilter : IFilter
     {

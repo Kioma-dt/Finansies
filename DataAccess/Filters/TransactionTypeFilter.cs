@@ -1,7 +1,7 @@
-﻿using BuisnessLogic.Entities;
-using BuisnessLogic.Enums;
+﻿using DataAccess.Entities;
+using DataAccess.Enums;
 
-namespace BuisnessLogic.Filters
+namespace DataAccess.Filters
 {
     public class TransactionTypeFilter : IFilter
     {
