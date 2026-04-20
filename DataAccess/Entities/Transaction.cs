@@ -16,7 +16,7 @@ namespace DataAccess.Entities
         public Guid? CategoryId { get; set; } = null;
         public Category? Category { get; set; } = null;
 
-        public List<TransactionTag> TransactionTags { get; } = new();
+        public List<TransactionTag> TransactionTags { get; set; } = new();
 
         public Guid? FamilyMemberId { get; set; } = null;
         public FamilyMember? FamilyMember { get; set; } = null;

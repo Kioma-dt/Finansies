@@ -1,5 +1,4 @@
 ﻿using DataAccess.Enums;
-using DataAccess.Filters;
 
 namespace DataAccess.Entities
 {
@@ -9,9 +8,20 @@ namespace DataAccess.Entities
         public string Name { get; set; } = String.Empty;
         public decimal Limit { get; set; } = 0;
         public DateTime UntilDate { get; set; }
-        public List<IFilter> Filters { get; } = new();
+        public List<BudgetFilter> Filters { get; set; } = new();
 
         public Guid UserId { get; set; }
         public User? User { get; set; }
     }
+    public enum BudgetFilterType { FamilyMember}
+    public class BudgetFilter
+    {
+        public Guid Id { get; set; }
+        public BudgetFilterType Type { get; set; }
+
+        public Guid BudgetId { get; set; }
+        public Budget? Budget { get; set; };
+    }
+
+
 }

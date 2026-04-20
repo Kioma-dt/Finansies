@@ -9,7 +9,12 @@
         public Guid? ParentId { get; set; } = null;
         public Account? Parent { get; set; } = null;
 
-        public List<Transaction> Transactions { get; } = new();
+        public List<Account> Children { get; set; } = new();
+
+        public List<Transaction> Transactions { get; set; } = new();
+
+        public List<Transfer> TransfersFrom { get; set; } = new();
+        public List<Transfer> TransfersTo { get; set; } = new();
 
         public Guid? FamilyMemberId { get; set; } = null;
         public FamilyMember? FamilyMember { get; set; } = null;
