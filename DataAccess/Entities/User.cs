@@ -10,6 +10,8 @@
         public List<Category> Categories { get; set; } = new();
         public List<Debt> Debts { get; set; } = new();
         public List<FamilyMember> FamilyMembers { get; set; } = new();
+        public List<Transaction> Transactions { get; set; } = new();
+        public List<PlannedTransaction> PlannedTransactions { get; set; } = new();
         public List<TransactionTag> TransactionTags { get; set; } = new();
         public List<Transfer> Transfers { get; set; } = new();
     }

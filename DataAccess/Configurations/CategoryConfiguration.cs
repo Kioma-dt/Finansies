@@ -17,7 +17,7 @@ namespace DataAccess.Configurations
 
             builder.Property(c => c.Description)
                .IsRequired()
-               .HasMaxLength(512);
+               .HasMaxLength(256);
 
             builder.HasOne(c => c.Parent)
                 .WithMany(c => c.Children)
@@ -28,6 +28,11 @@ namespace DataAccess.Configurations
                 .WithOne(t => t.Category)
                 .HasForeignKey(t => t.CategoryId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasMany(c => c.PlannedTransactions)
+               .WithOne(pt => pt.Category)
+               .HasForeignKey(pt => pt.CategoryId)
+               .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasMany(c => c.Debts)
                 .WithOne(d => d.Category)

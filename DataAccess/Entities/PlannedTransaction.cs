@@ -24,6 +24,9 @@ namespace DataAccess.Entities
         public Guid? FamilyMemberId { get; set; } = null;
         public FamilyMember? FamilyMember { get; set; } = null;
 
+        public Guid UserId { get; set; }
+        public User? User { get; set; }
+
         public void Conirm()
         {
             Status = PlannedTransactionStatus.Confirmed;

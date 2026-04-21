@@ -12,6 +12,7 @@
         public List<Category> Children { get; set; } = new();
 
         public List<Transaction> Transactions { get; set; } = new();
+        public List<PlannedTransaction> PlannedTransactions { get; set; } = new();
         public List<Debt> Debts { get; set; } = new();
 
         public Guid UserId { get; set; }

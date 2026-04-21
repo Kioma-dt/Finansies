@@ -26,17 +26,25 @@ namespace DataAccess.Configurations
             builder.HasMany(a => a.Transactions)
                 .WithOne(t => t.Account)
                 .HasForeignKey(t => t.AccountId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+
+            builder.HasMany(a => a.PlannedTransactions)
+                .WithOne(pt => pt.Account)
+                .HasForeignKey(pt => pt.AccountId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasMany(a => a.TransfersFrom)
                 .WithOne(t => t.FromAccount)
                 .HasForeignKey(t => t.FromAccountId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
 
             builder.HasMany(a => a.TransfersTo)
                 .WithOne(t => t.ToAccount)
                 .HasForeignKey(t => t.ToAccountId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
 
             builder.HasOne(a => a.FamilyMember)
                 .WithMany(fm => fm.Accounts)

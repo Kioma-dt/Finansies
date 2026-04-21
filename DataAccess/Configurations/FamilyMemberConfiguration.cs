@@ -8,85 +8,38 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<FamilyMember> builder)
         {
-            builder.HasKey(d => d.Id);
+            builder.HasKey(fm => fm.Id);
 
-            builder.Property(d => d.Name)
+            builder.Property(fm => fm.Name)
                 .HasMaxLength(128)
                 .IsRequired();
 
-            builder.Property(d => d.StartAmount)
-                .HasPrecision(18, 2)
-                .IsRequired();
+            builder.HasMany(fm => fm.Accounts)
+                 .WithOne(a => a.FamilyMember)
+                 .HasForeignKey(a => a.FamilyMemberId)
+                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Property(d => d.TotalAmount)
-                .HasPrecision(18, 2)
-                .IsRequired();
+            builder.HasMany(fm => fm.Transactions)
+                 .WithOne(t => t.FamilyMember)
+                 .HasForeignKey(t => t.FamilyMemberId)
+                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Property(d => d.PaidAmount)
-                .HasPrecision(18, 2)
-                .IsRequired();
+            builder.HasMany(fm => fm.PlannedTransactions)
+                 .WithOne(pt => pt.FamilyMember)
+                 .HasForeignKey(pt => pt.FamilyMemberId)
+                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Property(d => d.InterestRate)
-                .HasPrecision(12, 4)
-                .IsRequired();
+            builder.HasMany(fm => fm.Debts)
+                 .WithOne(d => d.FamilyMember)
+                 .HasForeignKey(d => d.FamilyMemberId)
+                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Property(d => d.CapitalisationsPerYear)
-                .HasPrecision(12, 4)
-                .IsRequired();
+            builder.HasOne(fm => fm.User)
+                .WithMany(u => u.FamilyMembers)
+                .HasForeignKey(fm => fm.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Property(d => d.FixedAddition)
-                .HasPrecision(18, 2)
-                .IsRequired();
-
-            builder.Property(d => d.Type)
-                .HasConversion<string>()
-                .IsRequired();
-
-            builder.Property(d => d.InterestType)
-                .HasConversion<string>()
-                .IsRequired();
-
-            builder.Property(d => d.StartDate)
-                .IsRequired();
-
-            builder.Property(d => d.LastPaidDate)
-                .IsRequired();
-
-            builder.Property(d => d.EndDate)
-                .IsRequired();
-
-            builder.HasOne(d => d.Category)
-                .WithMany(c => c.Debts)
-                .HasForeignKey(d => d.CategoryId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            builder.HasOne(d => d.FamilyMember)
-                .WithMany(fm => fm.Debts)
-                .HasForeignKey(d => d.FamilyMemberId);
-
-            builder.HasOne(d => d.User)
-                .WithMany(u => u.Debts)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
-
-            builder.HasIndex(d => d.CategoryId);
-            builder.HasIndex(d => d.FamilyMemberId);
-            builder.HasIndex(d => d.UserId);
-            builder.HasIndex(d => d.Type);
-            builder.HasIndex(d => d.InterestType);
-
-            builder.ToTable(t =>
-            {
-                t.HasCheckConstraint("CK_Debt_Amounts",
-                    "`StartAmount` >= 0 AND `TotalAmount` >= 0 AND `PaidAmount` >= 0");
-
-                t.HasCheckConstraint("CK_Debt_Paid_Not_Exceed",
-                    "`PaidAmount` <= `TotalAmount`");
-
-                t.HasCheckConstraint("CK_Debt_Dates",
-                    "`StartDate` <= `EndDate`");
-            });
+            builder.HasIndex(fm => fm.UserId);
         }
     }
 }

@@ -12,6 +12,7 @@
         public List<Account> Children { get; set; } = new();
 
         public List<Transaction> Transactions { get; set; } = new();
+        public List<PlannedTransaction> PlannedTransactions { get; set; } = new();
 
         public List<Transfer> TransfersFrom { get; set; } = new();
         public List<Transfer> TransfersTo { get; set; } = new();

@@ -11,7 +11,7 @@ namespace DataAccess.Entities
         public TransactionType Type { get; set; }
 
         public Guid AccountId { get; set; }
-        public Account? Account { get; set; } = null;
+        public Account? Account { get; set; }
 
         public Guid? CategoryId { get; set; } = null;
         public Category? Category { get; set; } = null;
@@ -20,6 +20,9 @@ namespace DataAccess.Entities
 
         public Guid? FamilyMemberId { get; set; } = null;
         public FamilyMember? FamilyMember { get; set; } = null;
+
+        public Guid UserId { get; set; }
+        public User? User { get; set; }
 
         public void AddTag(TransactionTag tag)
         {
