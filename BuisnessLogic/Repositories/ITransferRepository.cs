@@ -1,4 +1,4 @@
-﻿using BuisnessLogic.Entities;
+﻿using DataAccess.Entities;
 namespace BuisnessLogic.Repositories
 {
     public interface ITransferRepository

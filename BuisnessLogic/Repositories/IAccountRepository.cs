@@ -1,11 +1,11 @@
-﻿using BuisnessLogic.Entities;
+﻿using DataAccess.Entities;
 
 namespace BuisnessLogic.Repositories
 {
     public interface IAccountRepository
     {
         Task Add(Account account);
-        Task<Account> GetById (Guid id);
+        Task<Account> GetById(Guid userId, Guid id);
         Task Update(Account account);
     }
 }

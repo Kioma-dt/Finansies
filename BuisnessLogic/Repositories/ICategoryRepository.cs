@@ -1,11 +1,11 @@
-﻿using BuisnessLogic.Entities;
+﻿using DataAccess.Entities;
 
 namespace BuisnessLogic.Repositories
 {
     public interface ICategoryRepository
     {
         Task Add(Category category);
-        Task<Category> GetById(Guid id);
+        Task<Category> GetById(Guid userId, Guid id);
     }
 
 }
