@@ -30,7 +30,7 @@ namespace DataAccess.Entities
         public Guid UserId { get; set; }
         public User? User { get; set; }
 
-        public void CalculateInterest(decimal amount)
+        public void ChargeInterest(decimal amount)
         {
             if (amount < 0)
             {
