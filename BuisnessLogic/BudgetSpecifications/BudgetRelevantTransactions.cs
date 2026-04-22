@@ -9,9 +9,6 @@ namespace BuisnessLogic.BudgetService
 {
     public class BudgetRelevantTransactions
     {
-        readonly IBudgetSpecificationsExtender _budgetExtender;
-        readonly ITransactionRepository _transactionRepository;
-        readonly IBudgetRepository _budgetRepository;
 
         public BudgetRelevantTransactions(BudgetSpecificationsExtender budgetExtender, ITransactionRepository transactionRepository, IBudgetRepository budgetRepository)
         {
