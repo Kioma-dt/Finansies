@@ -1,14 +1,32 @@
 ﻿using BuisnessLogic.Repositories;
 using DataAccess.Entities;
+using DataAccess.Enums;
+using System;
 
 namespace BuisnessLogic.Services
 {
     public interface ITrasnsactionService
     {
-        Task RegsiterTransaction(decimal amount,
-            string description);
+        Task RegsiterTransaction(Guid userId,
+            decimal amount,
+            string description,
+            DateTime date,
+            TransactionType type,
+            Guid accountId);
+
+        Task AddCategory(Guid userId,
+            Guid transactionId,
+            Guid categoryId);
+
+        Task AddTag(Guid userId, 
+            Guid transactionId,
+            Guid transactionTagId);
+
+        Task AddFamilyMember(Guid userId,
+            Guid transactionId,
+            Guid familyMemberId);
     }
-    public class TransactionService
+    public class TransactionService : ITrasnsactionService
     {
         readonly ITransactionRepository _transactionRepository;
         readonly IAccountRepository _accountRepository;
@@ -25,6 +43,74 @@ namespace BuisnessLogic.Services
             _transactionTagRepository = transactionTagRepository;
         }
 
-        
+        public async Task AddCategory(Guid userId, Guid transactionId, Guid categoryId)
+        {
+            var transaction = await _transactionRepository.GetById(userId, transactionId);
+            var category = await _categoryRepository.GetById(userId, categoryId);
+
+            transaction.Category = category;
+            transaction.CategoryId = categoryId;
+
+            category.Transactions.Add(transaction);
+
+            await _transactionRepository.Update(transaction);
+            //await _familyMemberRepository.Update(familyMember);
+        }
+
+        public async Task AddFamilyMember(Guid userId, Guid transactionId, Guid familyMemberId)
+        {
+            var transaction = await _transactionRepository.GetById(userId, transactionId);
+            var familyMember = await _familyMemberRepository.GetById(userId, familyMemberId);
+
+            transaction.FamilyMember = familyMember;
+            transaction.FamilyMemberId = familyMemberId;
+
+            familyMember.Transactions.Add(transaction);
+
+            await _transactionRepository.Update(transaction);
+            //await _familyMemberRepository.Update(familyMember);
+        }
+
+        public async Task AddTag(Guid userId, Guid transactionId, Guid transactionTagId)
+        {
+            var transaction = await _transactionRepository.GetById(userId, transactionId);
+            var transactionTag = await _transactionTagRepository.GetById(userId, transactionTagId);
+
+            transaction.TransactionTags.Add(transactionTag);
+
+            transactionTag.Transactions.Add(transaction);
+
+            await _transactionRepository.Update(transaction);
+            //await _familyMemberRepository.Update(familyMember);
+        }
+
+        public async Task RegsiterTransaction(Guid userId, decimal amount, string description, DateTime date, TransactionType type, Guid accountId)
+        {
+            var account = await _accountRepository.GetById(userId, accountId);
+
+            if (type == TransactionType.Expense)
+            {
+                account.RemoveFromBalance(amount);
+            }
+            else
+            {
+                account.AddToBalance(amount);
+            }       
+
+            var transaction = new Transaction
+            {
+                Amount = amount,
+                Description = description,
+                Date = date,
+                Type = type,
+
+                AccountId = account.Id,
+                Account = account
+            };
+
+            await _transactionRepository.Add(transaction);
+
+            await _accountRepository.Update(account);
+        }
     }
 }
