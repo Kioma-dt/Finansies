@@ -1,4 +1,4 @@
-﻿using DataAccess.Enums;
+﻿using BuisnessLogic.Enums;
 
 namespace BuisnessLogic.DebtInterestCalculator
 {

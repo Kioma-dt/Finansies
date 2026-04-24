@@ -1,19 +1,16 @@
-﻿using DataAccess.Enums;
-using System.Diagnostics.Contracts;
+﻿using BuisnessLogic.Enums;
 
-namespace DataAccess.Entities
+namespace BuisnessLogic.Entities
 {
-    public class PlannedTransaction
+    public class Transaction
     {
         public Guid Id { get; set; }
         public decimal Amount { get; set; } = 0;
         public string Description { get; set; } = String.Empty;
+        public DateTime Date { get; set; }
         public TransactionType Type { get; set; }
 
-        public DateTime PlannedDate { get; set; }
-        public PlannedTransactionStatus Status { get; set; } = PlannedTransactionStatus.Planned;
-
-        public Guid? AccountId { get; set; }
+        public Guid AccountId { get; set; }
         public Account? Account { get; set; }
 
         public Guid? CategoryId { get; set; } = null;
@@ -27,17 +24,14 @@ namespace DataAccess.Entities
         public Guid UserId { get; set; }
         public User? User { get; set; }
 
-        public void Conirm()
+        public void AddTag(TransactionTag tag)
         {
-            Status = PlannedTransactionStatus.Confirmed;
-        }
-
-        public void Update(DateTime date)
-        {
-            if(Status != PlannedTransactionStatus.Confirmed && date >= PlannedDate)
+            if (TransactionTags.Contains(tag))
             {
-                Status = PlannedTransactionStatus.WaitingForConfirm;
+                throw new Exception("Transaction is Already Tagged");
             }
+
+            TransactionTags.Add(tag);
         }
     }
 }

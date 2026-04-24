@@ -1,6 +1,6 @@
 ﻿using BuisnessLogic.Repositories;
-using DataAccess.Entities;
-using DataAccess.Enums;
+using BuisnessLogic.Entities;
+using BuisnessLogic.Enums;
 using System;
 
 namespace BuisnessLogic.Services

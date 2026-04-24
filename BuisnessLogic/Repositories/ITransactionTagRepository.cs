@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using BuisnessLogic.Entities;
 
 namespace BuisnessLogic.Repositories
 {

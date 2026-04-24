@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="RepositoriesImplementation\" />
+    <ProjectReference Include="..\BuisnessLogic\BuisnessLogic.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
-﻿using DataAccess.Entities;
-using DataAccess.Enums;
+﻿using BuisnessLogic.Entities;
+using BuisnessLogic.Enums;
 using System.Linq.Expressions;
 
 namespace BuisnessLogic.BudgetService

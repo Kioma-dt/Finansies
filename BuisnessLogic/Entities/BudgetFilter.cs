@@ -1,6 +1,6 @@
-﻿using DataAccess.Enums;
+﻿using BuisnessLogic.Enums;
 
-namespace DataAccess.Entities
+namespace BuisnessLogic.Entities
 {
     public class BudgetFilter
     {

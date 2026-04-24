@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using BuisnessLogic.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;

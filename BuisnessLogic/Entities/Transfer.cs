@@ -1,4 +1,4 @@
-﻿namespace DataAccess.Entities
+﻿namespace BuisnessLogic.Entities
 {
     public class Transfer
     {

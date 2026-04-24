@@ -1,4 +1,4 @@
-﻿namespace DataAccess.Enums
+﻿namespace BuisnessLogic.Enums
 {
     public enum TransactionType { Income, Expense };
 }

@@ -1,5 +1,5 @@
 ﻿using BuisnessLogic.Repositories;
-using DataAccess.Entities;
+using BuisnessLogic.Entities;
 
 namespace BuisnessLogic.Services
 {
