@@ -67,7 +67,19 @@ namespace BuisnessLogic.Services
         public async Task AddAccount(Guid userId, Guid plannedTransactionId, Guid accountId)
         {
             var plannedTransaction = await _plannedTransactionRepository.GetById(userId, plannedTransactionId);
+
+            if (plannedTransaction is null)
+            {
+                throw new ArgumentException($"No Planned Transaction with Id: {plannedTransactionId}");
+            }
+
             var account = await _accountRepository.GetById(userId, accountId);
+
+            if (account is null)
+            {
+                throw new ArgumentException($"No Account with Id: {accountId}");
+            }
+
 
             plannedTransaction.Account = account;
             plannedTransaction.AccountId = accountId;
@@ -81,7 +93,19 @@ namespace BuisnessLogic.Services
         public async Task AddCategory(Guid userId, Guid plannedTransactionId, Guid categoryId)
         {
             var plannedTransaction = await _plannedTransactionRepository.GetById(userId, plannedTransactionId);
+
+            if (plannedTransaction is null)
+            {
+                throw new ArgumentException($"No Planned Transaction with Id: {plannedTransactionId}");
+            }
+
+
             var category = await _categoryRepository.GetById(userId, categoryId);
+
+            if (category is null)
+            {
+                throw new ArgumentException($"No Category with Id: {categoryId}");
+            }
 
             plannedTransaction.Category = category;
             plannedTransaction.CategoryId = categoryId;
@@ -95,7 +119,19 @@ namespace BuisnessLogic.Services
         public async Task AddFamilyMember(Guid userId, Guid plannedTransactionId, Guid familyMemberId)
         {
             var plannedTransaction = await _plannedTransactionRepository.GetById(userId, plannedTransactionId);
+
+            if (plannedTransaction is null)
+            {
+                throw new ArgumentException($"No Planned Transaction with Id: {plannedTransactionId}");
+            }
+
+
             var familyMember = await _familyMemberRepository.GetById(userId, familyMemberId);
+
+            if (familyMember is null)
+            {
+                throw new ArgumentException($"No Family Member with Id: {familyMemberId}");
+            }
 
             plannedTransaction.FamilyMember = familyMember;
             plannedTransaction.FamilyMemberId = familyMemberId;
@@ -109,7 +145,19 @@ namespace BuisnessLogic.Services
         public async Task AddTag(Guid userId, Guid plannedTransactionId, Guid transactionTagId)
         {
             var plannedTransaction = await _plannedTransactionRepository.GetById(userId, plannedTransactionId);
+
+            if (plannedTransaction is null)
+            {
+                throw new ArgumentException($"No Planned Transaction with Id: {plannedTransactionId}");
+            }
+
+
             var transactionTag = await _transactionTagRepository.GetById(userId, transactionTagId);
+
+            if (transactionTag is null)
+            {
+                throw new ArgumentException($"No Transaction Tag with Id: {transactionTagId}");
+            }
 
             plannedTransaction.TransactionTags.Add(transactionTag);
 
@@ -123,7 +171,13 @@ namespace BuisnessLogic.Services
         {
             var plannedTransaction = await _plannedTransactionRepository.GetById(userId, plannedTransactionId);
 
-            if(plannedTransaction.AccountId is null)
+            if (plannedTransaction is null)
+            {
+                throw new ArgumentException($"No Planned Transaction with Id: {plannedTransactionId}");
+            }
+
+
+            if (plannedTransaction.AccountId is null)
             {
                 throw new Exception("Planned Transaction Does't Contain Account");
             }
@@ -157,6 +211,12 @@ namespace BuisnessLogic.Services
         public async Task UpdatePlannedTransaction(Guid userId, Guid plannedTransactionId, DateTime date)
         {
             var plannedTransaction = await _plannedTransactionRepository.GetById(userId, plannedTransactionId);
+
+            if (plannedTransaction is null)
+            {
+                throw new ArgumentException($"No Planned Transaction with Id: {plannedTransactionId}");
+            }
+
 
             plannedTransaction.Update(date);
 

@@ -26,9 +26,14 @@ namespace BuisnessLogic.Services
         {
             var budget = await _budgetRepository.GetById(userId, budgetId);
 
+            if (budget is null)
+            {
+                throw new ArgumentException($"No Budget with Id: {budgetId}");
+            }
+
             var specification = _budgetExtender.GetFullExpression(budget);
 
-            return await _transactionRepository.GetWithSpecification(userId, specification);
+            return await _transactionRepository.GetWithSpecification(userId, specification) ?? new List<Transaction>();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BuisnessLogic.DebtInterestCalculator;
+using BuisnessLogic.Entities;
 using BuisnessLogic.Repositories;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,11 @@ namespace BuisnessLogic.Services
         {
             var debt = await _debtRepository.GetById(userId, debtId);
 
+            if (debt is null)
+            {
+                throw new ArgumentException($"No Debt with Id: {debtId}");
+            }
+
             debt.MakeAPayment(amount, date);
 
             await _debtRepository.Update(debt);
@@ -42,6 +48,11 @@ namespace BuisnessLogic.Services
         public async Task UpdateDebt(Guid userId, Guid debtId, DateTime date)
         {
             var debt = await _debtRepository.GetById(userId, debtId);
+
+            if (debt is null)
+            {
+                throw new ArgumentException($"No Debt with Id: {debtId}");
+            }
 
             if (date > debt.EndDate)
             {

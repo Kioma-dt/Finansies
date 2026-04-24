@@ -46,12 +46,26 @@ namespace BuisnessLogic.Services
         public async Task AddCategory(Guid userId, Guid transactionId, Guid categoryId)
         {
             var transaction = await _transactionRepository.GetById(userId, transactionId);
+
+            if (transaction is null)
+            {
+                throw new ArgumentException($"No Transaction with Id: {transactionId}");
+            }
+
             var category = await _categoryRepository.GetById(userId, categoryId);
+
+            if (category is null)
+            {
+                throw new ArgumentException($"No Category with Id: {categoryId}");
+            }
 
             transaction.Category = category;
             transaction.CategoryId = categoryId;
 
+
             category.Transactions.Add(transaction);
+
+
 
             await _transactionRepository.Update(transaction);
             //await _familyMemberRepository.Update(familyMember);
@@ -60,7 +74,18 @@ namespace BuisnessLogic.Services
         public async Task AddFamilyMember(Guid userId, Guid transactionId, Guid familyMemberId)
         {
             var transaction = await _transactionRepository.GetById(userId, transactionId);
+
+            if (transaction is null)
+            {
+                throw new ArgumentException($"No Transaction with Id: {transactionId}");
+            }
+
             var familyMember = await _familyMemberRepository.GetById(userId, familyMemberId);
+
+            if (familyMember is null)
+            {
+                throw new ArgumentException($"No Family Member with Id: {familyMemberId}");
+            }
 
             transaction.FamilyMember = familyMember;
             transaction.FamilyMemberId = familyMemberId;
@@ -74,7 +99,18 @@ namespace BuisnessLogic.Services
         public async Task AddTag(Guid userId, Guid transactionId, Guid transactionTagId)
         {
             var transaction = await _transactionRepository.GetById(userId, transactionId);
+
+            if (transaction is null)
+            {
+                throw new ArgumentException($"No Transaction with Id: {transactionId}");
+            }
+
             var transactionTag = await _transactionTagRepository.GetById(userId, transactionTagId);
+
+            if (transactionTag is null)
+            {
+                throw new ArgumentException($"No Transaction Tag with Id: {transactionTagId}");
+            }
 
             transaction.TransactionTags.Add(transactionTag);
 
@@ -87,6 +123,11 @@ namespace BuisnessLogic.Services
         public async Task RegsiterTransaction(Guid userId, decimal amount, string description, DateTime date, TransactionType type, Guid accountId)
         {
             var account = await _accountRepository.GetById(userId, accountId);
+
+            if (account is null)
+            {
+                throw new ArgumentException($"No Account with Id: {accountId}");
+            }
 
             if (type == TransactionType.Expense)
             {

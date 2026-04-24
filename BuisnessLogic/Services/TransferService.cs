@@ -1,5 +1,6 @@
-﻿using BuisnessLogic.Repositories;
-using BuisnessLogic.Entities;
+﻿using BuisnessLogic.Entities;
+using BuisnessLogic.Repositories;
+using System.Security.Principal;
 
 namespace BuisnessLogic.Services
 {
@@ -27,6 +28,17 @@ namespace BuisnessLogic.Services
         {
             var fromAccount = await _accountRepository.GetById(userId, fromAccountId);
             var toAccount = await _accountRepository.GetById(userId, toAccountId);
+
+            if (fromAccount is null)
+            {
+                throw new ArgumentException($"No Account with Id: {fromAccountId}");
+            }
+
+
+            if (toAccount is null)
+            {
+                throw new ArgumentException($"No Account with Id: {toAccountId}");
+            }
 
             fromAccount.RemoveFromBalance(amount);
             toAccount.AddToBalance(amount);
