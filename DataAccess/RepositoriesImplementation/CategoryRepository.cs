@@ -27,21 +27,34 @@ namespace DataAccess.RepositoriesImplementation
                 .FirstOrDefaultAsync();
         }
 
+        public async Task AddParent(Guid userId, Guid id, Category parent)
+        {
+            var category = await GetById(userId, id);
+
+            if (category is not null)
+            {
+                category.ParentId = parent.Id;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task Update(Category category)
         {
-            var dbCategory = await GetById(category.UserId, category.Id);
+            var dbEntity = await GetById(category.UserId, category.Id);
 
-            if (dbCategory is null)
+            if (dbEntity is null)
             {
-                await this.Add(category);
+                await Add(category);
             }
             else
             {
-                dbCategory.UserId = category.UserId;
-                dbCategory.ParentId = category.ParentId;
-                dbCategory.Description = category.Description;
-                dbCategory.Name = category.Name;
+                dbEntity.Name = category.Name;
+                dbEntity.Description = category.Description;
+                dbEntity.ParentId = category.ParentId;
+                dbEntity.UserId = category.UserId;
             }
+
             await _dbContext.SaveChangesAsync();
         }
     }

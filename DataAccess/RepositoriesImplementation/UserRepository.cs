@@ -28,23 +28,15 @@ namespace DataAccess.RepositoriesImplementation
 
         public async Task Update(User user)
         {
-            var dbUser = await GetById(user.Id);
+            var dbEntity = await GetById(user.Id);
 
-            if (dbUser is null)
+            if (dbEntity is null)
             {
-                await this.Add(user);
+                await Add(user);
             }
             else
             {
-                //dbAccount.Name = account.Name;
-                //dbAccount.Balance = account.Balance;
-                //dbAccount.Children = account.Children;
-                //dbAccount.PlannedTransactions = account.PlannedTransactions;
-                //dbAccount.Transactions = account.Transactions;
-                //dbAccount.TransfersFrom = account.TransfersFrom;
-                //dbAccount.ParentId = account.ParentId;
-                //dbAccount.FamilyMemberId = account.FamilyMemberId;
-                //dbAccount.UserId = account.UserId;
+                dbEntity.Name = user.Name;
             }
 
             await _dbContext.SaveChangesAsync();

@@ -27,24 +27,75 @@ namespace DataAccess.RepositoriesImplementation
                 .FirstOrDefaultAsync();
         }
 
-        public async Task Update(PlannedTransaction plannedTransaction)
+        public async Task AddAccount(Guid userId, Guid id, Account account)
         {
-            var dbPlannedTransactions = await GetById(plannedTransaction.UserId, plannedTransaction.Id);
+            var planned = await GetById(userId, id);
 
-            if (dbPlannedTransactions is null)
+            if (planned is not null)
             {
-                await this.Add(plannedTransaction);
+                planned.AccountId = account.Id;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task AddFamilyMember(Guid userId, Guid id, FamilyMember familyMember)
+        {
+            var planned = await GetById(userId, id);
+
+            if (planned is not null)
+            {
+                planned.FamilyMemberId = familyMember.Id;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task AddTag(Guid userId, Guid id, TransactionTag tag)
+        {
+            var planned = await GetById(userId, id);
+
+            if (planned is not null)
+            {
+                planned.TransactionTags.Add(tag);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task AddCategory(Guid userId, Guid id, Category category)
+        {
+            var planned = await GetById(userId, id);
+
+            if (planned is not null)
+            {
+                planned.CategoryId = category.Id;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task Update(PlannedTransaction entity)
+        {
+            var dbEntity = await GetById(entity.UserId, entity.Id);
+
+            if (dbEntity is null)
+            {
+                await Add(entity);
             }
             else
             {
-                dbPlannedTransactions.AccountId = plannedTransaction.AccountId;
-                dbPlannedTransactions.Amount = plannedTransaction.Amount;
-                dbPlannedTransactions.CategoryId = plannedTransaction.CategoryId;
-                dbPlannedTransactions.Description = plannedTransaction.Description;
-                dbPlannedTransactions.FamilyMemberId = plannedTransaction.FamilyMemberId;
-                dbPlannedTransactions.PlannedDate = plannedTransaction.PlannedDate;
-                dbPlannedTransactions.Status = plannedTransaction.Status;
-                dbPlannedTransactions.UserId = plannedTransaction.UserId;
+                dbEntity.Amount = entity.Amount;
+                dbEntity.Description = entity.Description;
+                dbEntity.Type = entity.Type;
+
+                dbEntity.PlannedDate = entity.PlannedDate;
+                dbEntity.Status = entity.Status;
+
+                dbEntity.AccountId = entity.AccountId;
+                dbEntity.CategoryId = entity.CategoryId;
+                dbEntity.FamilyMemberId = entity.FamilyMemberId;
+                dbEntity.UserId = entity.UserId;
             }
 
             await _dbContext.SaveChangesAsync();

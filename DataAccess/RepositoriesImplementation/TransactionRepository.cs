@@ -33,28 +33,66 @@ namespace DataAccess.RepositoriesImplementation
                 .FirstOrDefaultAsync();
         }
 
+        public async Task AddCategory(Guid userId, Guid id, Category category)
+        {
+            var transaction = await GetById(userId, id);
+
+            if (transaction is not null)
+            {
+                transaction.CategoryId = category.Id;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task AddFamilyMember(Guid userId, Guid id, FamilyMember familyMember)
+        {
+            var transaction = await GetById(userId, id);
+
+            if (transaction is not null)
+            {
+                transaction.FamilyMemberId = familyMember.Id;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task AddTag(Guid userId, Guid id, TransactionTag tag)
+        {
+            var transaction = await GetById(userId, id);
+
+            if (transaction is not null)
+            {
+                transaction.TransactionTags.Add(tag);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<Transaction>?> GetWithSpecification(Guid userId, Expression<Func<Transaction, bool>> specification)
         {
             return await _dbContext.Transactions.Where(specification).ToListAsync();
         }
 
-        public async Task Update(Transaction transaction)
+        public async Task Update(Transaction entity)
         {
-            var dbTransaction = await GetById(transaction.UserId, transaction.Id);
+            var dbEntity = await GetById(entity.UserId, entity.Id);
 
-            if (dbTransaction is null)
+            if (dbEntity is null)
             {
-                await this.Add(transaction);
+                await Add(entity);
             }
             else
             {
-                dbTransaction.AccountId = transaction.AccountId;
-                dbTransaction.Amount = transaction.Amount;
-                dbTransaction.CategoryId = transaction.CategoryId;
-                dbTransaction.Description = transaction.Description;
-                dbTransaction.FamilyMemberId = transaction.FamilyMemberId;
-                dbTransaction.Date = transaction.Date;
-                dbTransaction.UserId = transaction.UserId;
+                dbEntity.Amount = entity.Amount;
+                dbEntity.Description = entity.Description;
+                dbEntity.Date = entity.Date;
+                dbEntity.Type = entity.Type;
+
+                dbEntity.AccountId = entity.AccountId;
+                dbEntity.CategoryId = entity.CategoryId;
+                dbEntity.FamilyMemberId = entity.FamilyMemberId;
+                dbEntity.UserId = entity.UserId;
             }
 
             await _dbContext.SaveChangesAsync();

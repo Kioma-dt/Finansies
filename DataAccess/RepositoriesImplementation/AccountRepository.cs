@@ -20,6 +20,30 @@ namespace DataAccess.RepositoriesImplementation
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task AddParent(Guid userId, Guid id, Account parent)
+        {
+            var account = await GetById(userId, id);
+
+            if (account is not null)
+            {
+                account.ParentId = parent.Id;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task AddFamilyMember(Guid userId, Guid id, FamilyMember familyMember)
+        {
+            var account = await GetById(userId, id);
+
+            if (account is not null)
+            {
+                account.FamilyMemberId = familyMember.Id;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<Account?> GetById(Guid userId, Guid id)
         {
             return await _dbContext.Accounts
@@ -40,10 +64,6 @@ namespace DataAccess.RepositoriesImplementation
             {
                 dbAccount.Name = account.Name;
                 dbAccount.Balance = account.Balance;
-                dbAccount.Children = account.Children;
-                dbAccount.PlannedTransactions = account.PlannedTransactions;
-                dbAccount.Transactions = account.Transactions;
-                dbAccount.TransfersFrom = account.TransfersFrom;
                 dbAccount.ParentId = account.ParentId;
                 dbAccount.FamilyMemberId = account.FamilyMemberId;
                 dbAccount.UserId = account.UserId;

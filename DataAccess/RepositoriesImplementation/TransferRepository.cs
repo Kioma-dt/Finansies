@@ -29,23 +29,21 @@ namespace DataAccess.RepositoriesImplementation
 
         public async Task Update(Transfer transfer)
         {
-            var dbTransfer = await GetById(transfer.UserId, transfer.Id);
+            var dbEntity = await GetById(transfer.UserId, transfer.Id);
 
-            if (dbTransfer is null)
+            if (dbEntity is null)
             {
-                await this.Add(transfer);
+                await Add(transfer);
             }
             else
             {
-                //dbAccount.Name = account.Name;
-                //dbAccount.Balance = account.Balance;
-                //dbAccount.Children = account.Children;
-                //dbAccount.PlannedTransactions = account.PlannedTransactions;
-                //dbAccount.Transactions = account.Transactions;
-                //dbAccount.TransfersFrom = account.TransfersFrom;
-                //dbAccount.ParentId = account.ParentId;
-                //dbAccount.FamilyMemberId = account.FamilyMemberId;
-                //dbAccount.UserId = account.UserId;
+                dbEntity.Amount = transfer.Amount;
+                dbEntity.Description = transfer.Description;
+                dbEntity.Date = transfer.Date;
+
+                dbEntity.FromAccountId = transfer.FromAccountId;
+                dbEntity.ToAccountId = transfer.ToAccountId;
+                dbEntity.UserId = transfer.UserId;
             }
 
             await _dbContext.SaveChangesAsync();

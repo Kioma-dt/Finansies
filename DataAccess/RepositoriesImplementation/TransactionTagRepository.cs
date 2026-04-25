@@ -27,18 +27,18 @@ namespace DataAccess.RepositoriesImplementation
                 .FirstOrDefaultAsync();
         }
 
-        public async Task Update(TransactionTag transactionTag)
+        public async Task Update(TransactionTag tag)
         {
-            var dbTransactionTag = await GetById(transactionTag.UserId, transactionTag.Id);
+            var dbEntity = await GetById(tag.UserId, tag.Id);
 
-            if (dbTransactionTag is null)
+            if (dbEntity is null)
             {
-                await this.Add(transactionTag);
+                await Add(tag);
             }
             else
             {
-                //Need Copy
-                dbTransactionTag.Name = transactionTag.Name;
+                dbEntity.Name = tag.Name;
+                dbEntity.UserId = tag.UserId;
             }
 
             await _dbContext.SaveChangesAsync();

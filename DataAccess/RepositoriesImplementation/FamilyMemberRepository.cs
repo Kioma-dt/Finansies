@@ -27,17 +27,18 @@ namespace DataAccess.RepositoriesImplementation
                 .FirstOrDefaultAsync();
         }
 
-        public async Task Update(FamilyMember familyMember)
+        public async Task Update(FamilyMember member)
         {
-            var dbFamilyMember = await GetById(familyMember.UserId, familyMember.Id);
+            var dbEntity = await GetById(member.UserId, member.Id);
 
-            if (dbFamilyMember is null)
+            if (dbEntity is null)
             {
-                await this.Add(familyMember);
+                await Add(member);
             }
             else
             {
-                dbFamilyMember.Name = familyMember.Name;
+                dbEntity.Name = member.Name;
+                dbEntity.UserId = member.UserId;
             }
 
             await _dbContext.SaveChangesAsync();

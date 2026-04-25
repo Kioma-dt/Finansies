@@ -26,21 +26,33 @@ namespace DataAccess.RepositoriesImplementation
                 .FirstOrDefaultAsync();
         }
 
+        public async Task AddBudgetFilter(Guid userId, Guid id, BudgetFilter filter)
+        {
+            var budget = await GetById(userId, id);
+
+            if (budget is not null)
+            {
+                budget.Filters.Add(filter);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task Update(Budget budget)
         {
-            var dbBudget = await GetById(budget.UserId, budget.Id);
+            var dbEntity = await GetById(budget.UserId, budget.Id);
 
-            if (dbBudget is null)
+            if (dbEntity is null)
             {
-                await this.Add(budget);
+                await Add(budget);
             }
             else
             {
-                dbBudget.Limit = budget.Limit;
-                dbBudget.Name = budget.Name;
-                dbBudget.StartDate = budget.StartDate;
-                dbBudget.EndDate = budget.EndDate;
-                dbBudget.UserId = budget.UserId;
+                dbEntity.Name = budget.Name;
+                dbEntity.Limit = budget.Limit;
+                dbEntity.StartDate = budget.StartDate;
+                dbEntity.EndDate = budget.EndDate;
+                dbEntity.UserId = budget.UserId;
             }
 
             await _dbContext.SaveChangesAsync();
