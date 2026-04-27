@@ -5,35 +5,54 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
     x:TypeArguments="entity:Account"
-    x:Class="UI.Popups.AddAccountPopup">
+    x:Class="UI.Popups.AccountCreatePopUp">
 
     <Border Padding="20"
             BackgroundColor="White"
-            WidthRequest="300">
+            WidthRequest="320"
+            Stroke="LightGray"
+            StrokeThickness="1">
 
-        <VerticalStackLayout Spacing="10">
+        <VerticalStackLayout Spacing="12">
 
+            <!-- TITLE -->
             <Label Text="Create Account"
                    FontSize="20"
-                   FontAttributes="Bold"/>
+                   FontAttributes="Bold"
+                   TextColor="Black"/>
 
+            <!-- NAME -->
             <Entry x:Name="NameEntry"
-                   Placeholder="Account name"/>
+                   Placeholder="Account name"
+                   TextColor="Black"
+                   PlaceholderColor="Gray"/>
 
+            <!-- BALANCE -->
             <Entry x:Name="BalanceEntry"
                    Placeholder="Balance"
-                   Keyboard="Numeric"/>
+                   Keyboard="Numeric"
+                   TextColor="Black"
+                   PlaceholderColor="Gray"/>
 
+            <!-- PARENT -->
+            <Picker x:Name="ParentPicker"
+                    Title="Select parent account"
+                    TextColor="Black"
+                    TitleColor="Gray"/>
+
+            <!-- BUTTONS -->
             <HorizontalStackLayout Spacing="10">
 
                 <Button Text="Cancel"
-                        BackgroundColor="Gray"
+                        BackgroundColor="#9E9E9E"
                         TextColor="White"
+                        CornerRadius="8"
                         Clicked="OnCancel"/>
 
                 <Button Text="Create"
-                        BackgroundColor="Green"
+                        BackgroundColor="#4CAF50"
                         TextColor="White"
+                        CornerRadius="8"
                         Clicked="OnCreate"/>
 
             </HorizontalStackLayout>

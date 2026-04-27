@@ -1,5 +1,6 @@
 ﻿using UI.Views;
 using UI.ViewModels;
+using UI.Popups;
 using BuisnessLogic.Repositories;
 using BuisnessLogic.Services;
 using CommunityToolkit.Maui;
@@ -34,6 +35,8 @@ namespace UI
                  new MySqlServerVersion(new Version(8, 0, 34))
              ));
 
+            builder.Services.AddSingleton<IUserContext, UserContext>();
+
             builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
             builder.Services.AddSingleton<IBudgetRepository, BudgetRepository>();
             builder.Services.AddSingleton<ICategoryRepository, CategoryRepository>();
@@ -59,6 +62,8 @@ namespace UI
             builder.Services.AddSingleton<TransactionsViewModel>();
 
             builder.Services.AddSingleton<TransactionsPage>();
+
+            builder.Services.AddTransient<AccountCreatePopUp>();
 
 #if DEBUG
             builder.Logging.AddDebug();

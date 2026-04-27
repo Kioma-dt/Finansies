@@ -20,13 +20,28 @@ namespace DataAccess.RepositoriesImplementation
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Transaction>> GetAll(Guid userId)
+        public async Task<List<Transaction>?> GetAllScalar(Guid userId)
         {
             return await _dbContext.Transactions
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
 
+        public async Task<List<Transaction>?> GetAll(Guid userId)
+        {
+            return await _dbContext.Transactions
+                .Where(x => x.UserId == userId)
+
+                .Include(x => x.Account)
+                .Include(x => x.Category)
+                .Include(x => x.FamilyMember)
+
+                .Include(x => x.TransactionTags)
+
+                .Include(x => x.User)
+
+                .ToListAsync();
+        }
         public async Task<Transaction?> GetById(Guid userId, Guid id)
         {
             return await _dbContext.Transactions

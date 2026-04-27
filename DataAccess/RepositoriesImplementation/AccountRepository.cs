@@ -17,6 +17,27 @@ namespace DataAccess.RepositoriesImplementation
         {
             return await _dbContext.Accounts
                 .Where(x => x.UserId == userId)
+
+                .Include(x => x.Parent)
+                .Include(x => x.Children)
+
+                .Include(x => x.Transactions)
+                .Include(x => x.PlannedTransactions)
+
+                .Include(x => x.TransfersFrom)
+                .Include(x => x.TransfersTo)
+
+                .Include(x => x.FamilyMember)
+
+                .Include(x => x.User)
+
+                .ToListAsync();
+        }
+
+        public async Task<List<Account>?> GetAllScalar(Guid userId)
+        {
+            return await _dbContext.Accounts
+                .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
 
@@ -78,5 +99,6 @@ namespace DataAccess.RepositoriesImplementation
 
             await _dbContext.SaveChangesAsync();
         }
+
     }
 }

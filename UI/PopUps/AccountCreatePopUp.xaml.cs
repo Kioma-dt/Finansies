@@ -1,15 +1,35 @@
-using CommunityToolkit.Maui.Views;
 using BuisnessLogic.Entities;
+using BuisnessLogic.Repositories;
+using CommunityToolkit.Maui.Views;
 
 namespace UI.Popups;
 
-public partial class AddAccountPopup : Popup<Account?>
+public partial class AccountCreatePopUp : Popup<Account?>
 {
-    public AddAccountPopup()
+    readonly IAccountRepository _accountRepository;
+    List<Account> Accounts { get; set; } = new();
+    Guid UserId { get; set; }
+    public AccountCreatePopUp(IAccountRepository accountRepository, IUserContext user)
     {
         InitializeComponent();
-    }
 
+        _accountRepository = accountRepository;
+
+        UserId = user.UserId;
+
+        Loaded += OnLoad;
+    }
+    private async void OnLoad(object sender, EventArgs e)
+    {
+        this.Clear();
+
+        Accounts = await _accountRepository.GetAllScalar(UserId) ?? new();
+
+        Accounts.Insert(0, new Account() {Id=Guid.Empty, Name = "-No Parent-"});
+
+        ParentPicker.ItemsSource = Accounts;
+        ParentPicker.ItemDisplayBinding = new Binding("Name");
+    }
     private async void OnCancel(object sender, EventArgs e)
     {
         await CloseAsync(null);
@@ -20,10 +40,24 @@ public partial class AddAccountPopup : Popup<Account?>
         var name = NameEntry.Text;
         var balance = decimal.TryParse(BalanceEntry.Text, out var b) ? b : 0;
 
+        var parent = ParentPicker.SelectedItem as Account;
+
+
         await CloseAsync(new Account
         {
             Name = name,
-            Balance = balance
+            Balance = balance,
+            ParentId = parent == null || parent.Id == Guid.Empty ? null : parent.Id,
+            Parent = parent?.Id == Guid.Empty ? null : parent
         });
+    }
+
+    public void Clear()
+    {
+        NameEntry.Text = string.Empty;
+        BalanceEntry.Text = string.Empty;
+
+        if (ParentPicker.ItemsSource != null)
+            ParentPicker.SelectedIndex = 0;
     }
 }

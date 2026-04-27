@@ -23,6 +23,21 @@
         public Guid UserId {  get; set; }
         public User? User { get; set; }
 
+        public decimal TotalBalance
+        {
+            get
+            {
+                var sum = Balance;
+
+                foreach(var child in Children)
+                {
+                    sum += child.TotalBalance;
+                }
+
+                return sum;
+            }
+        }
+
         public void AddToBalance(decimal amount)
         {
             if(amount < 0)

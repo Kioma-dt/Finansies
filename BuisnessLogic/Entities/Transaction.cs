@@ -24,6 +24,8 @@ namespace BuisnessLogic.Entities
         public Guid UserId { get; set; }
         public User? User { get; set; }
 
+        public decimal SignedAmount => Type == TransactionType.Income ? Amount : -Amount;
+
         public void AddTag(TransactionTag tag)
         {
             if (TransactionTags.Contains(tag))

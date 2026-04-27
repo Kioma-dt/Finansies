@@ -18,36 +18,45 @@ using UI.Popups;
 
 namespace UI.ViewModels
 {
+    public class AccountNode
+    {
+        public Account Account { get; set; } = null!;
+        public int Level { get; set; }
+    }
+
     public partial class TransactionsViewModel : ObservableObject
     {
         private readonly IAccountService _accountService;
         private readonly ITransactionService _transactionService;
+        private readonly AccountCreatePopUp _accountCreatePopUp;
+
+        private List<Account> _accounts = new();
 
         [ObservableProperty]
         public partial Guid UserId { get; set; }
 
-        public ObservableCollection<Account> Accounts { get;} = new ObservableCollection<Account>();
+        public ObservableCollection<AccountNode> FlatAccounts { get;} = new ObservableCollection<AccountNode>();
         public ObservableCollection<Transaction> Transactions { get; } = new ObservableCollection<Transaction>();
 
         public TransactionsViewModel(
             IAccountService accountService,
-            ITransactionService transactionService)
+            ITransactionService transactionService,
+            IUserContext user,
+            AccountCreatePopUp accountCreatePopUp)
         {
             _accountService = accountService;
             _transactionService = transactionService;
+            UserId = user.UserId;
+            _accountCreatePopUp = accountCreatePopUp;
         }
 
         [RelayCommand]
         public async Task Load()
         {
-            UserId = new Guid("00000000-0000-0000-0000-000000000001");
 
-            var accounts = await _accountService.GetAll(UserId);
+            _accounts = await _accountService.GetAll(UserId);
 
-            Accounts.Clear();
-            foreach (var acc in accounts)
-                Accounts.Add(acc);
-
+            BuildFlatTree(_accounts);
 
             var transactions = await _transactionService.GetAll(UserId);
             Transactions.Clear();
@@ -59,9 +68,7 @@ namespace UI.ViewModels
         [RelayCommand]
         public async Task AddAccount()
         {
-            var popup = new AddAccountPopup();
-
-            var result = await Application.Current.MainPage.ShowPopupAsync<Account?>(popup);
+            var result = await Application.Current.MainPage.ShowPopupAsync<Account?>(_accountCreatePopUp);
 
             var acc = result.Result;
 
@@ -71,7 +78,35 @@ namespace UI.ViewModels
 
                 await _accountService.Add(acc);
 
-                Accounts.Add(acc);
+                _accounts.Add(acc);
+
+                this.BuildFlatTree(_accounts);
+            }
+        }
+
+        private void BuildFlatTree(List<Account> accounts)
+        {
+            FlatAccounts.Clear();
+
+            void AddChildren(Account acc, int level)
+            {
+                FlatAccounts.Add(new AccountNode
+                {
+                    Account = acc,
+                    Level = level
+                });
+
+                foreach (var child in acc.Children)
+                {
+                    AddChildren(child, level + 1);
+                }
+            }
+
+            var roots = accounts.Where(x => x.ParentId == null);
+
+            foreach (var root in roots)
+            {
+                AddChildren(root, 0);
             }
         }
     }
