@@ -13,7 +13,7 @@ namespace DataAccess.RepositoriesImplementation
         {
             _dbContext = dbContext;
         }
-        public async Task<List<Account>> GetAll(Guid userId)
+        public async Task<List<Account>?> GetAll(Guid userId)
         {
             return await _dbContext.Accounts
                 .Where(x => x.UserId == userId)

@@ -5,8 +5,9 @@ using System;
 
 namespace BuisnessLogic.Services
 {
-    public interface ITrasnsactionService
+    public interface ITransactionService
     {
+        Task<List<Transaction>> GetAll(Guid userId);
         Task RegsiterTransaction(Guid userId,
             decimal amount,
             string description,
@@ -26,7 +27,7 @@ namespace BuisnessLogic.Services
             Guid transactionId,
             Guid familyMemberId);
     }
-    public class TransactionService : ITrasnsactionService
+    public class TransactionService : ITransactionService
     {
         readonly ITransactionRepository _transactionRepository;
         readonly IAccountRepository _accountRepository;
@@ -43,6 +44,7 @@ namespace BuisnessLogic.Services
             _transactionTagRepository = transactionTagRepository;
         }
 
+        public async Task<List<Transaction>> GetAll(Guid userId) => (await _transactionRepository.GetAll(userId));
         public async Task AddCategory(Guid userId, Guid transactionId, Guid categoryId)
         {
             var transaction = await _transactionRepository.GetById(userId, transactionId);

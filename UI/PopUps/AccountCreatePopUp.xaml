@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
+    x:TypeArguments="entity:Account"
+    x:Class="UI.Popups.AddAccountPopup">
+
+    <Border Padding="20"
+            BackgroundColor="White"
+            WidthRequest="300">
+
+        <VerticalStackLayout Spacing="10">
+
+            <Label Text="Create Account"
+                   FontSize="20"
+                   FontAttributes="Bold"/>
+
+            <Entry x:Name="NameEntry"
+                   Placeholder="Account name"/>
+
+            <Entry x:Name="BalanceEntry"
+                   Placeholder="Balance"
+                   Keyboard="Numeric"/>
+
+            <HorizontalStackLayout Spacing="10">
+
+                <Button Text="Cancel"
+                        BackgroundColor="Gray"
+                        TextColor="White"
+                        Clicked="OnCancel"/>
+
+                <Button Text="Create"
+                        BackgroundColor="Green"
+                        TextColor="White"
+                        Clicked="OnCreate"/>
+
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+
+    </Border>
+
+</toolkit:Popup>

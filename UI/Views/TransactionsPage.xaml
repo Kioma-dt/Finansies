@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:UI.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
+             x:Class="UI.Views.TransactionsPage"
+             x:DataType="viewmodel:TransactionsViewModel"
+             Title="TransactionsPage">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+        EventName="Loaded"
+        Command="{Binding LoadCommand}"/>
+    </ContentPage.Behaviors>
+
+
+
+    <Grid ColumnDefinitions="250, *">
+
+
+        <Grid Grid.Column="0"
+          RowDefinitions="*, Auto"
+          Padding="10"
+          RowSpacing="10">
+
+                <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding Accounts}">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="entity:Account">
+                            <Label Text="{Binding Name}"
+                           Padding="10"
+                           TextColor="White"/>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+
+            <Button Grid.Row="1"
+                    Text="Add Account"
+                    Command="{Binding AddAccountCommand}"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="45"/>
+
+        </Grid>
+
+        <CollectionView Grid.Column="1"
+                        Grid.Row="1"
+                        ItemsSource="{Binding Transactions}">
+
+            <CollectionView.Header>
+                <Grid ColumnDefinitions="80,120,150,200,120,120,120"
+                      Padding="10"
+                      BackgroundColor="#2d2d2d">
+
+                    <Label Text="Amount" TextColor="White"/>
+                    <Label Text="Type" Grid.Column="1" TextColor="White"/>
+                    <Label Text="Date" Grid.Column="2" TextColor="White"/>
+                    <Label Text="Description" Grid.Column="3" TextColor="White"/>
+                    <Label Text="Account" Grid.Column="4" TextColor="White"/>
+                    <Label Text="Category" Grid.Column="5" TextColor="White"/>
+                    <Label Text="FamilyMember" Grid.Column="6" TextColor="White"/>
+
+                </Grid>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="entity:Transaction">
+                    <Grid ColumnDefinitions="80,120,150,200,120,120,120"
+                          Padding="10">
+
+                        <Label Text="{Binding Amount}" />
+                        <Label Text="{Binding Type}" Grid.Column="1"/>
+                        <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="2"/>
+                        <Label Text="{Binding Description}" Grid.Column="3"/>
+
+                        <Label Text="{Binding Account.Name}" Grid.Column="4"/>
+                        <Label Text="{Binding Category.Name, TargetNullValue='-'}" Grid.Column="5"/>
+                        <Label Text="{Binding FamilyMember.Name, TargetNullValue='-'}" Grid.Column="6"/>
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

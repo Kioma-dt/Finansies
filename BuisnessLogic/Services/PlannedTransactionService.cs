@@ -42,14 +42,14 @@ namespace BuisnessLogic.Services
     }
     public class PlannedTransactionService : IPlannedTransactionService
     {
-        readonly ITrasnsactionService _transactionService;
+        readonly ITransactionService _transactionService;
         readonly IAccountRepository _accountRepository;
         readonly ICategoryRepository _categoryRepository;
         readonly IFamilyMemberRepository _familyMemberRepository;
         readonly IPlannedTransactionRepository _plannedTransactionRepository;
         readonly ITransactionTagRepository _transactionTagRepository;
 
-        public PlannedTransactionService(ITrasnsactionService trasnsactionService, 
+        public PlannedTransactionService(ITransactionService trasnsactionService, 
             IPlannedTransactionRepository plannedTransactionRepository,
             IAccountRepository accountRepository,
             ICategoryRepository categoryRepository, 
