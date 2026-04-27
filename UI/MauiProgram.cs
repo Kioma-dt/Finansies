@@ -60,12 +60,14 @@ namespace UI
             //builder.Services.AddScoped<IUserService, UserService>();
 
 
-            builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<TransactionsViewModel>();
             builder.Services.AddSingleton<AccountViewModel>();
+            builder.Services.AddSingleton<CategoryViewModel>();
+            builder.Services.AddSingleton<MainPageViewModel>();
 
             builder.Services.AddSingleton<TransactionView>();
             builder.Services.AddSingleton<AccountView>();
+            builder.Services.AddSingleton<CategoryView>();
             builder.Services.AddSingleton<MainPage>();
 
             builder.Services.AddTransient<AccountCreatePopUp>();

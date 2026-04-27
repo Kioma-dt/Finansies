@@ -7,13 +7,30 @@
              x:Class="UI.Views.MainPage"
              x:DataType="viewmodel:MainPageViewModel"
              Title="MainPage">
-    <Grid ColumnDefinitions="250,*">
+    <Grid RowDefinitions="Auto,*"
+      ColumnDefinitions="*,*">
 
-        <ContentView Grid.Column="0"
-                     Content="{Binding AccountView}"/>
+        <HorizontalStackLayout Grid.Row="0"
+                           Grid.ColumnSpan="2"
+                           BackgroundColor="#1e1e1e"
+                           Padding="10"
+                           Spacing="10">
 
-        <ContentView Grid.Column="1" 
-                     Content="{Binding TransactionView}"/>
+            <Button Text="Transactions"
+                Command="{Binding ShowTransactionsCommand}" />
+
+            <Button Text="Categories"
+                Command="{Binding ShowCategoriesCommand}" />
+
+        </HorizontalStackLayout>
+        
+        <ContentView Grid.Row="1"
+                 Grid.Column="0"
+                 Content="{Binding LeftView}" />
+
+        <ContentView Grid.Row="1"
+                 Grid.Column="1"
+                 Content="{Binding RightView}" />
 
     </Grid>
 </ContentPage>

@@ -13,11 +13,23 @@ namespace DataAccess.RepositoriesImplementation
             _dbContext = dbContext;
         }
 
-        public async Task<List<Category>> GetAll(Guid userId)
+        public async Task<List<Category>?> GetAllScalar(Guid userId)
         {
             return await _dbContext.Categories
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
+        }
+
+        public async Task<List<Category>?> GetAll(Guid userId)
+        {
+            return await _dbContext.Categories
+            .Where(x => x.UserId == userId)
+            .Include(x => x.Parent)
+            .Include(x => x.Children)
+            .Include(x => x.Transactions)
+            .Include(x => x.PlannedTransactions)
+            .Include(x => x.Debts)
+            .ToListAsync();
         }
 
         public async Task Add(Category category)

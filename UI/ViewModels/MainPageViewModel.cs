@@ -22,23 +22,46 @@ namespace UI.ViewModels
     public partial class MainPageViewModel : ObservableObject
     {
         [ObservableProperty]
-        public partial AccountView AccountView { get; set; }
+        public partial AccountView LeftView { get; set; }
 
         [ObservableProperty]
-        public partial TransactionView TransactionView { get; set; }
+        public partial View RightView { get; set; }
 
-        public MainPageViewModel(AccountView accountView, TransactionView transactionView)
+
+        private readonly TransactionView _transactionView;
+        private readonly AccountView _accountView;
+        private readonly CategoryView _categoryView;
+
+        public MainPageViewModel(AccountView accountView, 
+            TransactionView transactionView,
+            CategoryView categoryView)
         {
-            AccountView = accountView;
-            TransactionView = transactionView;
+            _accountView = accountView;
+            _transactionView = transactionView;
+
+            LeftView = _accountView;
+            RightView = _transactionView;
+            _categoryView = categoryView;
+        }
+
+        [RelayCommand]
+        public void ShowTransactions()
+        {
+            RightView = _transactionView;
+        }
+
+        [RelayCommand]
+        public void ShowCategories()
+        {
+            RightView = _categoryView;
         }
 
         [RelayCommand]
         public async Task Load()
         {
-            await TransactionView.LoadContent();
+            await _transactionView.LoadContent();
 
-            await AccountView.LoadContent();
+            await _accountView.LoadContent();
         }
     }
 }
