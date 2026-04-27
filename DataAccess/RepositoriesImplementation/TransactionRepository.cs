@@ -71,7 +71,7 @@ namespace DataAccess.RepositoriesImplementation
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Transaction>?> GetWithSpecification(Guid userId, Expression<Func<Transaction, bool>> specification)
+        public async Task<List<Transaction>> GetWithSpecification(Guid userId, Expression<Func<Transaction, bool>> specification)
         {
             return await _dbContext.Transactions.Where(specification).ToListAsync();
         }
