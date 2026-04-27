@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
+            xmlns:viewmodel="clr-namespace:UI.ViewModels"
+            xmlns:converter="clr-namespace:UI.Converters"
+             x:Class="UI.Views.MainPage"
+             x:DataType="viewmodel:MainPageViewModel"
+             Title="MainPage">
+    <Grid ColumnDefinitions="250,*">
+
+        <ContentView Grid.Column="0"
+                     Content="{Binding AccountView}"/>
+
+        <ContentView Grid.Column="1" 
+                     Content="{Binding TransactionView}"/>
+
+    </Grid>
+</ContentPage>

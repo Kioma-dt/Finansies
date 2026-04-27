@@ -27,8 +27,6 @@ namespace UI.ViewModels
 
         public ObservableCollection<Transaction> Transactions { get; } = new();
 
-        [ObservableProperty]
-        public partial AccountView AccountView { get; set; }
 
         public TransactionsViewModel(
             ITransactionService transactionService,
@@ -37,8 +35,6 @@ namespace UI.ViewModels
         {
             _transactionService = transactionService;
             _user = user;
-
-            AccountView = accountView;
         }
 
         [RelayCommand]
@@ -49,8 +45,6 @@ namespace UI.ViewModels
             Transactions.Clear();
             foreach (var t in data)
                 Transactions.Add(t);
-
-            await AccountView.LoadContent();
         }
     }
 }

@@ -59,11 +59,14 @@ namespace UI
             builder.Services.AddSingleton<ITransferService, TransferService>();
             //builder.Services.AddScoped<IUserService, UserService>();
 
+
+            builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<TransactionsViewModel>();
             builder.Services.AddSingleton<AccountViewModel>();
 
-            builder.Services.AddSingleton<TransactionsPage>();
+            builder.Services.AddSingleton<TransactionView>();
             builder.Services.AddSingleton<AccountView>();
+            builder.Services.AddSingleton<MainPage>();
 
             builder.Services.AddTransient<AccountCreatePopUp>();
 

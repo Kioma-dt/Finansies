@@ -1,30 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:UI.ViewModels"
-             xmlns:view="clr-namespace:UI.Views"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
              xmlns:converter="clr-namespace:UI.Converters"
-             x:Class="UI.Views.TransactionsPage"
-             x:DataType="viewmodel:TransactionsViewModel"
-             Title="TransactionsPage">
-
-
-    <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior
-        EventName="Loaded"
-        Command="{Binding LoadCommand}"/>
-    </ContentPage.Behaviors>
+             x:Class="UI.Views.TransactionView"
+             x:DataType="viewmodel:TransactionsViewModel">
 
 
 
     <Grid ColumnDefinitions="250, *">
 
-
-        <ContentView x:Name="AccountsContainer"
-             Grid.Column="0"
-                     Content="{Binding AccountView}"/>
 
         <CollectionView Grid.Column="1"
                         Grid.Row="1"
@@ -67,4 +54,4 @@
         </CollectionView>
 
     </Grid>
-</ContentPage>
+</ContentView>
