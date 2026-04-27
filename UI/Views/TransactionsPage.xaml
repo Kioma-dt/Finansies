@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:UI.ViewModels"
+             xmlns:view="clr-namespace:UI.Views"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
              xmlns:converter="clr-namespace:UI.Converters"
@@ -9,11 +10,6 @@
              x:DataType="viewmodel:TransactionsViewModel"
              Title="TransactionsPage">
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <converter:IndentConverter x:Key="indentConverter"/>
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
@@ -26,48 +22,9 @@
     <Grid ColumnDefinitions="250, *">
 
 
-        <Grid Grid.Column="0"
-          RowDefinitions="*, Auto"
-          Padding="10"
-          RowSpacing="10">
-
-            <CollectionView Grid.Row="0"
-                 ItemsSource="{Binding FlatAccounts}">
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="viewmodel:AccountNode">
-
-                        <Grid ColumnDefinitions="*, Auto">
-
-                            <Grid Grid.Column="0"
-                                Padding="{Binding Level, Converter={StaticResource indentConverter}}">
-
-                                <Label Text="{Binding Account.Name}"
-                                   TextColor="White"
-                                 />
-
-                            </Grid>
-
-                            <Label Grid.Column="1"
-                                   HorizontalOptions="End"
-                                   Text="{Binding Account.TotalBalance}"/>
-                        </Grid>
-
-
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-
-            </CollectionView>
-
-            <Button Grid.Row="1"
-                    Text="Add Account"
-                    Command="{Binding AddAccountCommand}"
-                    BackgroundColor="#4CAF50"
-                    TextColor="White"
-                    CornerRadius="10"
-                    HeightRequest="45"/>
-
-        </Grid>
+        <ContentView x:Name="AccountsContainer"
+             Grid.Column="0"
+                     Content="{Binding AccountView}"/>
 
         <CollectionView Grid.Column="1"
                         Grid.Row="1"

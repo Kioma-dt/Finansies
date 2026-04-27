@@ -18,7 +18,13 @@ using UI.Popups;
 
 namespace UI.ViewModels
 {
-    public partial class AccountsViewModel : ObservableObject
+    public class AccountNode
+    {
+        public Account Account { get; set; } = null!;
+        public int Level { get; set; }
+    }
+
+    public partial class AccountViewModel : ObservableObject
     {
         private readonly IAccountService _accountService;
         private readonly IUserContext _user;
@@ -28,7 +34,7 @@ namespace UI.ViewModels
 
         public ObservableCollection<AccountNode> FlatAccounts { get; } = new();
 
-        public AccountsViewModel(
+        public AccountViewModel(
             IAccountService accountService,
             IUserContext user,
             AccountCreatePopUp popup)

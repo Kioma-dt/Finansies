@@ -77,10 +77,16 @@
 	  <Compile Update="PopUps\AccountCreatePopUp.xaml.cs">
 	    <DependentUpon>AccountCreatePopUp.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\AccountView.xaml.cs">
+	    <DependentUpon>AccountView.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <MauiXaml Update="PopUps\AccountCreatePopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\AccountView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\TransactionsPage.xaml">
