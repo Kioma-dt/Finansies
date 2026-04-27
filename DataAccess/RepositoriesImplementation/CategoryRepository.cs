@@ -13,6 +13,13 @@ namespace DataAccess.RepositoriesImplementation
             _dbContext = dbContext;
         }
 
+        public async Task<List<Category>> GetAll(Guid userId)
+        {
+            return await _dbContext.Categories
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
+        }
+
         public async Task Add(Category category)
         {
             await _dbContext.Categories.AddAsync(category);

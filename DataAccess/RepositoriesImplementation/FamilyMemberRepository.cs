@@ -13,6 +13,13 @@ namespace DataAccess.RepositoriesImplementation
             _dbContext = dbContext;
         }
 
+        public async Task<List<FamilyMember>> GetAll(Guid userId)
+        {
+            return await _dbContext.FamilyMembers
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
+        }
+
         public async Task Add(FamilyMember familyMember)
         {
             await _dbContext.FamilyMembers.AddAsync(familyMember);

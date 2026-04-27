@@ -12,6 +12,12 @@ namespace DataAccess.RepositoriesImplementation
         {
             _dbContext = dbContext;
         }
+        public async Task<List<Transfer>> GetAll(Guid userId)
+        {
+            return await _dbContext.Transfers
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
+        }
 
         public async Task Add(Transfer transfer)
         {

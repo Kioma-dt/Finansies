@@ -18,6 +18,13 @@ namespace DataAccess.RepositoriesImplementation
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<List<Budget>> GetAll(Guid userId)
+        {
+            return await _dbContext.Budgets
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
+        }
+
         public async Task<Budget?> GetById(Guid userId, Guid id)
         {
             return await _dbContext.Budgets
@@ -30,10 +37,13 @@ namespace DataAccess.RepositoriesImplementation
         {
             var budget = await GetById(userId, id);
 
+            
             if (budget is not null)
             {
                 budget.Filters.Add(filter);
             }
+
+            await _dbContext.BudgetFilters.AddAsync(filter);
 
             await _dbContext.SaveChangesAsync();
         }

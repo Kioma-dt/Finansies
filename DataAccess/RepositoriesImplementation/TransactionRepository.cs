@@ -20,9 +20,11 @@ namespace DataAccess.RepositoriesImplementation
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Transaction>?> GetAll(Guid userId)
+        public async Task<List<Transaction>> GetAll(Guid userId)
         {
-            return await _dbContext.Transactions.ToListAsync();
+            return await _dbContext.Transactions
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
         }
 
         public async Task<Transaction?> GetById(Guid userId, Guid id)

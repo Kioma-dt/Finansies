@@ -13,6 +13,13 @@ namespace DataAccess.RepositoriesImplementation
             _dbContext = dbContext;
         }
 
+        public async Task<List<Debt>> GetAll(Guid userId)
+        {
+            return await _dbContext.Debts
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
+        }
+
         public async Task Add(Debt debt)
         {
             await _dbContext.Debts.AddAsync(debt);
