@@ -71,6 +71,7 @@ namespace UI
             builder.Services.AddSingleton<MainPage>();
 
             builder.Services.AddTransient<AccountCreatePopUp>();
+            builder.Services.AddTransient<CategoryCreatePopUp>();
 
 #if DEBUG
             builder.Logging.AddDebug();

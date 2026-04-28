@@ -32,6 +32,9 @@ namespace UI.ViewModels
 
         private List<Account> _accounts = new();
 
+        [ObservableProperty]
+        public partial bool IsLoaded { get; set; } = false;
+
         public ObservableCollection<AccountNode> FlatAccounts { get; } = new();
 
         public AccountViewModel(
@@ -39,6 +42,7 @@ namespace UI.ViewModels
             IUserContext user,
             AccountCreatePopUp popup)
         {
+
             _accountService = accountService;
             _user = user;
             _popup = popup;

@@ -33,7 +33,7 @@
                         </Grid>
 
                         <Label Grid.Column="1"
-                               Text="{Binding Account.Balance}"
+                               Text="{Binding Account.TotalBalance}"
                                TextColor="LightGreen"
                                HorizontalOptions="End"/>
                     </Grid>

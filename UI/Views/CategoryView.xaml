@@ -16,31 +16,78 @@
           Padding="10"
           RowSpacing="10">
 
-        <CollectionView Grid.Row="0"
-                        ItemsSource="{Binding FlatCategories}">
+        <Grid Grid.Row="0" 
+            RowDefinitions="Auto,*">
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="viewmodel:CategoryNode">
+            <Grid ColumnDefinitions="2*, 3*, Auto, Auto"
+              Padding="10"
+              BackgroundColor="#2d2d2d">
 
-                    <Grid ColumnDefinitions="*">
+                <Label Text="Name"
+               TextColor="White"
+               FontAttributes="Bold"/>
 
-                        <Grid Padding="{Binding Level, Converter={StaticResource indentConverter}}">
+                <Label Grid.Column="1"
+               Text="Description"
+               TextColor="White"
+               FontAttributes="Bold"/>
 
-                            <Label Text="{Binding Category.Name}"
-                                   TextColor="White"/>
+                <Label Grid.Column="2"
+               Text="Count"
+               TextColor="White"
+               FontAttributes="Bold"/>
+
+                <Label Grid.Column="3"
+               Text="Total"
+               TextColor="White"
+               FontAttributes="Bold"/>
+            </Grid>
+
+
+            <CollectionView Grid.Row="1"
+                    ItemsSource="{Binding FlatCategories}">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="viewmodel:CategoryNode">
+
+                        <Grid ColumnDefinitions="2*, 3*, Auto, Auto">
+
+
+                            <Label Grid.Column="0" 
+                                Text="{Binding Category.Name}"
+                               TextColor="White"
+                                Padding="{Binding Level, Converter={StaticResource indentConverter}}"/> 
+
+
+                            <Label Grid.Column="1"
+                               Text="{Binding Category.Description}"
+                               TextColor="Gray"
+                               LineBreakMode="TailTruncation"/>
+
+
+                            <Label Grid.Column="2"
+                               Text="{Binding Category.Transactions.Count}"
+                               TextColor="LightBlue"
+                               HorizontalTextAlignment="End"/>
+
+
+                            <Label Grid.Column="3"
+                               Text="{Binding Category.TransactionsSum}"
+                               TextColor="LightGreen"
+                               HorizontalTextAlignment="End"/>
 
                         </Grid>
 
-                    </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
 
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+            </CollectionView>
 
-        </CollectionView>
+        </Grid>
 
         <Button Grid.Row="1"
                 Text="Add Category"
-                Command="{Binding LoadCommand}" 
+                Command="{Binding AddCategoryCommand}" 
             BackgroundColor="#2196F3"
                 TextColor="White"
                 CornerRadius="10"

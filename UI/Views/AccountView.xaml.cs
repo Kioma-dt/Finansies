@@ -13,10 +13,11 @@ public partial class AccountView : ContentView
 		//viewModel.LoadCommand.ExecuteAsync(null);
 	}
 
-	public async Task LoadContent()
-	{
-        if (BindingContext is AccountViewModel vm)
+    public async Task LoadContent()
+    {
+        if (BindingContext is AccountViewModel vm && !vm.IsLoaded)
         {
+            vm.IsLoaded = true;
             await vm.LoadCommand.ExecuteAsync(null);
         }
     }

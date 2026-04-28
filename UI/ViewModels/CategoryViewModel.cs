@@ -1,4 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using BuisnessLogic.Entities;
+using BuisnessLogic.Repositories;
+using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -6,9 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using BuisnessLogic.Repositories;
-using BuisnessLogic.Entities;
+using UI.Popups;
 
 namespace UI.ViewModels
 {
@@ -22,17 +24,24 @@ namespace UI.ViewModels
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserContext _user;
+        private readonly CategoryCreatePopUp _categoryCreatePopUp;
 
         private List<Category> _categories = new();
 
+
         public ObservableCollection<CategoryNode> FlatCategories { get; } = new();
+
+        [ObservableProperty]
+        public partial bool IsLoaded { get; set; } = false;
 
         public CategoryViewModel(
             ICategoryRepository categoryRepository,
-            IUserContext user)
+            IUserContext user,
+            CategoryCreatePopUp categoryCreatePopUp)
         {
             _categoryRepository = categoryRepository;
             _user = user;
+            _categoryCreatePopUp = categoryCreatePopUp;
         }
 
         [RelayCommand]
@@ -42,6 +51,27 @@ namespace UI.ViewModels
 
             BuildTree();
         }
+
+        [RelayCommand]
+        public async Task AddCategory()
+        {
+            var result = await Application.Current.MainPage
+                .ShowPopupAsync<Category?>(_categoryCreatePopUp);
+
+            var category = result.Result;
+
+            if (category is null)
+                return;
+
+            category.UserId = _user.UserId;
+
+            await _categoryRepository.Add(category);
+
+            _categories.Add(category);
+
+            BuildTree();
+        }
+
 
         private void BuildTree()
         {

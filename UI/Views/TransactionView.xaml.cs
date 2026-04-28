@@ -11,11 +11,11 @@ public partial class TransactionView : ContentView
         BindingContext = viewModel;
     }
 
-
     public async Task LoadContent()
     {
-        if (BindingContext is TransactionsViewModel vm)
+        if (BindingContext is TransactionsViewModel vm && !vm.IsLoaded)
         {
+            vm.IsLoaded = true;
             await vm.LoadCommand.ExecuteAsync(null);
         }
     }

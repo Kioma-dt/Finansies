@@ -22,7 +22,7 @@ namespace UI.ViewModels
     public partial class MainPageViewModel : ObservableObject
     {
         [ObservableProperty]
-        public partial AccountView LeftView { get; set; }
+        public partial View LeftView { get; set; }
 
         [ObservableProperty]
         public partial View RightView { get; set; }
@@ -60,8 +60,8 @@ namespace UI.ViewModels
         public async Task Load()
         {
             await _transactionView.LoadContent();
-
             await _accountView.LoadContent();
+            await _categoryView.LoadContent();
         }
     }
 }

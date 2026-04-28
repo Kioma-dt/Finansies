@@ -17,5 +17,25 @@
 
         public Guid UserId { get; set; }
         public User? User { get; set; }
+
+        public decimal TransactionsSum
+        {
+            get
+            {
+                var sum = 0m;
+
+                foreach (var transaction in Transactions)
+                {
+                    sum += transaction.SignedAmount;
+                }
+
+                foreach (var child in Children)
+                {
+                    sum += child.TransactionsSum;
+                }
+
+                return sum;
+            }
+        }
     }
 }

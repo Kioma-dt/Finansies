@@ -10,11 +10,11 @@
 
 
 
-    <Grid ColumnDefinitions="250, *">
+    <Grid ColumnDefinitions="*">
 
 
-        <CollectionView Grid.Column="1"
-                        Grid.Row="1"
+        <CollectionView Grid.Column="0"
+                        Grid.Row="0"
                         ItemsSource="{Binding Transactions}">
 
             <CollectionView.Header>

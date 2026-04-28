@@ -4,56 +4,56 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
-    x:TypeArguments="entity:Account"
-    x:Class="UI.Popups.AccountCreatePopUp">
+    x:TypeArguments="entity:Category"
+    x:Class="UI.Popups.CategoryCreatePopUp">
 
-    <Border Padding="20"
+        <Border Padding="20"
             BackgroundColor="White"
             WidthRequest="320"
             Stroke="LightGray"
             StrokeThickness="1">
 
-        <VerticalStackLayout Spacing="12">
+            <VerticalStackLayout Spacing="12">
 
-            <Label Text="Create Account"
+                <Label Text="Create Category"
                    FontSize="20"
                    FontAttributes="Bold"
                    TextColor="Black"/>
 
-            <Entry x:Name="NameEntry"
-                   Placeholder="Account name"
+                <Entry x:Name="NameEntry"
+                   Placeholder="Category name"
                    TextColor="Black"
                    PlaceholderColor="Gray"/>
 
-            <Entry x:Name="BalanceEntry"
-                   Placeholder="Balance"
-                   Keyboard="Numeric"
+                <Entry x:Name="DescriptionEntry"
+                   Placeholder="Category description"
                    TextColor="Black"
                    PlaceholderColor="Gray"/>
 
-            <Picker x:Name="ParentPicker"
-                    Title="Select parent account"
+
+                <Picker x:Name="ParentPicker"
+                    Title="Select parent category"
                     TextColor="Black"
                     TitleColor="Gray"/>
 
-            <HorizontalStackLayout Spacing="10">
+                <HorizontalStackLayout Spacing="10">
 
-                <Button Text="Cancel"
+                    <Button Text="Cancel"
                         BackgroundColor="#9E9E9E"
                         TextColor="White"
                         CornerRadius="8"
                         Clicked="OnCancel"/>
 
-                <Button Text="Create"
+                    <Button Text="Create"
                         BackgroundColor="#4CAF50"
                         TextColor="White"
                         CornerRadius="8"
                         Clicked="OnCreate"/>
 
-            </HorizontalStackLayout>
+                </HorizontalStackLayout>
 
-        </VerticalStackLayout>
+            </VerticalStackLayout>
 
-    </Border>
+        </Border>
 
 </toolkit:Popup>
