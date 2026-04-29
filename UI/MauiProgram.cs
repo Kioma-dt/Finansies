@@ -3,6 +3,7 @@ using UI.ViewModels;
 using UI.Popups;
 using BuisnessLogic.Repositories;
 using BuisnessLogic.Services;
+using DataAccess.DbProxy;
 using CommunityToolkit.Maui;
 using DataAccess;
 using DataAccess.RepositoriesImplementation;
@@ -37,26 +38,26 @@ namespace UI
 
             builder.Services.AddSingleton<IUserContext, UserContext>();
 
-            builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
-            builder.Services.AddSingleton<IBudgetRepository, BudgetRepository>();
-            builder.Services.AddSingleton<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddSingleton<IDebtRepository, DebtRepository>();
-            builder.Services.AddSingleton<IFamilyMemberRepository, FamilyMemberRepository>();
-            builder.Services.AddSingleton<ITransactionRepository, TransactionRepository>();
-            builder.Services.AddSingleton<IPlannedTransactionRepository, PlannedTransactionRepository>();
-            builder.Services.AddSingleton<ITransactionTagRepository, TransactionTagRepository>();
-            builder.Services.AddSingleton<ITransferRepository, TransferRepository>();
-            builder.Services.AddSingleton<IUserRepository, UserRepository>();
+            builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+            builder.Services.AddTransient<IBudgetRepository, BudgetRepository>();
+            builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddTransient<IDebtRepository, DebtRepository>();
+            builder.Services.AddTransient<IFamilyMemberRepository, FamilyMemberRepository>();
+            builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
+            builder.Services.AddTransient<IPlannedTransactionRepository, PlannedTransactionRepository>();
+            builder.Services.AddTransient<ITransactionTagRepository, TransactionTagRepository>();
+            builder.Services.AddTransient<ITransferRepository, TransferRepository>();
+            builder.Services.AddTransient<IUserRepository, UserRepository>();
 
-            builder.Services.AddSingleton<IAccountService, AccountService>();
-            builder.Services.AddSingleton<IBudgetService, BudgetService>();
+            builder.Services.AddTransient<IAccountService, AccountService>();
+            builder.Services.AddTransient<IBudgetService, BudgetService>();
             //builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddSingleton<IDebtService, DebtService>();
+            builder.Services.AddTransient<IDebtService, DebtService>();
             //builder.Services.AddScoped<IFamilyMemberService, FamilyMemberService>();
-            builder.Services.AddSingleton<ITransactionService, TransactionService>();
-            builder.Services.AddSingleton<IPlannedTransactionService, PlannedTransactionService>();
+            builder.Services.AddTransient<ITransactionService, TransactionService>();
+            builder.Services.AddTransient<IPlannedTransactionService, PlannedTransactionService>();
             //builder.Services.AddScoped<ITransactionTagService, TransactionTagService>();
-            builder.Services.AddSingleton<ITransferService, TransferService>();
+            builder.Services.AddTransient<ITransferService, TransferService>();
             //builder.Services.AddScoped<IUserService, UserService>();
 
 

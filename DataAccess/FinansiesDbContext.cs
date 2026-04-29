@@ -7,17 +7,17 @@ namespace DataAccess
     public class FinansiesDbContext(DbContextOptions<FinansiesDbContext> options)
         :DbContext(options) 
     {
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<Budget> Budgets { get; set; }
-        public DbSet<BudgetFilter> BudgetFilters { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Debt> Debts { get; set; }
-        public DbSet<FamilyMember> FamilyMembers { get; set; }
-        public DbSet<PlannedTransaction> PlannedTransactions { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<TransactionTag> TransactionTags { get; set; }
-        public DbSet<Transfer> Transfers { get; set; }
-        public DbSet<User> Users { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Budget> Budgets { get; set; }
+        public virtual DbSet<BudgetFilter> BudgetFilters { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Debt> Debts { get; set; }
+        public virtual DbSet<FamilyMember> FamilyMembers { get; set; }
+        public virtual DbSet<PlannedTransaction> PlannedTransactions { get; set; }
+        public virtual DbSet<Transaction> Transactions { get; set; }
+        public virtual DbSet<TransactionTag> TransactionTags { get; set; }
+        public virtual DbSet<Transfer> Transfers { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
