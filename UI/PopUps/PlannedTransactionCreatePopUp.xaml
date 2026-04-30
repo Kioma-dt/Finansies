@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+ <toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:dto="clr-namespace:UI.Popups"
+    x:TypeArguments="dto:PlannedTransactionCreateDTO"
+    x:Class="UI.Popups.PlannedTransactionCreatePopUp">
+
+    <Grid RowDefinitions="*, Auto"
+          ColumnDefinitions="*, *">
+
+        <Border Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Padding="20"
+                BackgroundColor="White"
+                WidthRequest="340">
+
+            <ScrollView>
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Create Planned Transaction"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="Black"/>
+
+                    <Entry x:Name="AmountEntry"
+                           Placeholder="Amount"
+                           Keyboard="Numeric"
+                           TextColor="Black"/>
+
+                    <Entry x:Name="DescriptionEntry"
+                           Placeholder="Description"
+                           TextColor="Black"/>
+
+                    <Picker x:Name="TypePicker"
+                            Title="Transaction Type"
+                            TextColor="Black"/>
+
+                    <DatePicker x:Name="StartDatePicker"
+                                TextColor="Black"/>
+
+                    <Picker x:Name="PeriodPicker"
+                            Title="Periodicity"
+                            SelectedIndexChanged="OnPeriodChanged"
+                            TextColor="Black"/>
+
+                    <Entry x:Name="CountEntry"
+                           Placeholder="Count"
+                           Keyboard="Numeric"
+                           TextColor="Black"/>
+
+                    <Picker x:Name="AccountPicker"
+                            Title="Account"
+                            TextColor="Black"/>
+
+                    <Picker x:Name="CategoryPicker"
+                            Title="Category"
+                            TextColor="Black"/>
+
+                    <Picker x:Name="FamilyPicker"
+                            Title="Family Member"
+                            TextColor="Black"/>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+        </Border>
+
+        <Button Grid.Row="1"
+                Text="Cancel"
+                BackgroundColor="#9E9E9E"
+                Clicked="OnCancel"/>
+
+        <Button Grid.Row="1"
+                Grid.Column="1"
+                Text="Create"
+                BackgroundColor="#4CAF50"
+                Clicked="OnCreate"/>
+
+    </Grid>
+</toolkit:Popup>

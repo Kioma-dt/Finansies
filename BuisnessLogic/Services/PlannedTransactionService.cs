@@ -11,11 +11,27 @@ namespace BuisnessLogic.Services
 {
     public interface IPlannedTransactionService
     {
+        Task<List<PlannedTransaction>> GetAll(Guid userId);
         Task PlanTransaction(Guid userId,
             decimal amount,
             string description,
+            TransactionType type,
             DateTime plannedDate,
-            TransactionType type);
+            Guid? accountId,
+            Guid? categoryId,
+            Guid? familyMemberId);
+
+        public Task PlanMultipleTransactions(Guid userId,
+            decimal amount,
+            string description,
+            TransactionType type,
+            DateTime startDate,
+            TransactionPeriodicity periodicy,
+            uint numberOfTransactions,
+            Guid? accountId,
+            Guid? categoryId,
+            Guid? familyMemberId
+            );
 
         Task ConfirmTransaction(Guid userId,
             Guid plannedTransactionId,
@@ -63,6 +79,8 @@ namespace BuisnessLogic.Services
             _familyMemberRepository = familyMemberRepository;
             _transactionTagRepository = transactionTagRepository;
         }
+
+        public async Task<List<PlannedTransaction>> GetAll(Guid userId) => await _plannedTransactionRepository.GetAll(userId);
 
         public async Task AddAccount(Guid userId, Guid plannedTransactionId, Guid accountId)
         {
@@ -169,11 +187,17 @@ namespace BuisnessLogic.Services
 
         public async Task ConfirmTransaction(Guid userId, Guid plannedTransactionId, DateTime date)
         {
+
             var plannedTransaction = await _plannedTransactionRepository.GetById(userId, plannedTransactionId);
 
             if (plannedTransaction is null)
             {
                 throw new ArgumentException($"No Planned Transaction with Id: {plannedTransactionId}");
+            }
+
+            if (plannedTransaction.Status == PlannedTransactionStatus.Confirmed)
+            {
+                throw new ArgumentException($"No Planned Transaction is Already Confirmed: {plannedTransaction.Description}");
             }
 
 
@@ -197,17 +221,49 @@ namespace BuisnessLogic.Services
             await _plannedTransactionRepository.Update(plannedTransaction);
         }
 
-        public async Task PlanTransaction(Guid userId, decimal amount, string description, DateTime plannedDate, TransactionType type)
+        public async Task PlanTransaction(Guid userId, decimal amount, string description, TransactionType type, DateTime plannedDate,
+            Guid? accountId,
+            Guid? categoryId,
+            Guid? familyMemberId)
         {
             var planedTransaction = new PlannedTransaction()
             {
                 Amount = amount,
                 Description = description,
                 Type = type,
-                PlannedDate = plannedDate
+                PlannedDate = plannedDate,
+                AccountId = accountId,
+                CategoryId = categoryId,
+                FamilyMemberId = familyMemberId,
+                UserId = userId
             };
 
             await _plannedTransactionRepository.Add(planedTransaction);
+        }
+
+        public async Task PlanMultipleTransactions(Guid userId,
+            decimal amount,
+            string description,
+            TransactionType type,
+            DateTime startDate,
+            TransactionPeriodicity periodicy,
+            uint numberOfTransactions,
+            Guid? accountId,
+            Guid? categoryId,
+            Guid? familyMemberId)
+        {
+            for (int i = 0; i < numberOfTransactions; i++)
+            {
+                await this.PlanTransaction(userId, amount, description, type, startDate, accountId, categoryId, familyMemberId);
+
+                startDate = periodicy switch
+                {
+                    TransactionPeriodicity.Daily => startDate.AddDays(1),
+                    TransactionPeriodicity.Monthly => startDate.AddMonths(1),
+                    TransactionPeriodicity.Yearly => startDate.AddYears(1),
+                    _ => startDate,
+                };
+            }
         }
 
         public async Task UpdatePlannedTransaction(Guid userId, Guid plannedTransactionId, DateTime date)

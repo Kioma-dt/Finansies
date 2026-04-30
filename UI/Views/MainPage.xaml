@@ -22,6 +22,9 @@
             <Button Text="Categories"
                 Command="{Binding ShowCategoriesCommand}" />
 
+            <Button Text="Plan Transactions"
+                Command="{Binding ShowPlannedTransactionsCommand}" />
+
             <Button Text="Create Transactiom"
                 Command="{Binding CreateTransactionCommand}" />
 

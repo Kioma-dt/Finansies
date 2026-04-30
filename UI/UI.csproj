@@ -74,6 +74,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="PopUps\PlannedTransactionCreatePopUp.xaml.cs">
+	    <DependentUpon>PlannedTransactionCreatePopUp.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="PopUps\TransactionCreatePopUp.xaml.cs">
 	    <DependentUpon>TransactionCreatePopUp.xaml</DependentUpon>
 	  </Compile>
@@ -83,12 +86,18 @@
 	  <Compile Update="Views\AccountView.xaml.cs">
 	    <DependentUpon>AccountView.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\PlannedTransactionView.xaml.cs">
+	    <DependentUpon>PlannedTransactionView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\TransactionView.xaml.cs">
 	    <DependentUpon>TransactionView.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="PopUps\PlannedTransactionCreatePopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="PopUps\TransactionCreatePopUp.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -105,6 +114,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\PlannedTransactionView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\TransactionView.xaml">

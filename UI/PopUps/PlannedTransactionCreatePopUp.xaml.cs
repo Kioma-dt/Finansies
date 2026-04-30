@@ -1,0 +1,168 @@
+using BuisnessLogic.Entities;
+using BuisnessLogic.Enums;
+using BuisnessLogic.Repositories;
+using CommunityToolkit.Maui.Views;
+
+namespace UI.Popups;
+
+
+public class PlannedTransactionCreateDTO(decimal Amount,
+    string Description,
+    TransactionType Type,
+    Guid? AccountId,
+    Guid? CategoryId,
+    Guid? FamilyMemberId,
+    DateTime StartDate,
+    TransactionPeriodicity Periodicity,
+    uint Count)
+{
+    public decimal Amount { get; } = Amount;
+    public string Description { get; } = Description;
+    public TransactionType Type { get; } = Type;
+    public Guid? AccountId { get; } = AccountId;
+    public Guid? CategoryId { get; } = CategoryId;
+    public Guid? FamilyMemberId { get; } = FamilyMemberId;
+    public DateTime StartDate { get; } = StartDate;
+    public TransactionPeriodicity Periodicity { get; } = Periodicity;
+    public uint Count { get; } = Count;
+}
+
+public partial class PlannedTransactionCreatePopUp : Popup<PlannedTransactionCreateDTO?>
+{
+    readonly IAccountRepository _accountRepository;
+    readonly ICategoryRepository _categoryRepository;
+    readonly IFamilyMemberRepository _familyRepository;
+    readonly IUserContext _user;
+
+    List<Account> Accounts = new();
+    List<Category> Categories = new();
+    List<FamilyMember> Families = new();
+
+    public PlannedTransactionCreatePopUp(
+        IAccountRepository accountRepository,
+        ICategoryRepository categoryRepository,
+        IFamilyMemberRepository familyRepository,
+        IUserContext user)
+    {
+        InitializeComponent();
+
+        _accountRepository = accountRepository;
+        _categoryRepository = categoryRepository;
+        _familyRepository = familyRepository;
+        _user = user;
+
+        Loaded += OnLoad;
+    }
+
+    private async void OnLoad(object sender, EventArgs e)
+    {
+        Clear();
+
+        var userId = _user.UserId;
+
+        Accounts = await _accountRepository.GetAllScalar(userId) ?? new();
+        Categories = await _categoryRepository.GetAllScalar(userId) ?? new();
+        Families = await _familyRepository.GetAllScalar(userId) ?? new();
+
+        TypePicker.ItemsSource = Enum.GetValues(typeof(TransactionType));
+        TypePicker.SelectedItem = TransactionType.Expense;
+
+        PeriodPicker.ItemsSource = Enum.GetValues(typeof(TransactionPeriodicity));
+        PeriodPicker.SelectedItem = TransactionPeriodicity.Once;
+
+        AccountPicker.ItemsSource = Accounts;
+        AccountPicker.ItemDisplayBinding = new Binding("Name");
+        AccountPicker.SelectedIndex = 0;
+
+        Categories.Insert(0, new Category { Id = Guid.Empty, Name = "-No Category-" });
+        CategoryPicker.ItemsSource = Categories;
+        CategoryPicker.ItemDisplayBinding = new Binding("Name");
+        CategoryPicker.SelectedIndex = 0;
+
+        Families.Insert(0, new FamilyMember { Id = Guid.Empty, Name = "-No Member-" });
+        FamilyPicker.ItemsSource = Families;
+        FamilyPicker.ItemDisplayBinding = new Binding("Name");
+        FamilyPicker.SelectedIndex = 0;
+
+        StartDatePicker.Date = DateTime.Now;
+        CountEntry.Text = "1";
+        CountEntry.IsEnabled = false;
+    }
+
+    private void OnPeriodChanged(object sender, EventArgs e)
+    {
+        var period = (TransactionPeriodicity)PeriodPicker.SelectedItem;
+
+        if (period == TransactionPeriodicity.Once)
+        {
+            CountEntry.Text = "1";
+            CountEntry.IsEnabled = false;
+        }
+        else
+        {
+            CountEntry.IsEnabled = true;
+        }
+    }
+
+    private async void OnCancel(object sender, EventArgs e)
+    {
+        await CloseAsync(null);
+    }
+
+    private async void OnCreate(object sender, EventArgs e)
+    {
+        var amount = decimal.Parse(AmountEntry.Text);
+        var description = DescriptionEntry.Text ?? "";
+
+        var type = (TransactionType)TypePicker.SelectedItem;
+        var period = (TransactionPeriodicity)PeriodPicker.SelectedItem;
+
+        TimeSpan timeSpan = period switch
+        {
+            TransactionPeriodicity.Daily => TimeSpan.FromDays(1),
+
+            TransactionPeriodicity.Monthly => TimeSpan.FromDays(30),
+            TransactionPeriodicity.Yearly => TimeSpan.FromDays(365),
+
+            TransactionPeriodicity.Once => TimeSpan.Zero,
+
+            _ => throw new ArgumentOutOfRangeException(nameof(period), period, null)
+        };
+
+        var count = uint.Parse(CountEntry.Text);
+        if (period == TransactionPeriodicity.Once)
+            count = 1;
+
+        var account = AccountPicker.SelectedItem as Account;
+        var category = CategoryPicker.SelectedItem as Category;
+        var family = FamilyPicker.SelectedItem as FamilyMember;
+
+        var planned = new PlannedTransactionCreateDTO
+        (
+            Amount: amount,
+            Description: description,
+            Type: type,
+
+            StartDate: StartDatePicker.Date,
+            Periodicity: period,
+            Count: count,
+
+            AccountId: account!.Id,
+            CategoryId: category?.Id == Guid.Empty ? null : category?.Id,
+            FamilyMemberId: family?.Id == Guid.Empty ? null : family?.Id
+        );
+
+        await CloseAsync(planned);
+    }
+
+    private void Clear()
+    {
+        AmountEntry.Text = "";
+        DescriptionEntry.Text = "";
+
+        StartDatePicker.Date = DateTime.Now;
+
+        CountEntry.Text = "1";
+        CountEntry.IsEnabled = false;
+    }
+}

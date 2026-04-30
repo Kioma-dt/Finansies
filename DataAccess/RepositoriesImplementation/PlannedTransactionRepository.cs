@@ -19,6 +19,20 @@ namespace DataAccess.RepositoriesImplementation
 
             return await db.PlannedTransactions
                 .Where(x => x.UserId == userId)
+                .Include(x => x.Account)
+                .Include(x => x.Category)
+                .Include(x => x.FamilyMember)
+                .Include(x => x.TransactionTags)
+                .Include(x => x.User)
+                .ToListAsync();
+        }
+
+        public async Task<List<PlannedTransaction>> GetAllScalar(Guid userId)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.PlannedTransactions
+                .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
 
@@ -121,6 +135,7 @@ namespace DataAccess.RepositoriesImplementation
 
             await db.SaveChangesAsync();
         }
+
     }
 
 }

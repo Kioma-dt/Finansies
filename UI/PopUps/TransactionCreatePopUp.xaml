@@ -57,8 +57,7 @@
                             Title="Select category"
                             TextColor="Black"
                             TitleColor="Gray"/>
-
-                    <!-- Family member -->
+                    
                     <Picker x:Name="FamilyMemberPicker"
                             Title="Select family member"
                             TextColor="Black"

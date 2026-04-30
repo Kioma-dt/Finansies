@@ -34,6 +34,7 @@ namespace UI.ViewModels
 
 
         private readonly TransactionView _transactionView;
+        private readonly PlannedTransactionView _plannedTransactionView;
         private readonly AccountView _accountView;
         private readonly CategoryView _categoryView;
 
@@ -42,6 +43,7 @@ namespace UI.ViewModels
             TransactionCreatePopUp transactionCreatePopUp,
             AccountView accountView, 
             TransactionView transactionView,
+            PlannedTransactionView plannedTransactionView,
             CategoryView categoryView)
         {
             _user = user;
@@ -50,6 +52,7 @@ namespace UI.ViewModels
 
             _accountView = accountView;
             _transactionView = transactionView;
+            _plannedTransactionView = plannedTransactionView;
             _categoryView = categoryView;
 
             LeftView = _accountView;
@@ -66,6 +69,12 @@ namespace UI.ViewModels
         public void ShowCategories()
         {
             RightView = _categoryView;
+        }
+
+        [RelayCommand]
+        public void ShowPlannedTransactions()
+        {
+            RightView = _plannedTransactionView;
         }
 
         [RelayCommand]

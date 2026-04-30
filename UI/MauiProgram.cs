@@ -58,18 +58,23 @@ namespace UI
 
 
             builder.Services.AddSingleton<TransactionsViewModel>();
+            builder.Services.AddSingleton<PlannedTransactionsViewModel>();
             builder.Services.AddSingleton<AccountViewModel>();
             builder.Services.AddSingleton<CategoryViewModel>();
+
             builder.Services.AddSingleton<MainPageViewModel>();
 
             builder.Services.AddSingleton<TransactionView>();
+            builder.Services.AddSingleton<PlannedTransactionView>();
             builder.Services.AddSingleton<AccountView>();
             builder.Services.AddSingleton<CategoryView>();
+
             builder.Services.AddSingleton<MainPage>();
 
             builder.Services.AddTransient<AccountCreatePopUp>();
             builder.Services.AddTransient<CategoryCreatePopUp>();
             builder.Services.AddTransient<TransactionCreatePopUp>();
+            builder.Services.AddTransient<PlannedTransactionCreatePopUp>();
 
 #if DEBUG
             builder.Logging.AddDebug();

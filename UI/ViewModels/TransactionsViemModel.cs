@@ -64,8 +64,7 @@ namespace UI.ViewModels
         public TransactionsViewModel(
             ITransactionService transactionService,
             ICategoryRepository categoryRepository,
-            IUserContext user,
-            AccountView accountView)
+            IUserContext user)
         {
             _transactionService = transactionService;
             _categoryRepository = categoryRepository;
@@ -135,14 +134,5 @@ namespace UI.ViewModels
         //}
 
 
-        //[RelayCommand]
-        //public async Task Load()
-        //{
-        //    var data = await _transactionService.GetAll(_user.UserId);
-
-        //    Transactions.Clear();
-        //    foreach (var t in data)
-        //        Transactions.Add(t);
-        //}
     }
 }
