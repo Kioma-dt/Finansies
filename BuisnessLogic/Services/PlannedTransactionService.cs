@@ -188,7 +188,9 @@ namespace BuisnessLogic.Services
                 plannedTransaction.Description,
                 date,
                 plannedTransaction.Type,
-                plannedTransaction.AccountId.Value
+                plannedTransaction.AccountId.Value,
+                plannedTransaction.CategoryId,
+                plannedTransaction.FamilyMemberId
             );
 
             plannedTransaction.Conirm();

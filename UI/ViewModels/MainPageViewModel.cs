@@ -22,6 +22,10 @@ namespace UI.ViewModels
 {
     public partial class MainPageViewModel : ObservableObject
     {
+        private readonly IUserContext _user;
+        private readonly ITransactionService _transactionService;
+        private readonly TransactionCreatePopUp _transctionCreatePopUp;
+
         [ObservableProperty]
         public partial View LeftView { get; set; }
 
@@ -33,16 +37,23 @@ namespace UI.ViewModels
         private readonly AccountView _accountView;
         private readonly CategoryView _categoryView;
 
-        public MainPageViewModel(AccountView accountView, 
+        public MainPageViewModel( IUserContext user,
+            ITransactionService transactionService,
+            TransactionCreatePopUp transactionCreatePopUp,
+            AccountView accountView, 
             TransactionView transactionView,
             CategoryView categoryView)
         {
+            _user = user;
+            _transactionService = transactionService;
+            _transctionCreatePopUp = transactionCreatePopUp;
+
             _accountView = accountView;
             _transactionView = transactionView;
+            _categoryView = categoryView;
 
             LeftView = _accountView;
             RightView = _transactionView;
-            _categoryView = categoryView;
         }
 
         [RelayCommand]
@@ -58,14 +69,40 @@ namespace UI.ViewModels
         }
 
         [RelayCommand]
+        public async Task CreateTransaction()
+        {
+            try
+            {
+                var result = await Application.Current.MainPage
+                .ShowPopupAsync<Transaction?>(_transctionCreatePopUp);
+
+                var transaction = result.Result;
+
+                if (transaction is null)
+                    return;
+
+                await _transactionService.RegsiterTransaction(_user.UserId,
+                    transaction.Amount,
+                    transaction.Description,
+                    transaction.Date,
+                    transaction.Type,
+                    transaction.AccountId,
+                    transaction.CategoryId,
+                    transaction.FamilyMemberId);
+
+                WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
+                WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Transactions));
+            }
+            catch (ArgumentException ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Can't create Transaction", $"{ex.Message}", "OK");
+            }
+
+        }
+
+        [RelayCommand]
         public void Load()
         {
-            //var t1 = _transactionView.LoadContent();
-            //var t2 = _accountView.LoadContent();
-            //var t3 = _categoryView.LoadContent();
-
-            //await Task.WhenAll(t1, t2, t3);
-
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Init));
         }
     }

@@ -1,5 +1,6 @@
 ﻿using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
+using BuisnessLogic.Repositories;
 using BuisnessLogic.Services;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm;
@@ -20,10 +21,18 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
+    public class TransactionNode
+    {
+        public Category Category { get; set; } = null!;
+        public int Level { get; set; }
+
+        public List<Transaction> Transactions { get; set; } = new();
+    }
 
     public partial class TransactionsViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
     {
         private readonly ITransactionService _transactionService;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IUserContext _user;
 
         public ObservableCollection<Transaction> Transactions { get; } = new();
@@ -33,10 +42,12 @@ namespace UI.ViewModels
 
         public TransactionsViewModel(
             ITransactionService transactionService,
+            ICategoryRepository categoryRepository,
             IUserContext user,
             AccountView accountView)
         {
             _transactionService = transactionService;
+            _categoryRepository = categoryRepository;
             _user = user;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);

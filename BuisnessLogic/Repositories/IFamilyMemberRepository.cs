@@ -6,6 +6,10 @@ namespace BuisnessLogic.Repositories
     {
         Task Add(FamilyMember familyMember);
         Task<FamilyMember?> GetById(Guid userId, Guid id);
+
+        Task<List<FamilyMember>> GetAll(Guid userId);
+
+        Task<List<FamilyMember>> GetAllScalar(Guid userID);
     }
 
 }

@@ -22,6 +22,19 @@ namespace DataAccess.RepositoriesImplementation
                 .ToListAsync();
         }
 
+
+        public async Task<List<FamilyMember>> GetAllScalar(Guid userId)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.FamilyMembers
+                .Where(x => x.UserId == userId)
+                .Include(x => x.Transactions)
+                .Include(x => x.PlannedTransactions)
+                .Include(x => x.Debts)
+                .ToListAsync();
+        }
+
         public async Task Add(FamilyMember familyMember)
         {
             await using var db = await _factory.CreateDbContextAsync();
@@ -57,5 +70,6 @@ namespace DataAccess.RepositoriesImplementation
 
             await db.SaveChangesAsync();
         }
+
     }
 }

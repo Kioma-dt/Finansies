@@ -22,6 +22,9 @@
             <Button Text="Categories"
                 Command="{Binding ShowCategoriesCommand}" />
 
+            <Button Text="Create Transactiom"
+                Command="{Binding CreateTransactionCommand}" />
+
         </HorizontalStackLayout>
         
         <ContentView Grid.Row="1"

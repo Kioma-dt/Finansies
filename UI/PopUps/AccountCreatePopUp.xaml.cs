@@ -26,9 +26,9 @@ public partial class AccountCreatePopUp : Popup<Account?>
         Accounts = await _accountRepository.GetAllScalar(UserId) ?? new();
 
         Accounts.Insert(0, new Account() {Id=Guid.Empty, Name = "-No Parent-"});
-
         ParentPicker.ItemsSource = Accounts;
         ParentPicker.ItemDisplayBinding = new Binding("Name");
+        ParentPicker.SelectedIndex = 0;
     }
     private async void OnCancel(object sender, EventArgs e)
     {

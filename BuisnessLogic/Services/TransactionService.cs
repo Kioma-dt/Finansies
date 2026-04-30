@@ -13,7 +13,9 @@ namespace BuisnessLogic.Services
             string description,
             DateTime date,
             TransactionType type,
-            Guid accountId);
+            Guid accountId, 
+            Guid? categoryId,
+            Guid? familyMemberId);
 
         Task AddCategory(Guid userId,
             Guid transactionId,
@@ -61,7 +63,7 @@ namespace BuisnessLogic.Services
                 throw new ArgumentException($"No Category with Id: {categoryId}");
             }
 
-            transaction.Category = category;
+            //transaction.Category = category;
             transaction.CategoryId = categoryId;
 
 
@@ -89,7 +91,7 @@ namespace BuisnessLogic.Services
                 throw new ArgumentException($"No Family Member with Id: {familyMemberId}");
             }
 
-            transaction.FamilyMember = familyMember;
+            //transaction.FamilyMember = familyMember;
             transaction.FamilyMemberId = familyMemberId;
 
             familyMember.Transactions.Add(transaction);
@@ -122,7 +124,14 @@ namespace BuisnessLogic.Services
             //await _familyMemberRepository.Update(familyMember);
         }
 
-        public async Task RegsiterTransaction(Guid userId, decimal amount, string description, DateTime date, TransactionType type, Guid accountId)
+        public async Task RegsiterTransaction(Guid userId, 
+            decimal amount,
+            string description,
+            DateTime date, 
+            TransactionType type, 
+            Guid accountId, 
+            Guid? categoryId,
+            Guid? familyMemberId)
         {
             var account = await _accountRepository.GetById(userId, accountId);
 
@@ -148,7 +157,9 @@ namespace BuisnessLogic.Services
                 Type = type,
 
                 AccountId = account.Id,
-                Account = account
+                CategoryId = categoryId,
+                FamilyMemberId = familyMemberId,
+                UserId = userId
             };
 
             await _transactionRepository.Add(transaction);

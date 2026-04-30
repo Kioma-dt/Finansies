@@ -26,9 +26,9 @@ public partial class CategoryCreatePopUp : Popup<Category?>
         Categories = await _categoryRepository.GetAllScalar(UserId) ?? new();
 
         Categories.Insert(0, new Category() { Id = Guid.Empty, Name = "-No Parent-" });
-
         ParentPicker.ItemsSource = Categories;
         ParentPicker.ItemDisplayBinding = new Binding("Name");
+        ParentPicker.SelectedIndex = 0;
     }
     private async void OnCancel(object sender, EventArgs e)
     {
