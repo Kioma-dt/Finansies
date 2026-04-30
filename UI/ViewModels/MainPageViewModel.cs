@@ -5,6 +5,7 @@ using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +14,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
+using UI.Messages;
 using UI.Popups;
 using UI.Views;
 
@@ -57,13 +58,15 @@ namespace UI.ViewModels
         }
 
         [RelayCommand]
-        public async Task Load()
+        public void Load()
         {
-            var t1 = _transactionView.LoadContent();
-            var t2 = _accountView.LoadContent();
-            var t3 = _categoryView.LoadContent();
+            //var t1 = _transactionView.LoadContent();
+            //var t2 = _accountView.LoadContent();
+            //var t3 = _categoryView.LoadContent();
 
-            await Task.WhenAll(t1, t2, t3);
+            //await Task.WhenAll(t1, t2, t3);
+
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Init));
         }
     }
 }

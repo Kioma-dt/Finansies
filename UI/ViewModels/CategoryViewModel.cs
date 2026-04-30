@@ -4,6 +4,7 @@ using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UI.Popups;
+using UI.Messages;
 
 namespace UI.ViewModels
 {
@@ -20,7 +22,7 @@ namespace UI.ViewModels
         public int Level { get; set; }
     }
 
-    public partial class CategoryViewModel : ObservableObject
+    public partial class CategoryViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserContext _user;
@@ -42,15 +44,28 @@ namespace UI.ViewModels
             _categoryRepository = categoryRepository;
             _user = user;
             _categoryCreatePopUp = categoryCreatePopUp;
+
+            WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
         }
 
-        [RelayCommand]
-        public async Task Load()
+        public async void Receive(DataBaseChangedMessage message)
         {
-            _categories = await _categoryRepository.GetAll(_user.UserId) ?? new();
+            if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Categories)
+            {
+                _categories = await _categoryRepository.GetAll(_user.UserId) ?? new();
 
-            BuildTree();
+                BuildTree();
+            }
         }
+
+
+        //[RelayCommand]
+        //public async Task Load()
+        //{
+        //    _categories = await _categoryRepository.GetAll(_user.UserId) ?? new();
+
+        //    BuildTree();
+        //}
 
         [RelayCommand]
         public async Task AddCategory()
@@ -67,9 +82,7 @@ namespace UI.ViewModels
 
             await _categoryRepository.Add(category);
 
-            _categories.Add(category);
-
-            BuildTree();
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Categories));
         }
 
 

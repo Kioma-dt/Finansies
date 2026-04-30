@@ -10,12 +10,12 @@ public partial class CategoryView : ContentView
         BindingContext = vm;
     }
 
-    public async Task LoadContent()
-    {
-        if (BindingContext is CategoryViewModel vm && !vm.IsLoaded)
-        {
-            vm.IsLoaded = true;
-            await vm.LoadCommand.ExecuteAsync(null);
-        }
-    }
+    //public async Task LoadContent()
+    //{
+    //    if (BindingContext is CategoryViewModel vm && !vm.IsLoaded)
+    //    {
+    //        vm.IsLoaded = true;
+    //        await vm.LoadCommand.ExecuteAsync(null);
+    //    }
+    //}
 }

@@ -14,7 +14,10 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using CommunityToolkit.Mvvm.Messaging;
+
 using UI.Popups;
+using UI.Messages;
 
 namespace UI.ViewModels
 {
@@ -24,7 +27,7 @@ namespace UI.ViewModels
         public int Level { get; set; }
     }
 
-    public partial class AccountViewModel : ObservableObject
+    public partial class AccountViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
     {
         private readonly IAccountService _accountService;
         private readonly IUserContext _user;
@@ -46,15 +49,27 @@ namespace UI.ViewModels
             _accountService = accountService;
             _user = user;
             _popup = popup;
+
+            WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
         }
 
-        [RelayCommand]
-        public async Task Load()
+        public async void Receive(DataBaseChangedMessage message)
         {
-            _accounts = await _accountService.GetAll(_user.UserId);
+            if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Accounts)
+            {
+                _accounts = await _accountService.GetAll(_user.UserId);
 
-            BuildTree();
+                BuildTree();
+            }
         }
+
+        //[RelayCommand]
+        //public async Task Load()
+        //{
+        //    _accounts = await _accountService.GetAll(_user.UserId);
+
+        //    BuildTree();
+        //}
 
         [RelayCommand]
         public async Task AddAccount()
@@ -71,9 +86,7 @@ namespace UI.ViewModels
 
             await _accountService.Add(acc);
 
-            _accounts.Add(acc);
-
-            BuildTree();
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
         }
 
         private void BuildTree()
