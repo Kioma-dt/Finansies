@@ -32,9 +32,8 @@ namespace UI
 
             builder.Services.AddDbContext<FinansiesDbContext>(options =>
                 options.UseMySql(
-                 "server=localhost;database=finansies_db;user=root;password=Kioma220;",
-                 new MySqlServerVersion(new Version(8, 0, 34))
-             ));
+                     "server=localhost;database=finansies_db;user=root;password=Kioma220;",
+                     new MySqlServerVersion(new Version(8, 0, 34))));
 
             builder.Services.AddSingleton<IUserContext, UserContext>();
 

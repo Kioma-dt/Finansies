@@ -10,9 +10,25 @@ using DataAccess.DbProxy;
 
 namespace DataAccess
 {
-    public class FinansiesDbContextFactory : IDesignTimeDbContextFactory<FinansiesDbContext>
+    public class FinansiesDbContextFactoryDesignTime : IDesignTimeDbContextFactory<FinansiesDbContext>
     {
         public FinansiesDbContext CreateDbContext(string[] args)
+        {
+
+            var optionsBuilder = new DbContextOptionsBuilder<FinansiesDbContext>();
+
+            optionsBuilder.UseMySql(
+             "server=localhost;database=finansies_db;user=root;password=Kioma220;",
+             new MySqlServerVersion(new Version(8, 0, 34))
+         );
+
+            return new FinansiesDbContext(optionsBuilder.Options);
+        }
+    }
+
+    public class FinansiesDbContextFactory : IDbContextFactory<FinansiesDbContext>
+    {
+        public FinansiesDbContext CreateDbContext()
         {
 
             var optionsBuilder = new DbContextOptionsBuilder<FinansiesDbContext>();

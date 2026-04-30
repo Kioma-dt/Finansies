@@ -59,11 +59,11 @@ namespace UI.ViewModels
         [RelayCommand]
         public async Task Load()
         {
-            var t1 = _transactionView.LoadContent();
-            var t2 = _accountView.LoadContent();
-            var t3 =  _categoryView.LoadContent();
+            await _transactionView.LoadContent();
+            await _accountView.LoadContent();
+            await _categoryView.LoadContent();
 
-            await Task.WhenAll(t1, t2, t3);
+            //await Task.WhenAll(t1, t2, t3);
         }
     }
 }
