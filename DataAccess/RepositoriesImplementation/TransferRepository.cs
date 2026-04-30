@@ -6,40 +6,48 @@ namespace DataAccess.RepositoriesImplementation
 {
     public class TransferRepository : ITransferRepository
     {
-        readonly FinansiesDbContext _dbContext;
+        private readonly IDbContextFactory<FinansiesDbContext> _factory;
 
-        public TransferRepository(FinansiesDbContext dbContext)
+        public TransferRepository(IDbContextFactory<FinansiesDbContext> factory)
         {
-            _dbContext = dbContext;
+            _factory = factory;
         }
+
         public async Task<List<Transfer>> GetAll(Guid userId)
         {
-            return await _dbContext.Transfers
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.Transfers
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
 
         public async Task Add(Transfer transfer)
         {
-            await _dbContext.Transfers.AddAsync(transfer);
-            await _dbContext.SaveChangesAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            await db.Transfers.AddAsync(transfer);
+            await db.SaveChangesAsync();
         }
 
         public async Task<Transfer?> GetById(Guid userId, Guid id)
         {
-            return await _dbContext.Transfers
-                .Select(a => a)
-                .Where(a => a.UserId == userId)
-                .FirstOrDefaultAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.Transfers
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
         }
 
         public async Task Update(Transfer transfer)
         {
-            var dbEntity = await GetById(transfer.UserId, transfer.Id);
+            await using var db = await _factory.CreateDbContextAsync();
+
+            var dbEntity = await db.Transfers
+                .FirstOrDefaultAsync(x => x.Id == transfer.Id && x.UserId == transfer.UserId);
 
             if (dbEntity is null)
             {
-                await Add(transfer);
+                await db.Transfers.AddAsync(transfer);
             }
             else
             {
@@ -52,7 +60,7 @@ namespace DataAccess.RepositoriesImplementation
                 dbEntity.UserId = transfer.UserId;
             }
 
-            await _dbContext.SaveChangesAsync();
+            await db.SaveChangesAsync();
         }
     }
 

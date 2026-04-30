@@ -6,55 +6,64 @@ namespace DataAccess.RepositoriesImplementation
 {
     public class BudgetRepository : IBudgetRepository
     {
-        readonly FinansiesDbContext _dbContext;
+        private readonly IDbContextFactory<FinansiesDbContext> _dbContextFactory;
 
-        public BudgetRepository(FinansiesDbContext dbContext)
+        public BudgetRepository(IDbContextFactory<FinansiesDbContext> dbContextFactory)
         {
-            _dbContext = dbContext;
+            _dbContextFactory = dbContextFactory;
         }
+
         public async Task Add(Budget budget)
         {
-            await _dbContext.Budgets.AddAsync(budget);
-            await _dbContext.SaveChangesAsync();
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+            await dbContext.Budgets.AddAsync(budget);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<List<Budget>> GetAll(Guid userId)
         {
-            return await _dbContext.Budgets
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+            return await dbContext.Budgets
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
 
         public async Task<Budget?> GetById(Guid userId, Guid id)
         {
-            return await _dbContext.Budgets
-                .Select(b => b)
-                .Where(b => b.UserId == userId)
-                .FirstOrDefaultAsync();
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+            return await dbContext.Budgets
+                .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
         }
 
         public async Task AddBudgetFilter(Guid userId, Guid id, BudgetFilter filter)
         {
-            var budget = await GetById(userId, id);
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
-            
+            var budget = await dbContext.Budgets
+                .Include(b => b.Filters)
+                .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
+
             if (budget is not null)
             {
                 budget.Filters.Add(filter);
+                await dbContext.BudgetFilters.AddAsync(filter);
+                await dbContext.SaveChangesAsync();
             }
-
-            await _dbContext.BudgetFilters.AddAsync(filter);
-
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task Update(Budget budget)
         {
-            var dbEntity = await GetById(budget.UserId, budget.Id);
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+            var dbEntity = await dbContext.Budgets
+                .FirstOrDefaultAsync(b => b.Id == budget.Id && b.UserId == budget.UserId);
 
             if (dbEntity is null)
             {
-                await Add(budget);
+                await dbContext.Budgets.AddAsync(budget);
             }
             else
             {
@@ -65,7 +74,7 @@ namespace DataAccess.RepositoriesImplementation
                 dbEntity.UserId = budget.UserId;
             }
 
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
     }
 }

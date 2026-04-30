@@ -6,40 +6,46 @@ namespace DataAccess.RepositoriesImplementation
 {
     public class UserRepository : IUserRepository
     {
-        readonly FinansiesDbContext _dbContext;
+        private readonly IDbContextFactory<FinansiesDbContext> _factory;
 
-        public UserRepository(FinansiesDbContext dbContext)
+        public UserRepository(IDbContextFactory<FinansiesDbContext> factory)
         {
-            _dbContext = dbContext;
+            _factory = factory;
         }
 
         public async Task Add(User user)
         {
-            await _dbContext.Users.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            await db.Users.AddAsync(user);
+            await db.SaveChangesAsync();
         }
 
         public async Task<User?> GetById(Guid id)
         {
-            return await _dbContext.Users
-                .Select(a => a)
-                .FirstOrDefaultAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.Users
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task Update(User user)
         {
-            var dbEntity = await GetById(user.Id);
+            await using var db = await _factory.CreateDbContextAsync();
+
+            var dbEntity = await db.Users
+                .FirstOrDefaultAsync(x => x.Id == user.Id);
 
             if (dbEntity is null)
             {
-                await Add(user);
+                await db.Users.AddAsync(user);
             }
             else
             {
                 dbEntity.Name = user.Name;
             }
 
-            await _dbContext.SaveChangesAsync();
+            await db.SaveChangesAsync();
         }
     }
 }

@@ -6,41 +6,48 @@ namespace DataAccess.RepositoriesImplementation
 {
     public class FamilyMemberRepository : IFamilyMemberRepository
     {
-        readonly FinansiesDbContext _dbContext;
+        private readonly IDbContextFactory<FinansiesDbContext> _factory;
 
-        public FamilyMemberRepository(FinansiesDbContext dbContext)
+        public FamilyMemberRepository(IDbContextFactory<FinansiesDbContext> factory)
         {
-            _dbContext = dbContext;
+            _factory = factory;
         }
 
         public async Task<List<FamilyMember>> GetAll(Guid userId)
         {
-            return await _dbContext.FamilyMembers
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.FamilyMembers
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
 
         public async Task Add(FamilyMember familyMember)
         {
-            await _dbContext.FamilyMembers.AddAsync(familyMember);
-            await _dbContext.SaveChangesAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            await db.FamilyMembers.AddAsync(familyMember);
+            await db.SaveChangesAsync();
         }
 
         public async Task<FamilyMember?> GetById(Guid userId, Guid id)
         {
-            return await _dbContext.FamilyMembers
-                .Select(a => a)
-                .Where(a => a.UserId == userId)
-                .FirstOrDefaultAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.FamilyMembers
+                .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId);
         }
 
         public async Task Update(FamilyMember member)
         {
-            var dbEntity = await GetById(member.UserId, member.Id);
+            await using var db = await _factory.CreateDbContextAsync();
+
+            var dbEntity = await db.FamilyMembers
+                .FirstOrDefaultAsync(x => x.Id == member.Id && x.UserId == member.UserId);
 
             if (dbEntity is null)
             {
-                await Add(member);
+                await db.FamilyMembers.AddAsync(member);
             }
             else
             {
@@ -48,7 +55,7 @@ namespace DataAccess.RepositoriesImplementation
                 dbEntity.UserId = member.UserId;
             }
 
-            await _dbContext.SaveChangesAsync();
+            await db.SaveChangesAsync();
         }
     }
 }

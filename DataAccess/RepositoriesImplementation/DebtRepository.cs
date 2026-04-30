@@ -6,65 +6,76 @@ namespace DataAccess.RepositoriesImplementation
 {
     public class DebtRepository : IDebtRepository
     {
-        readonly FinansiesDbContext _dbContext;
+        private readonly IDbContextFactory<FinansiesDbContext> _factory;
 
-        public DebtRepository(FinansiesDbContext dbContext)
+        public DebtRepository(IDbContextFactory<FinansiesDbContext> factory)
         {
-            _dbContext = dbContext;
+            _factory = factory;
         }
 
         public async Task<List<Debt>> GetAll(Guid userId)
         {
-            return await _dbContext.Debts
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.Debts
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
 
         public async Task Add(Debt debt)
         {
-            await _dbContext.Debts.AddAsync(debt);
-            await _dbContext.SaveChangesAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            await db.Debts.AddAsync(debt);
+            await db.SaveChangesAsync();
         }
 
         public async Task<Debt?> GetById(Guid userId, Guid id)
         {
-            return await _dbContext.Debts
-                .Select(a => a)
-                .Where(a => a.UserId == userId)
-                .FirstOrDefaultAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.Debts
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
         }
 
         public async Task AddCategory(Guid userId, Guid id, Category category)
         {
-            var debt = await GetById(userId, id);
+            await using var db = await _factory.CreateDbContextAsync();
 
-            if (debt is not null)
+            var entity = await db.Debts
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+
+            if (entity is not null)
             {
-                debt.CategoryId = category.Id;
+                entity.CategoryId = category.Id;
+                await db.SaveChangesAsync();
             }
-
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task AddFamilyMember(Guid userId, Guid id, FamilyMember familyMember)
         {
-            var debt = await GetById(userId, id);
+            await using var db = await _factory.CreateDbContextAsync();
 
-            if (debt is not null)
+            var entity = await db.Debts
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+
+            if (entity is not null)
             {
-                debt.FamilyMemberId = familyMember.Id;
+                entity.FamilyMemberId = familyMember.Id;
+                await db.SaveChangesAsync();
             }
-
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task Update(Debt debt)
         {
-            var dbEntity = await GetById(debt.UserId, debt.Id);
+            await using var db = await _factory.CreateDbContextAsync();
+
+            var dbEntity = await db.Debts
+                .FirstOrDefaultAsync(x => x.Id == debt.Id && x.UserId == debt.UserId);
 
             if (dbEntity is null)
             {
-                await Add(debt);
+                await db.Debts.AddAsync(debt);
             }
             else
             {
@@ -77,17 +88,15 @@ namespace DataAccess.RepositoriesImplementation
                 dbEntity.FixedAddition = debt.FixedAddition;
                 dbEntity.Type = debt.Type;
                 dbEntity.InterestType = debt.InterestType;
-
                 dbEntity.StartDate = debt.StartDate;
                 dbEntity.LastPaidDate = debt.LastPaidDate;
                 dbEntity.EndDate = debt.EndDate;
-
                 dbEntity.CategoryId = debt.CategoryId;
                 dbEntity.FamilyMemberId = debt.FamilyMemberId;
                 dbEntity.UserId = debt.UserId;
             }
 
-            await _dbContext.SaveChangesAsync();
+            await db.SaveChangesAsync();
         }
     }
 }

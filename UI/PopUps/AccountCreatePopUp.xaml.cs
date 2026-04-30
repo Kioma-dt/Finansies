@@ -45,6 +45,7 @@ public partial class AccountCreatePopUp : Popup<Account?>
 
         await CloseAsync(new Account
         {
+            Id = Guid.NewGuid(),
             Name = name,
             Balance = balance,
             ParentId = parent == null || parent.Id == Guid.Empty ? null : parent.Id,

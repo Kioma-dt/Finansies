@@ -6,65 +6,76 @@ namespace DataAccess.RepositoriesImplementation
 {
     public class CategoryRepository : ICategoryRepository
     {
-        readonly FinansiesDbContext _dbContext;
+        private readonly IDbContextFactory<FinansiesDbContext> _factory;
 
-        public CategoryRepository(FinansiesDbContext dbContext)
+        public CategoryRepository(IDbContextFactory<FinansiesDbContext> factory)
         {
-            _dbContext = dbContext;
+            _factory = factory;
         }
 
         public async Task<List<Category>?> GetAllScalar(Guid userId)
         {
-            return await _dbContext.Categories
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.Categories
                 .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
 
         public async Task<List<Category>?> GetAll(Guid userId)
         {
-            return await _dbContext.Categories
-            .Where(x => x.UserId == userId)
-            .Include(x => x.Parent)
-            .Include(x => x.Children)
-            .Include(x => x.Transactions)
-            .Include(x => x.PlannedTransactions)
-            .Include(x => x.Debts)
-            .ToListAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.Categories
+                .Where(x => x.UserId == userId)
+                .Include(x => x.Parent)
+                .Include(x => x.Children)
+                .Include(x => x.Transactions)
+                .Include(x => x.PlannedTransactions)
+                .Include(x => x.Debts)
+                .ToListAsync();
         }
 
         public async Task Add(Category category)
         {
-            await _dbContext.Categories.AddAsync(category);
-            await _dbContext.SaveChangesAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            await db.Categories.AddAsync(category);
+            await db.SaveChangesAsync();
         }
 
         public async Task<Category?> GetById(Guid userId, Guid id)
         {
-            return await _dbContext.Categories
-                .Select(a => a)
-                .Where(a => a.UserId == userId)
-                .FirstOrDefaultAsync();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.Categories
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
         }
 
         public async Task AddParent(Guid userId, Guid id, Category parent)
         {
-            var category = await GetById(userId, id);
+            await using var db = await _factory.CreateDbContextAsync();
 
-            if (category is not null)
+            var entity = await db.Categories
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+
+            if (entity is not null)
             {
-                category.ParentId = parent.Id;
+                entity.ParentId = parent.Id;
+                await db.SaveChangesAsync();
             }
-
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task Update(Category category)
         {
-            var dbEntity = await GetById(category.UserId, category.Id);
+            await using var db = await _factory.CreateDbContextAsync();
+
+            var dbEntity = await db.Categories
+                .FirstOrDefaultAsync(x => x.Id == category.Id && x.UserId == category.UserId);
 
             if (dbEntity is null)
             {
-                await Add(category);
+                await db.Categories.AddAsync(category);
             }
             else
             {
@@ -74,7 +85,7 @@ namespace DataAccess.RepositoriesImplementation
                 dbEntity.UserId = category.UserId;
             }
 
-            await _dbContext.SaveChangesAsync();
+            await db.SaveChangesAsync();
         }
     }
 }
