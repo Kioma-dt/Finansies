@@ -21,6 +21,22 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
+    public class TransactionTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate CategoryTemplate { get; set; }
+        public DataTemplate TransactionTemplate { get; set; }
+
+        protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
+        {
+            return item switch
+            {
+                TransactionNode => CategoryTemplate,
+                Transaction => TransactionTemplate,
+                _ => null
+            };
+        }
+    }
+
     public class TransactionNode
     {
         public Category Category { get; set; } = null!;
@@ -35,7 +51,12 @@ namespace UI.ViewModels
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserContext _user;
 
-        public ObservableCollection<Transaction> Transactions { get; } = new();
+        //public List<Transaction> _transactions { get; } = new();
+        //public List<Category> _categories { get; } = new();
+
+        //public ObservableCollection<object> FlatItems { get; } = new();
+
+        public ObservableCollection<Transaction> Transactions { get; set; } = new();
 
         [ObservableProperty]
         public partial bool IsLoaded { get; set; } = false;
@@ -54,6 +75,7 @@ namespace UI.ViewModels
         }
         public async void Receive(DataBaseChangedMessage message)
         {
+            bool isUpdated = false;
             if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Transactions)
             {
                 var data = await _transactionService.GetAll(_user.UserId);
@@ -61,8 +83,56 @@ namespace UI.ViewModels
                 Transactions.Clear();
                 foreach (var t in data)
                     Transactions.Add(t);
+
+                isUpdated = true;
             }
+
+            //if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Categories)
+            //{
+            //    var data = await _categoryRepository.GetAll(_user.UserId) ?? new();
+
+            //    _categories.Clear();
+            //    foreach (var t in data)
+            //        _categories.Add(t);
+
+            //    isUpdated = true;
+            //}
+
+            //if (isUpdated)
+            //{
+            //    BuildTree(_categories, _transactions);
+            //}
         }
+
+        //private void BuildTree(List<Category> categories, List<Transaction> transactions)
+        //{
+        //    FlatItems.Clear();
+
+        //    void AddCategory(Category category, int level)
+        //    {
+        //        var catTransactions = transactions
+        //            .Where(t => t.Category?.Id == category.Id)
+        //            .ToList();
+
+        //        FlatItems.Add(new TransactionNode
+        //        {
+        //            Category = category,
+        //            Level = level,
+        //            Transactions = catTransactions
+        //        });
+
+        //        foreach (var t in catTransactions)
+        //            FlatItems.Add(t);
+
+        //        foreach (var child in category.Children)
+        //            AddCategory(child, level + 1);
+        //    }
+
+        //    var roots = categories.Where(c => c.ParentId == null);
+
+        //    foreach (var root in roots)
+        //        AddCategory(root, 0);
+        //}
 
 
         //[RelayCommand]

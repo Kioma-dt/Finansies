@@ -8,6 +8,44 @@
              x:Class="UI.Views.TransactionView"
              x:DataType="viewmodel:TransactionsViewModel">
 
+    <ContentView.Resources>
+
+        <DataTemplate x:Key="CategoryTemplate">
+            <Grid ColumnDefinitions="*"
+              Padding="10"
+              BackgroundColor="#1e1e1e">
+
+                <Label Text="{Binding Category.Name}"
+                   FontAttributes="Bold"
+                   TextColor="LightBlue"
+                   Padding="{Binding Level, Converter={StaticResource indentConverter}}"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TransactionTemplate"
+                  x:DataType="entity:Transaction">
+
+            <Grid ColumnDefinitions="80,120,150,200,120,120,120"
+              Padding="10">
+
+                <Label Text="{Binding Amount}" />
+                <Label Text="{Binding Type}" Grid.Column="1"/>
+                <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="2"/>
+                <Label Text="{Binding Description}" Grid.Column="3"/>
+
+                <Label Text="{Binding Account.Name}" Grid.Column="4"/>
+                <Label Text="{Binding Category.Name, TargetNullValue='-'}" Grid.Column="5"/>
+                <Label Text="{Binding FamilyMember.Name, TargetNullValue='-'}" Grid.Column="6"/>
+
+            </Grid>
+
+        </DataTemplate>
+
+        <viewmodel:TransactionTemplateSelector x:Key="Selector"
+        CategoryTemplate="{StaticResource CategoryTemplate}"
+        TransactionTemplate="{StaticResource TransactionTemplate}" />
+
+    </ContentView.Resources>
 
 
     <Grid ColumnDefinitions="*">
@@ -18,14 +56,14 @@
                         ItemsSource="{Binding Transactions}">
 
             <CollectionView.Header>
-                <Grid ColumnDefinitions="80,120,150,200,120,120,120"
+                <Grid ColumnDefinitions="*,*,*,*,*,*,*"
                       Padding="10"
                       BackgroundColor="#2d2d2d">
 
-                    <Label Text="Amount" TextColor="White"/>
-                    <Label Text="Type" Grid.Column="1" TextColor="White"/>
-                    <Label Text="Date" Grid.Column="2" TextColor="White"/>
-                    <Label Text="Description" Grid.Column="3" TextColor="White"/>
+                    <Label Text="Description" Grid.Column="0" TextColor="White"/>
+                    <Label Text="Amount" Grid.Column="1" TextColor="White"/>
+                    <Label Text="Type" Grid.Column="2" TextColor="White"/>
+                    <Label Text="Date" Grid.Column="3" TextColor="White"/>
                     <Label Text="Account" Grid.Column="4" TextColor="White"/>
                     <Label Text="Category" Grid.Column="5" TextColor="White"/>
                     <Label Text="FamilyMember" Grid.Column="6" TextColor="White"/>
@@ -35,13 +73,14 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="entity:Transaction">
-                    <Grid ColumnDefinitions="80,120,150,200,120,120,120"
+                    <Grid ColumnDefinitions="*,*,*,*,*,*,*"
                           Padding="10">
 
-                        <Label Text="{Binding Amount}" />
-                        <Label Text="{Binding Type}" Grid.Column="1"/>
-                        <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="2"/>
-                        <Label Text="{Binding Description}" Grid.Column="3"/>
+                        <Label Text="{Binding Description}" Grid.Column="0"/>
+                        <Label Text="{Binding Amount}"  Grid.Column="1" />
+                        <Label Text="{Binding Type}" Grid.Column="2"/>
+                        <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="3"/>
+                        
 
                         <Label Text="{Binding Account.Name}" Grid.Column="4"/>
                         <Label Text="{Binding Category.Name, TargetNullValue='-'}" Grid.Column="5"/>

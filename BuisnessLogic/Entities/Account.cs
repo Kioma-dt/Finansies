@@ -42,7 +42,7 @@
         {
             if(amount < 0)
             {
-                throw new Exception("Amount is Negative!");
+                throw new ArgumentException("Amount is Negative!");
             }
             Balance += amount;
         }
@@ -50,12 +50,12 @@
         {
             if (amount < 0)
             {
-                throw new Exception("Amount is Negative!");
+                throw new ArgumentException("Amount is Negative!");
             }
 
             if (Balance < amount)
             {
-                throw new Exception("Not Enough Money!");
+                throw new ArgumentException("Not Enough Money!");
             }
 
             Balance -= amount;
