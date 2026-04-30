@@ -47,8 +47,7 @@ public partial class CategoryCreatePopUp : Popup<Category?>
         {
             Name = name,
             Description = desciption,
-            ParentId = parent == null || parent.Id == Guid.Empty ? null : parent.Id,
-            Parent = parent?.Id == Guid.Empty ? null : parent
+            ParentId = parent == null || parent.Id == Guid.Empty ? null : parent.Id
         });
     }
 

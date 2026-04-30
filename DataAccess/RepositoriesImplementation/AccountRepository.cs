@@ -49,6 +49,9 @@ namespace DataAccess.RepositoriesImplementation
         {
             await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
+
+            account.Parent = null;
+
             await dbContext.Accounts.AddAsync(account);
             await dbContext.SaveChangesAsync();
         }

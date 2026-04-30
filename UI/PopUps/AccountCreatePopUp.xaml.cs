@@ -48,8 +48,7 @@ public partial class AccountCreatePopUp : Popup<Account?>
             Id = Guid.NewGuid(),
             Name = name,
             Balance = balance,
-            ParentId = parent == null || parent.Id == Guid.Empty ? null : parent.Id,
-            Parent = parent?.Id == Guid.Empty ? null : parent
+            ParentId = parent == null || parent.Id == Guid.Empty ? null : parent.Id
         });
     }
 
