@@ -68,35 +68,7 @@ namespace BuisnessLogic.Services
 
             if (dto.IsAutoPlanned)
             {
-                var period = (decimal)(dto.EndDate - dto.StartDate).TotalDays;
-
-                var transactionAmount = dto.TransactionPeriodicity switch
-                {
-                    TransactionPeriodicity.Daily => dto.Amount / period,
-                    TransactionPeriodicity.Monthly => dto.Amount / (period / 30m),
-                    TransactionPeriodicity.Yearly => dto.Amount / (period / 365m),
-                    _ => dto.Amount
-                };
-
-                var type = dto.Type switch
-                {
-                    DebtType.Debit => TransactionType.Income,
-
-                    _ => TransactionType.Expense
-                };
-
-                await _plannedTransactionService.PlanMultipleTransactions(userId,
-                    transactionAmount,
-                    dto.Name,
-                    type,
-                    dto.StartDate,
-                    dto.TransactionPeriodicity,
-                    (uint)Math.Ceiling(dto.Amount / transactionAmount),
-                    null,
-                    null,
-                    null,
-                    id
-                    );
+                await _plannedTransactionService.PlanDebtPayments(userId, id, dto.TransactionPeriodicity);
             }
         }
 

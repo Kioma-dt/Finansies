@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BuisnessLogic.Shared;
+using BuisnessLogic.DebtInterestCalculator;
 
 namespace BuisnessLogic.Services
 {
@@ -35,6 +36,8 @@ namespace BuisnessLogic.Services
             Guid? familyMemberId,
             Guid? debtId
             );
+
+        Task PlanDebtPayments(Guid userId, Guid debtId, TransactionPeriodicity periodicity);
 
         Task ConfirmTransaction(Guid userId,
             Guid plannedTransactionId,
@@ -66,21 +69,28 @@ namespace BuisnessLogic.Services
         readonly ICategoryRepository _categoryRepository;
         readonly IFamilyMemberRepository _familyMemberRepository;
         readonly IPlannedTransactionRepository _plannedTransactionRepository;
+        readonly IDebtRepository _debtRepository;
         readonly ITransactionTagRepository _transactionTagRepository;
+
+        readonly IDebtInterestCalculatorProvider _debtInterestCalculatorProvider;
 
         public PlannedTransactionService(ITransactionService trasnsactionService, 
             IPlannedTransactionRepository plannedTransactionRepository,
             IAccountRepository accountRepository,
             ICategoryRepository categoryRepository, 
             IFamilyMemberRepository familyMemberRepository,
-            ITransactionTagRepository transactionTagRepository)
+            IDebtRepository debtRepository,
+            ITransactionTagRepository transactionTagRepository,
+            IDebtInterestCalculatorProvider debtInterestCalculatorProvider)
         {
             _transactionService = trasnsactionService;
             _plannedTransactionRepository = plannedTransactionRepository;
             _accountRepository = accountRepository;
             _categoryRepository = categoryRepository;
             _familyMemberRepository = familyMemberRepository;
+            _debtRepository = debtRepository;
             _transactionTagRepository = transactionTagRepository;
+            _debtInterestCalculatorProvider = debtInterestCalculatorProvider;
         }
 
         public async Task<List<PlannedTransaction>> GetAll(Guid userId) => await _plannedTransactionRepository.GetAll(userId);
@@ -265,6 +275,60 @@ namespace BuisnessLogic.Services
 
                 startDate = startDate.AddTransactionPeriodicity(periodicy);
             }
+        }
+
+        public async Task PlanDebtPayments(Guid userId, Guid debtId, TransactionPeriodicity periodicity)
+        {
+            var debt = await _debtRepository.GetById(userId, debtId);
+
+            if (debt is null)
+            {
+                throw new ArgumentException($"No Such Debt: {debt}");
+            }
+
+            var period = (decimal)(debt.EndDate - debt.StartDate).TotalDays;
+
+            var totalAmount = _debtInterestCalculatorProvider
+                .GetCalculator(debt.InterestType)
+                .Calculate
+                (
+                    debt.StartAmount,
+                    debt.InterestRate,
+                    debt.CapitalisationsPerYear,
+                    debt.FixedAddition,
+                    debt.StartDate,
+                    debt.EndDate
+                );
+
+            var transactionAmount = periodicity switch
+            {
+                TransactionPeriodicity.Daily => totalAmount / period,
+                TransactionPeriodicity.Monthly => totalAmount / (period / 30m),
+                TransactionPeriodicity.Yearly => totalAmount / (period / 365m),
+                _ => totalAmount
+            };
+
+            var type = debt.Type switch
+            {
+                DebtType.Debit => TransactionType.Income,
+
+                _ => TransactionType.Expense
+            };
+
+            var paymentsNumber = (uint)Math.Ceiling(totalAmount / transactionAmount);
+
+            await this.PlanMultipleTransactions(userId,
+                transactionAmount,
+                debt.Name,
+                type,
+                debt.StartDate,
+                periodicity,
+                paymentsNumber,
+                null,
+                null,
+                null,
+                debtId
+                );
         }
 
         public async Task UpdatePlannedTransaction(Guid userId, Guid plannedTransactionId, DateTime date)
