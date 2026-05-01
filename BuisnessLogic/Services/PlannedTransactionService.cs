@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BuisnessLogic.Shared;
 
 namespace BuisnessLogic.Services
 {
@@ -262,13 +263,7 @@ namespace BuisnessLogic.Services
             {
                 await this.PlanTransaction(userId, amount, description, type, startDate, accountId, categoryId, familyMemberId, debtId);
 
-                startDate = periodicy switch
-                {
-                    TransactionPeriodicity.Daily => startDate.AddDays(1),
-                    TransactionPeriodicity.Monthly => startDate.AddMonths(1),
-                    TransactionPeriodicity.Yearly => startDate.AddYears(1),
-                    _ => startDate,
-                };
+                startDate = startDate.AddTransactionPeriodicity(periodicy);
             }
         }
 
