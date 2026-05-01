@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using BuisnessLogic.BudgetService;
 
 namespace UI
 {
@@ -31,6 +32,15 @@ namespace UI
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services.AddDbContextFactory<FinansiesDbContext, FinansiesDbContextFactory>();
+
+            builder.Services.AddSingleton<IBudgetSpecificationsCreator, BudgetAccountSpecificationsCreator>();
+            builder.Services.AddSingleton<IBudgetSpecificationsCreator, BudgetCategorySpecificationsCreator>();
+            builder.Services.AddSingleton<IBudgetSpecificationsCreator, BudgetFamilyMemberSpecificationsCreator>();
+            builder.Services.AddSingleton<IBudgetSpecificationsCreator, BudgetTransactionTagSpecificationsCreator>();
+            builder.Services.AddSingleton<IBudgetSpecificationsCreator, BudgetTransactionTypeSpecificationsCreator>();
+
+            builder.Services.AddSingleton<IBudgetSpecificationsCreatorsProvider, BudgetSpecificationsCreatorsProvider>();
+            builder.Services.AddSingleton<IBudgetSpecificationsExtender, BudgetSpecificationsExtender>();
 
             builder.Services.AddSingleton<IUserContext, UserContext>();
 
@@ -61,6 +71,7 @@ namespace UI
             builder.Services.AddSingleton<PlannedTransactionsViewModel>();
             builder.Services.AddSingleton<AccountViewModel>();
             builder.Services.AddSingleton<CategoryViewModel>();
+            builder.Services.AddSingleton<BudgetViewModel>();
 
             builder.Services.AddSingleton<MainPageViewModel>();
 
@@ -68,6 +79,7 @@ namespace UI
             builder.Services.AddSingleton<PlannedTransactionView>();
             builder.Services.AddSingleton<AccountView>();
             builder.Services.AddSingleton<CategoryView>();
+            builder.Services.AddSingleton<BudgetView>();
 
             builder.Services.AddSingleton<MainPage>();
 

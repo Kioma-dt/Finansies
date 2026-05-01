@@ -27,6 +27,16 @@ namespace DataAccess.RepositoriesImplementation
 
             return await dbContext.Budgets
                 .Where(x => x.UserId == userId)
+                .Include(x => x.Filters)
+                .ToListAsync();
+        }
+
+        public async Task<List<Budget>> GetAllScalar(Guid userId)
+        {
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+            return await dbContext.Budgets
+                .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
 

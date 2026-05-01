@@ -7,8 +7,14 @@ namespace BuisnessLogic.Services
 {
     public interface IBudgetService
     {
+        Task<List<Budget>> GetAll(Guid userId);
+
         Task<IEnumerable<Transaction>> GetRelevantTransactions(Guid userId,
             Guid budgetId);
+
+        Task<decimal> CountTransactions(Guid userId, Guid budgetId);
+
+        Task AddFilter(Guid userId, Guid budgetId, BudgetFilterType type, string value);
     }
     public class BudgetService : IBudgetService
     {
@@ -16,12 +22,16 @@ namespace BuisnessLogic.Services
         readonly ITransactionRepository _transactionRepository;
         readonly IBudgetRepository _budgetRepository;
 
+
+
         public BudgetService(IBudgetSpecificationsExtender budgetExtender, ITransactionRepository transactionRepository, IBudgetRepository budgetRepository)
         {
             _budgetExtender = budgetExtender;
             _transactionRepository = transactionRepository;
             _budgetRepository = budgetRepository;
         }
+
+        public Task<List<Budget>> GetAll(Guid userId) => _budgetRepository.GetAll(userId);
 
         public async Task AddFilter(Guid userId, Guid budgetId, BudgetFilterType type, string value)
         {
@@ -49,6 +59,20 @@ namespace BuisnessLogic.Services
             var specification = _budgetExtender.GetFullExpression(budget);
 
             return await _transactionRepository.GetWithSpecification(userId, specification) ?? new List<Transaction>();
+        }
+
+        public async Task<decimal> CountTransactions(Guid userId, Guid budgetId)
+        {
+            var transactions = await this.GetRelevantTransactions(userId, budgetId);
+
+            var result = 0m;
+
+            foreach (var transaction in transactions)
+            {
+                result += transaction.SignedAmount;
+            }
+
+            return result;
         }
     }
 }

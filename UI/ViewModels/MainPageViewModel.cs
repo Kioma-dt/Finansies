@@ -27,16 +27,20 @@ namespace UI.ViewModels
         private readonly TransactionCreatePopUp _transctionCreatePopUp;
 
         [ObservableProperty]
-        public partial View LeftView { get; set; }
+        public partial View? LeftView { get; set; }
 
         [ObservableProperty]
-        public partial View RightView { get; set; }
+        public partial View? RightView { get; set; }
+
+        [ObservableProperty]
+        public partial View? CentralView { get; set; }
 
 
         private readonly TransactionView _transactionView;
         private readonly PlannedTransactionView _plannedTransactionView;
         private readonly AccountView _accountView;
         private readonly CategoryView _categoryView;
+        private readonly BudgetView _budgetView;
 
         public MainPageViewModel( IUserContext user,
             ITransactionService transactionService,
@@ -44,7 +48,8 @@ namespace UI.ViewModels
             AccountView accountView, 
             TransactionView transactionView,
             PlannedTransactionView plannedTransactionView,
-            CategoryView categoryView)
+            CategoryView categoryView,
+            BudgetView budgetView)
         {
             _user = user;
             _transactionService = transactionService;
@@ -54,27 +59,44 @@ namespace UI.ViewModels
             _transactionView = transactionView;
             _plannedTransactionView = plannedTransactionView;
             _categoryView = categoryView;
+            _budgetView = budgetView;
 
             LeftView = _accountView;
             RightView = _transactionView;
+            CentralView = null;
         }
 
         [RelayCommand]
         public void ShowTransactions()
         {
+            LeftView = _accountView;
             RightView = _transactionView;
+            CentralView = null;
         }
 
         [RelayCommand]
         public void ShowCategories()
         {
+            LeftView = _accountView;
             RightView = _categoryView;
+            CentralView = null;
         }
 
         [RelayCommand]
         public void ShowPlannedTransactions()
         {
+            LeftView = _accountView;
             RightView = _plannedTransactionView;
+            CentralView = null;
+        }
+
+        [RelayCommand]
+        public void ShowBudgets()
+        {
+            LeftView = null;
+            RightView = null;
+
+            CentralView = _budgetView;
         }
 
         [RelayCommand]

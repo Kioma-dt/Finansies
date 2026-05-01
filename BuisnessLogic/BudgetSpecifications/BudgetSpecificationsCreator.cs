@@ -38,7 +38,7 @@ namespace BuisnessLogic.BudgetService
 
     public class BudgetFamilyMemberSpecificationsCreator : IBudgetSpecificationsCreator
     {
-        public BudgetFilterType Type => BudgetFilterType.Category;
+        public BudgetFilterType Type => BudgetFilterType.FamilyMember;
 
         public Expression Create(ParameterExpression parameter, BudgetFilter filter)
         {
@@ -50,7 +50,7 @@ namespace BuisnessLogic.BudgetService
     }
     public class BudgetTransactionTagSpecificationsCreator : IBudgetSpecificationsCreator
     {
-        public BudgetFilterType Type => BudgetFilterType.Category;
+        public BudgetFilterType Type => BudgetFilterType.TransactionTag;
 
         public Expression Create(ParameterExpression parameter, BudgetFilter filter)
         {
@@ -84,7 +84,7 @@ namespace BuisnessLogic.BudgetService
 
     public class BudgetTransactionTypeSpecificationsCreator : IBudgetSpecificationsCreator
     {
-        public BudgetFilterType Type => BudgetFilterType.Category;
+        public BudgetFilterType Type => BudgetFilterType.TransactionType;
 
         public Expression Create(ParameterExpression parameter, BudgetFilter filter)
         {

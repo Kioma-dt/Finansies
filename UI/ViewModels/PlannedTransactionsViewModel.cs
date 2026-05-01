@@ -11,6 +11,7 @@ using UI.Popups;
 
 namespace UI.ViewModels
 {
+
     public partial class PlannedTransactionsViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
     {
         private readonly IPlannedTransactionService _plannedTransactionService;

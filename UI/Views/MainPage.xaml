@@ -25,11 +25,18 @@
             <Button Text="Plan Transactions"
                 Command="{Binding ShowPlannedTransactionsCommand}" />
 
+            <Button Text="Budgets"
+                Command="{Binding ShowBudgetsCommand}" />
+
             <Button Text="Create Transactiom"
                 Command="{Binding CreateTransactionCommand}" />
 
         </HorizontalStackLayout>
-        
+
+        <ContentView Grid.Row="1"
+                     Grid.ColumnSpan="2"
+                     Content="{Binding CentralView}"/>
+
         <ContentView Grid.Row="1"
                  Grid.Column="0"
                  Content="{Binding LeftView}" />

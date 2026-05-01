@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
+             xmlns:viewmodel="clr-namespace:UI.ViewModels"
+             xmlns:converter="clr-namespace:UI.Converters"
+             x:Class="UI.Views.BudgetView"
+             x:DataType="viewmodel:BudgetViewModel">
+
+    <Grid RowDefinitions="*,*"
+          Padding="10"
+          RowSpacing="10">
+
+        <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding Budgets}"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedBudget}"
+                        SelectionChangedCommand="{Binding SelectBudgetCommand}">
+
+            <CollectionView.Header>
+                <Grid ColumnDefinitions="2*,*,*,*"
+                      Padding="10"
+                      BackgroundColor="#2d2d2d">
+
+                    <Label Text="Name" TextColor="White"/>
+                    <Label Text="Limit" Grid.Column="1" TextColor="White"/>
+                    <Label Text="From Date" Grid.Column="2" TextColor="White"/>
+                    <Label Text="To Date" Grid.Column="3" TextColor="White"/>
+
+                </Grid>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="viewmodel:BudgetItem">
+
+                    <Grid ColumnDefinitions="2*, 2*, *, *"
+                        Padding="10">
+
+                        <Label Text="{Binding Budget.Name}" />
+
+                        <Grid Grid.Column="1"
+                              ColumnDefinitions="Auto, *"
+                              ColumnSpacing="10">
+                            
+                            <Label Text="{Binding UsedAmount, StringFormat='{0:F0}'}"
+                                VerticalOptions="Center"/>
+
+                            <Label Grid.Column="0"
+                               Text="/"
+                               Margin="40,0,0,0"
+                               Opacity="0"/>
+
+                            <Label Text="{Binding LimitText}" />
+
+                            <ProgressBar Grid.Column="1"
+                                 Progress="{Binding UsedPercent}"
+                                 HeightRequest="10"
+                                 VerticalOptions="Center"/>
+                        </Grid>
+
+                        <Label Grid.Column="2"
+                            Text="{Binding StartDate, StringFormat='{0:dd.MM}'}" />
+
+                        <Label Grid.Column="3"
+                            Text="{Binding EndDate, StringFormat='{0:dd.MM}'}" />
+
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Transactions}">
+
+            <CollectionView.Header>
+                <Grid ColumnDefinitions="80,120,150,200,120"
+                      Padding="10"
+                      BackgroundColor="#2d2d2d">
+
+                    <Label Text="Amount" TextColor="White"/>
+                    <Label Text="Type" Grid.Column="1" TextColor="White"/>
+                    <Label Text="Date" Grid.Column="2" TextColor="White"/>
+                    <Label Text="Description" Grid.Column="3" TextColor="White"/>
+                    <Label Text="Category" Grid.Column="4" TextColor="White"/>
+
+                </Grid>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="entity:Transaction">
+
+                    <Grid ColumnDefinitions="80,120,150,200,120"
+                          Padding="10">
+
+                        <Label Text="{Binding Amount}" />
+                        <Label Text="{Binding Type}" Grid.Column="1"/>
+                        <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="2"/>
+                        <Label Text="{Binding Description}" Grid.Column="3"/>
+                        <Label Text="{Binding Category.Name}" Grid.Column="4"/>
+
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+
+</ContentView>
