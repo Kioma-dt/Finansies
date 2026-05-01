@@ -1,0 +1,88 @@
+<toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:dto="clr-namespace:UI.Popups"
+    x:TypeArguments="dto:BudgetCreateDTO"
+    x:Class="UI.Popups.BudgetCreatePopUp">
+
+    <Border Padding="20"
+            BackgroundColor="White"
+            WidthRequest="350"
+            Stroke="LightGray"
+            StrokeThickness="1">
+
+        <ScrollView>
+            <VerticalStackLayout Spacing="12">
+
+                <Label Text="Create Budget"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="Black"/>
+
+                <Entry x:Name="NameEntry"
+                       Placeholder="Budget name"
+                       TextColor="Black"
+                       PlaceholderColor="Gray"/>
+
+                <DatePicker x:Name="StartDatePicker"
+                            TextColor="Black"/>
+
+                <DatePicker x:Name="EndDatePicker"
+                            TextColor="Black"/>
+
+                <Picker x:Name="TypePicker"
+                        Title="Transaction Type"
+                        TextColor="Black"
+                        TitleColor="Gray"/>
+
+                <!-- Добавление фильтра -->
+                <HorizontalStackLayout>
+                    <Picker x:Name="FilterTypePicker"
+                            WidthRequest="150"/>
+
+                    <Button Text="Add"
+                            Clicked="OnAddFilter"/>
+                </HorizontalStackLayout>
+
+                <!-- Список фильтров -->
+                <CollectionView x:Name="FiltersView">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*,*,Auto">
+
+                                <Label Text="{Binding Type}"
+                                       TextColor="Black"/>
+
+                                <Picker Grid.Column="1"
+                                        ItemsSource="{Binding Values}"
+                                        SelectedItem="{Binding SelectedValue}"/>
+
+                                <Button Grid.Column="2"
+                                        Text="X"
+                                        Clicked="OnRemoveFilter"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <HorizontalStackLayout Spacing="10">
+
+                    <Button Text="Cancel"
+                            BackgroundColor="#9E9E9E"
+                            TextColor="White"
+                            Clicked="OnCancel"/>
+
+                    <Button Text="Create"
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            Clicked="OnCreate"/>
+
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Border>
+
+</toolkit:Popup>
