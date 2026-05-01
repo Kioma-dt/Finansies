@@ -49,10 +49,10 @@ namespace BuisnessLogic.Entities
                 throw new Exception("Negative Amount");
             }
 
-            if (PaidAmount + amount > TotalAmount)
-            {
-                throw new Exception("Debt is OverPaing");
-            }
+            //if (PaidAmount + amount > TotalAmount)
+            //{
+            //    throw new Exception("Debt is OverPaing");
+            //}
 
             PaidAmount += amount;
             LastPaidDate = date;

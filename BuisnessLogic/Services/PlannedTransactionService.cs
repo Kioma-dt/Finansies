@@ -19,7 +19,8 @@ namespace BuisnessLogic.Services
             DateTime plannedDate,
             Guid? accountId,
             Guid? categoryId,
-            Guid? familyMemberId);
+            Guid? familyMemberId,
+            Guid? debtId);
 
         public Task PlanMultipleTransactions(Guid userId,
             decimal amount,
@@ -30,7 +31,8 @@ namespace BuisnessLogic.Services
             uint numberOfTransactions,
             Guid? accountId,
             Guid? categoryId,
-            Guid? familyMemberId
+            Guid? familyMemberId,
+            Guid? debtId
             );
 
         Task ConfirmTransaction(Guid userId,
@@ -214,7 +216,8 @@ namespace BuisnessLogic.Services
                 plannedTransaction.Type,
                 plannedTransaction.AccountId.Value,
                 plannedTransaction.CategoryId,
-                plannedTransaction.FamilyMemberId
+                plannedTransaction.FamilyMemberId,
+                plannedTransaction.DebtId
             );
 
             plannedTransaction.Conirm();
@@ -224,7 +227,8 @@ namespace BuisnessLogic.Services
         public async Task PlanTransaction(Guid userId, decimal amount, string description, TransactionType type, DateTime plannedDate,
             Guid? accountId,
             Guid? categoryId,
-            Guid? familyMemberId)
+            Guid? familyMemberId,
+            Guid? debtId)
         {
             var planedTransaction = new PlannedTransaction()
             {
@@ -235,6 +239,7 @@ namespace BuisnessLogic.Services
                 AccountId = accountId,
                 CategoryId = categoryId,
                 FamilyMemberId = familyMemberId,
+                DebtId = debtId,
                 UserId = userId
             };
 
@@ -250,11 +255,12 @@ namespace BuisnessLogic.Services
             uint numberOfTransactions,
             Guid? accountId,
             Guid? categoryId,
-            Guid? familyMemberId)
+            Guid? familyMemberId, 
+            Guid? debtId)
         {
             for (int i = 0; i < numberOfTransactions; i++)
             {
-                await this.PlanTransaction(userId, amount, description, type, startDate, accountId, categoryId, familyMemberId);
+                await this.PlanTransaction(userId, amount, description, type, startDate, accountId, categoryId, familyMemberId, debtId);
 
                 startDate = periodicy switch
                 {

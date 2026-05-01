@@ -15,7 +15,8 @@ namespace BuisnessLogic.Services
             TransactionType type,
             Guid accountId, 
             Guid? categoryId,
-            Guid? familyMemberId);
+            Guid? familyMemberId,
+            Guid? debtId);
 
         Task AddCategory(Guid userId,
             Guid transactionId,
@@ -35,15 +36,22 @@ namespace BuisnessLogic.Services
         readonly IAccountRepository _accountRepository;
         readonly ICategoryRepository _categoryRepository;
         readonly IFamilyMemberRepository _familyMemberRepository;
+        readonly IDebtService _debtService;
         readonly ITransactionTagRepository _transactionTagRepository;
 
-        public TransactionService(ITransactionRepository transactionRepository, IAccountRepository accountRepository, ICategoryRepository categoryRepository, IFamilyMemberRepository familyMemberRepository, ITransactionTagRepository transactionTagRepository)
+        public TransactionService(ITransactionRepository transactionRepository,
+            IAccountRepository accountRepository, 
+            ICategoryRepository categoryRepository, 
+            IFamilyMemberRepository familyMemberRepository, 
+            ITransactionTagRepository transactionTagRepository,
+            IDebtService debtService)
         {
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;
             _categoryRepository = categoryRepository;
             _familyMemberRepository = familyMemberRepository;
             _transactionTagRepository = transactionTagRepository;
+            _debtService = debtService;
         }
 
         public async Task<List<Transaction>> GetAll(Guid userId) => (await _transactionRepository.GetAll(userId));
@@ -131,7 +139,8 @@ namespace BuisnessLogic.Services
             TransactionType type, 
             Guid accountId, 
             Guid? categoryId,
-            Guid? familyMemberId)
+            Guid? familyMemberId,
+            Guid? debtId)
         {
             var account = await _accountRepository.GetById(userId, accountId);
 
@@ -148,6 +157,11 @@ namespace BuisnessLogic.Services
             {
                 account.AddToBalance(amount);
             }       
+
+            if (debtId is not null)
+            {
+                await _debtService.PayOffDebt(userId, debtId.Value, amount, date);
+            }
 
             var transaction = new Transaction
             {

@@ -131,10 +131,12 @@ namespace UI.ViewModels
                     transaction.Type,
                     transaction.AccountId,
                     transaction.CategoryId,
-                    transaction.FamilyMemberId);
+                    transaction.FamilyMemberId,
+                    transaction.DebtId);
 
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Transactions));
+                WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
             }
             catch (ArgumentException ex)
             {

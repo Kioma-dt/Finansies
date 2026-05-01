@@ -69,7 +69,8 @@ namespace UI.ViewModels
                         data.StartDate,
                         data.AccountId,
                         data.CategoryId,
-                        data.FamilyMemberId);
+                        data.FamilyMemberId,
+                        data.DebtId);
                 }
                 else
                 {
@@ -82,7 +83,8 @@ namespace UI.ViewModels
                         data.Count, 
                         data.AccountId,
                         data.CategoryId,
-                        data.FamilyMemberId);
+                        data.FamilyMemberId,
+                        data.DebtId);
                 }
 
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
