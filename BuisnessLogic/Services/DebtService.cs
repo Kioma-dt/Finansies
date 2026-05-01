@@ -1,6 +1,7 @@
 ﻿using BuisnessLogic.DebtInterestCalculator;
 using BuisnessLogic.DTO;
 using BuisnessLogic.Entities;
+using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using System;
 using System.Collections.Generic;
@@ -28,18 +29,24 @@ namespace BuisnessLogic.Services
     public class DebtService : IDebtService
     {
         readonly IDebtRepository _debtRepository;
+        readonly IPlannedTransactionService _plannedTransactionService;
         readonly IDebtInterestCalculatorProvider _debtInterestCalculatorProvider;
 
-        public DebtService(IDebtRepository debtRepository, IDebtInterestCalculatorProvider debtInterestCalculatorProvider)
+        public DebtService(IDebtRepository debtRepository, 
+            IDebtInterestCalculatorProvider debtInterestCalculatorProvider,
+            IPlannedTransactionService plannedTransactionService)
         {
             _debtRepository = debtRepository;
+            _plannedTransactionService = plannedTransactionService;
             _debtInterestCalculatorProvider = debtInterestCalculatorProvider;
         }
 
         public async Task CreateDebt(Guid userId, DebtCreateDTO dto)
         {
+            var id = Guid.NewGuid();
             var debt = new Debt()
             {
+                Id = id,
                 Name = dto.Name,
                 StartAmount = dto.Amount,
                 TotalAmount = dto.Amount,
@@ -58,6 +65,39 @@ namespace BuisnessLogic.Services
             };
 
             await _debtRepository.Add(debt);
+
+            if (dto.IsAutoPlanned)
+            {
+                var period = (decimal)(dto.EndDate - dto.StartDate).TotalDays;
+
+                var transactionAmount = dto.TransactionPeriodicity switch
+                {
+                    TransactionPeriodicity.Daily => dto.Amount / period,
+                    TransactionPeriodicity.Monthly => dto.Amount / (period / 30m),
+                    TransactionPeriodicity.Yearly => dto.Amount / (period / 365m),
+                    _ => dto.Amount
+                };
+
+                var type = dto.Type switch
+                {
+                    DebtType.Debit => TransactionType.Income,
+
+                    _ => TransactionType.Expense
+                };
+
+                await _plannedTransactionService.PlanMultipleTransactions(userId,
+                    transactionAmount,
+                    dto.Name,
+                    type,
+                    dto.StartDate,
+                    dto.TransactionPeriodicity,
+                    (uint)Math.Ceiling(dto.Amount / transactionAmount),
+                    null,
+                    null,
+                    null,
+                    id
+                    );
+            }
         }
 
         public Task<List<Debt>> GetAll(Guid userId) => _debtRepository.GetAll(userId);

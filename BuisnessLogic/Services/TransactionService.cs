@@ -36,7 +36,7 @@ namespace BuisnessLogic.Services
         readonly IAccountRepository _accountRepository;
         readonly ICategoryRepository _categoryRepository;
         readonly IFamilyMemberRepository _familyMemberRepository;
-        readonly IDebtService _debtService;
+        readonly IDebtRepository _debtRepository;
         readonly ITransactionTagRepository _transactionTagRepository;
 
         public TransactionService(ITransactionRepository transactionRepository,
@@ -44,14 +44,14 @@ namespace BuisnessLogic.Services
             ICategoryRepository categoryRepository, 
             IFamilyMemberRepository familyMemberRepository, 
             ITransactionTagRepository transactionTagRepository,
-            IDebtService debtService)
+            IDebtRepository debtRepository)
         {
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;
             _categoryRepository = categoryRepository;
             _familyMemberRepository = familyMemberRepository;
             _transactionTagRepository = transactionTagRepository;
-            _debtService = debtService;
+            _debtRepository = debtRepository;
         }
 
         public async Task<List<Transaction>> GetAll(Guid userId) => (await _transactionRepository.GetAll(userId));
@@ -160,7 +160,16 @@ namespace BuisnessLogic.Services
 
             if (debtId is not null)
             {
-                await _debtService.PayOffDebt(userId, debtId.Value, amount, date);
+                var debt = await _debtRepository.GetById(userId, debtId.Value);
+
+                if (debt is null)
+                {
+                    throw new ArgumentException($"No Debt with Id: {debtId.Value}");
+                }
+
+                debt.MakeAPayment(amount, date);
+
+                await _debtRepository.Update(debt);
             }
 
             var transaction = new Transaction

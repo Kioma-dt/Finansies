@@ -116,6 +116,8 @@ namespace UI.ViewModels
                     new DataBaseChangedMessage(DataBaseChangedMessageType.Transactions));
                 WeakReferenceMessenger.Default.Send(
                     new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
+                WeakReferenceMessenger.Default.Send(
+                    new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
             }
             catch (FormatException ex)
             {

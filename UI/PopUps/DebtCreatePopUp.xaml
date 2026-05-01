@@ -75,12 +75,11 @@
                        VerticalOptions="Center"
                        TextColor="Black"/>
                 </HorizontalStackLayout>
-                
-                <Entry x:Name="PaymentsPerYearEntry"
-                   Placeholder="Payments per year"
-                   Keyboard="Numeric"
-                   IsEnabled="False"
-                   TextColor="Black"/>
+
+                <Picker x:Name="PaymentPeriodicityPicker"
+                    Title="Payment frequency"
+                    TextColor="Black"
+                    TitleColor="Gray"/>
 
                 <HorizontalStackLayout Spacing="10">
 

@@ -14,7 +14,7 @@ namespace BuisnessLogic.DTO
     decimal InterestRate,
     decimal FixedAddition,
     bool IsAutoPlanned,
-    uint PaymentsPerYear
+    TransactionPeriodicity TransactionPeriodicity
     )
     {
         public string Name { get; } = Name;
@@ -29,6 +29,6 @@ namespace BuisnessLogic.DTO
         public decimal InterestRate { get; } = InterestRate;
         public decimal FixedAddition { get; } = FixedAddition;
         public bool IsAutoPlanned { get; } = IsAutoPlanned;
-        public uint PaymentsPerYear { get; } = PaymentsPerYear;
+        public TransactionPeriodicity TransactionPeriodicity { get; } = TransactionPeriodicity;
     }
 }

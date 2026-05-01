@@ -57,7 +57,10 @@ public partial class DebtCreatePopUp : Popup<DebtCreateDTO?>
         CapitalisationPicker.SelectedIndex = 1;
 
         AutoCalculateCheckBox.IsChecked = false;
-        PaymentsPerYearEntry.IsEnabled = false;
+
+        PaymentPeriodicityPicker.ItemsSource = Enum.GetValues(typeof(TransactionPeriodicity));
+        PaymentPeriodicityPicker.SelectedItem = TransactionPeriodicity.Monthly;
+        PaymentPeriodicityPicker.IsEnabled = false;
 
         UpdateInterestField();
     }
@@ -111,11 +114,11 @@ public partial class DebtCreatePopUp : Popup<DebtCreateDTO?>
 
             var autoCalculate = AutoCalculateCheckBox.IsChecked;
 
-            uint? paymentsPerYear = null;
+            TransactionPeriodicity? payments = null;
 
             if (autoCalculate)
             {
-                paymentsPerYear = uint.Parse(PaymentsPerYearEntry.Text);
+                payments = (TransactionPeriodicity)PaymentPeriodicityPicker.SelectedItem;
             }
 
             var debt = new DebtCreateDTO
@@ -135,7 +138,7 @@ public partial class DebtCreatePopUp : Popup<DebtCreateDTO?>
                 InterestRate: interestValue,
                 FixedAddition: interestValue,
                 IsAutoPlanned: autoCalculate,
-                PaymentsPerYear: paymentsPerYear ?? 1
+                TransactionPeriodicity: payments ?? TransactionPeriodicity.Once
             );
 
             await CloseAsync(debt);
@@ -149,12 +152,12 @@ public partial class DebtCreatePopUp : Popup<DebtCreateDTO?>
 
     private void OnAutoCalculateChanged(object sender, CheckedChangedEventArgs e)
     {
-        PaymentsPerYearEntry.IsEnabled = e.Value;
+        PaymentPeriodicityPicker.IsEnabled = e.Value;
 
-        if (!e.Value)
-        {
-            PaymentsPerYearEntry.Text = "";
-        }
+        //if (!e.Value)
+        //{
+        //    PaymentsPerYearEntry.Text = "";
+        //}
     }
 
     private void Clear()
