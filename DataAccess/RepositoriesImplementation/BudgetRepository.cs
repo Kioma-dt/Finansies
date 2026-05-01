@@ -21,6 +21,14 @@ namespace DataAccess.RepositoriesImplementation
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task AddBudgetFilter(BudgetFilter filter)
+        {
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+            await dbContext.BudgetFilters.AddAsync(filter);
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task<List<Budget>> GetAll(Guid userId)
         {
             await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
@@ -45,6 +53,7 @@ namespace DataAccess.RepositoriesImplementation
             await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
             return await dbContext.Budgets
+                .Include(b => b.Filters)
                 .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
         }
 
@@ -59,7 +68,7 @@ namespace DataAccess.RepositoriesImplementation
             if (budget is not null)
             {
                 budget.Filters.Add(filter);
-                await dbContext.BudgetFilters.AddAsync(filter);
+                //await dbContext.BudgetFilters.AddAsync(filter);
                 await dbContext.SaveChangesAsync();
             }
         }

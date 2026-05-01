@@ -25,6 +25,11 @@
                        TextColor="Black"
                        PlaceholderColor="Gray"/>
 
+                <Entry x:Name="LimitEntry"
+                   Placeholder="Limit"
+                   TextColor="Black"
+                   PlaceholderColor="Gray"/>
+
                 <DatePicker x:Name="StartDatePicker"
                             TextColor="Black"/>
 
@@ -36,26 +41,28 @@
                         TextColor="Black"
                         TitleColor="Gray"/>
 
-                <!-- Добавление фильтра -->
-                <HorizontalStackLayout>
-                    <Picker x:Name="FilterTypePicker"
-                            WidthRequest="150"/>
+                <Grid ColumnDefinitions="*, *, Auto">
+                    <Picker Grid.Column="0"
+                            x:Name="FilterTypePicker"
+                            SelectedIndexChanged="OnFilterTypeChanged"/>
 
-                    <Button Text="Add"
+                    <Picker Grid.Column="1"
+                            x:Name="FilterValuePicker"/>
+
+                    <Button Grid.Column="2"
+                            Text="Add"
                             Clicked="OnAddFilter"/>
-                </HorizontalStackLayout>
+                </Grid>
 
-                <!-- Список фильтров -->
                 <CollectionView x:Name="FiltersView">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="dto:FilterItem">
                             <Grid ColumnDefinitions="*,*,Auto">
 
                                 <Label Text="{Binding Type}"
                                        TextColor="Black"/>
 
                                 <Picker Grid.Column="1"
-                                        ItemsSource="{Binding Values}"
                                         SelectedItem="{Binding SelectedValue}"/>
 
                                 <Button Grid.Column="2"

@@ -9,6 +9,13 @@ namespace BuisnessLogic.Services
     {
         Task<List<Budget>> GetAll(Guid userId);
 
+        Task CreateBudget(Guid userId,
+            string name,
+            decimal limit,
+            DateTime startDate,
+            DateTime endDate,
+            List<(BudgetFilterType Type, string Value)> filters);
+
         Task<IEnumerable<Transaction>> GetRelevantTransactions(Guid userId,
             Guid budgetId);
 
@@ -32,6 +39,32 @@ namespace BuisnessLogic.Services
         }
 
         public Task<List<Budget>> GetAll(Guid userId) => _budgetRepository.GetAll(userId);
+
+        public async Task CreateBudget(Guid userId, 
+            string name, 
+            decimal limit,
+            DateTime startDate,
+            DateTime endDate,
+            List<(BudgetFilterType Type, string Value)> filters)
+        {
+            var id = Guid.NewGuid();
+            var budget = new Budget()
+            {
+                Id = id,
+                Name = name,
+                Limit = limit,
+                StartDate = startDate,
+                EndDate = endDate,
+                UserId = userId
+            };
+
+            await _budgetRepository.Add(budget);
+
+            foreach (var (type, value) in filters) 
+            {
+                await this.AddFilter(userId, id, type, value);
+            }
+        }
 
         public async Task AddFilter(Guid userId, Guid budgetId, BudgetFilterType type, string value)
         {
@@ -74,5 +107,6 @@ namespace BuisnessLogic.Services
 
             return result;
         }
+
     }
 }

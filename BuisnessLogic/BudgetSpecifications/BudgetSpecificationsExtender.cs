@@ -43,7 +43,7 @@ namespace BuisnessLogic.BudgetService
             );
 
             Expression? finalBody = null;
-            var groups = budget.Filters.GroupBy(bf => bf.Type);
+            var groups = budget.Filters.GroupBy(bf => bf.Type).ToList();
 
             foreach (var group in groups)
             {

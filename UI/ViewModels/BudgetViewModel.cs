@@ -26,6 +26,7 @@ namespace UI.ViewModels
     {
         private readonly IBudgetService _budgetService;
         private readonly IUserContext _user;
+        private readonly BudgetCreatePopUp _popup;
 
 
         public ObservableCollection<BudgetItem> Budgets { get; set; } = new();
@@ -37,12 +38,14 @@ namespace UI.ViewModels
 
         public BudgetViewModel(
             IBudgetService budgetService,
-            IUserContext user)
+            IUserContext user,
+            BudgetCreatePopUp popup)
         {
             _budgetService = budgetService;
             _user = user;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
+            _popup = popup;
         }
         public async void Receive(DataBaseChangedMessage message)
         {
@@ -75,55 +78,32 @@ namespace UI.ViewModels
             }
         }
 
-        //[RelayCommand]
-        //public async Task PlanTransaction()
-        //{
-        //    try
-        //    {
-        //        var result = await Application.Current.MainPage
-        //        .ShowPopupAsync<PlannedTransactionCreateDTO?>(_popUp);
+        [RelayCommand]
+        public async Task CreateBudget()
+        {
+            try
+            {
+                var result = await Application.Current.MainPage
+                .ShowPopupAsync<BudgetCreateDTO?>(_popup);
 
-        //        var data = result.Result;
+                var data = result.Result;
 
-        //        if (data is null)
-        //            return;
+                if (data is null)
+                    return;
 
-        //        if (data.Periodicity == TransactionPeriodicity.Once)
-        //        {
-        //            await _plannedTransactionService.PlanTransaction(_user.UserId,
-        //                data.Amount,
-        //                data.Description,
-        //                data.Type,
-        //                data.StartDate,
-        //                data.AccountId,
-        //                data.CategoryId,
-        //                data.FamilyMemberId);
-        //        }
-        //        else
-        //        {
-        //            await _plannedTransactionService.PlanMultipleTransactions(_user.UserId,
-        //                data.Amount,
-        //                data.Description,
-        //                data.Type,
-        //                data.StartDate,
-        //                data.Periodicity,
-        //                data.Count,
-        //                data.AccountId,
-        //                data.CategoryId,
-        //                data.FamilyMemberId);
-        //        }
+                await _budgetService.CreateBudget(_user.UserId, data.Name, data.Limit, data.StartDate, data.EndDate, data.Filters);
 
-        //        WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
-        //    }
-        //    catch (FormatException ex)
-        //    {
-        //        await Application.Current.MainPage.DisplayAlert("Can't plan Transaction", $"{ex.Message}", "OK");
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        await Application.Current.MainPage.DisplayAlert("Can't plan Transaction", $"{ex.Message}", "OK");
-        //    }
+                WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Budgets));
+            }
+            catch (FormatException ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+            }
+            catch (ArgumentException ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+            }
 
-        //}
+        }
     }
 }

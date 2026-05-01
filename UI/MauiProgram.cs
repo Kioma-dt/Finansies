@@ -87,6 +87,7 @@ namespace UI
             builder.Services.AddTransient<CategoryCreatePopUp>();
             builder.Services.AddTransient<TransactionCreatePopUp>();
             builder.Services.AddTransient<PlannedTransactionCreatePopUp>();
+            builder.Services.AddTransient<BudgetCreatePopUp>();
 
 #if DEBUG
             builder.Logging.AddDebug();

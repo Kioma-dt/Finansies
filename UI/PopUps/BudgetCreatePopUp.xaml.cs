@@ -2,6 +2,8 @@ using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using CommunityToolkit.Maui.Views;
+using DataAccess.RepositoriesImplementation;
+using System.Collections.Generic;
 
 namespace UI.Popups;
 
@@ -22,18 +24,22 @@ public class BudgetCreateDTO(string Name,
 public class FilterItem
 {
     public BudgetFilterType Type { get; set; }
-    public List<string> Values { get; set; } = new();
     public string? SelectedValue { get; set; }
 }
 
 public partial class BudgetCreatePopUp : Popup<BudgetCreateDTO?>
 {
-    readonly IAccountRepository _accounts;
-    readonly ICategoryRepository _categories;
-    readonly IFamilyMemberRepository _families;
+    readonly IAccountRepository _accountsRepository;
+    readonly ICategoryRepository _categoriesRepository;
+    readonly IFamilyMemberRepository _familyMembersRepository;
     readonly IUserContext _user;
 
-    List<FilterItem> Filters = new();
+    List<Account> Accounts { get; set; } = new();
+    List<Category> Categories { get; set; } = new();
+    List<FamilyMember> FamilyMembers { get; set; } = new();
+
+    List<FilterItem> SelectedFiltersDisplay = new();
+    List<FilterItem> SelectedFiltersReturned = new();
 
     public BudgetCreatePopUp(
         IAccountRepository accounts,
@@ -43,9 +49,9 @@ public partial class BudgetCreatePopUp : Popup<BudgetCreateDTO?>
     {
         InitializeComponent();
 
-        _accounts = accounts;
-        _categories = categories;
-        _families = families;
+        _accountsRepository = accounts;
+        _categoriesRepository = categories;
+        _familyMembersRepository = families;
         _user = user;
 
         Loaded += OnLoad;
@@ -58,8 +64,49 @@ public partial class BudgetCreatePopUp : Popup<BudgetCreateDTO?>
         TypePicker.ItemsSource = Enum.GetValues(typeof(TransactionType));
         TypePicker.SelectedItem = TransactionType.Expense;
 
+
+        Accounts = await _accountsRepository.GetAllScalar(_user.UserId) ?? new();
+        Categories = await _categoriesRepository.GetAllScalar(_user.UserId) ?? new();
+        FamilyMembers = await _familyMembersRepository.GetAllScalar(_user.UserId) ?? new();
+
         FilterTypePicker.ItemsSource = Enum.GetValues(typeof(BudgetFilterType));
-        FiltersView.ItemsSource = Filters;
+        FilterTypePicker.SelectedItem = BudgetFilterType.Account;
+
+        FilterValuePicker.ItemsSource = Accounts;
+        FilterValuePicker.ItemDisplayBinding = new Binding("Name");
+    }
+
+    private async void OnFilterTypeChanged(object sender, EventArgs e)
+    {
+        var type = FilterTypePicker.SelectedItem as BudgetFilterType?;
+
+        if (type is null)
+        {
+            return;
+        }
+
+        switch (type.Value)
+        {
+            case BudgetFilterType.Account:
+                {
+                    FilterValuePicker.SelectedItem = null;
+                    FilterValuePicker.ItemsSource = Accounts;
+                    
+                    break;
+                }
+            case BudgetFilterType.Category:
+                {
+                    FilterValuePicker.SelectedItem = null;
+                    FilterValuePicker.ItemsSource = Categories;
+                    break;
+                }
+            case BudgetFilterType.FamilyMember:
+                {
+                    FilterValuePicker.SelectedItem = null;
+                    FilterValuePicker.ItemsSource = FamilyMembers;
+                    break;
+                }
+        }
     }
 
     private async void OnAddFilter(object sender, EventArgs e)
@@ -67,47 +114,71 @@ public partial class BudgetCreatePopUp : Popup<BudgetCreateDTO?>
         var type = (BudgetFilterType)FilterTypePicker.SelectedItem;
 
         var item = new FilterItem { Type = type };
-
-        var userId = _user.UserId;
+        var itemDisplay = new FilterItem { Type = type };
 
         switch (type)
         {
             case BudgetFilterType.Account:
-                item.Values = (await _accounts.GetAllScalar(userId)).Select();
-                break;
+                {
+                    var account = FilterValuePicker.SelectedItem as Account;
+
+                    if (account is not null)
+                    {
+                        item.SelectedValue = account.Id.ToString();
+                        itemDisplay.SelectedValue = account.Name;
+                    }
+
+                        break;
+                }
 
             case BudgetFilterType.Category:
-                item.Values = (await _categories.GetAllScalar(userId))!.Cast<object>().ToList();
-                break;
+                {
+                    var category = FilterValuePicker.SelectedItem as Category;
+
+                    if (category is not null)
+                    {
+                        item.SelectedValue = category.Id.ToString();
+                        itemDisplay.SelectedValue = category.Name;
+                    }
+
+                    break;
+                }
+
 
             case BudgetFilterType.FamilyMember:
-                item.Values = (await _families.GetAllScalar(userId))!.Cast<object>().ToList();
-                break;
+                {
+                    var familyMember = FilterValuePicker.SelectedItem as FamilyMember;
 
-            case BudgetFilterType.TransactionType:
-                item.Values = Enum.GetValues(typeof(TransactionType)).Cast<object>().ToList();
-                break;
+                    if (familyMember is not null)
+                    {
+                        item.SelectedValue = familyMember.Id.ToString();
+                        itemDisplay.SelectedValue = familyMember.Name;
+                    }
+
+                    break;
+                }
+
         }
 
-        Filters.Add(item);
+        SelectedFiltersReturned.Add(item);
+        SelectedFiltersDisplay.Add(itemDisplay);
 
-        // обновляем вручную
         FiltersView.ItemsSource = null;
-        FiltersView.ItemsSource = Filters;
+        FiltersView.ItemsSource = SelectedFiltersDisplay;
     }
 
     private void OnRemoveFilter(object sender, EventArgs e)
     {
-        var button = sender as Button;
-        var item = button?.BindingContext as FilterItem;
+        //var button = sender as Button;
+        //var item = button?.BindingContext as FilterItem;
 
-        if (item != null)
-        {
-            Filters.Remove(item);
+        //if (item != null)
+        //{
+        //    Filters.Remove(item);
 
-            FiltersView.ItemsSource = null;
-            FiltersView.ItemsSource = Filters;
-        }
+        //    FiltersView.ItemsSource = null;
+        //    FiltersView.ItemsSource = Filters;
+        //}
     }
 
     private async void OnCancel(object sender, EventArgs e)
@@ -119,29 +190,41 @@ public partial class BudgetCreatePopUp : Popup<BudgetCreateDTO?>
     {
         var name = NameEntry.Text;
 
-        var budget = new Budget
+        var limit = decimal.Parse(LimitEntry.Text);
+
+        var startDate = StartDatePicker.Date;
+
+        var endDate = EndDatePicker.Date;
+
+        var filters = new List<(BudgetFilterType Type, string Value)>();
+
+        filters.Add((BudgetFilterType.TransactionType, (TypePicker.SelectedItem as TransactionType?)?.ToString() ?? "Income"));
+
+        foreach (var filterItem in SelectedFiltersReturned)
         {
-            Id = Guid.NewGuid(),
-            Name = name,
-            StartDate = StartDatePicker.Date,
-            EndDate = EndDatePicker.Date,
-            UserId = _user.UserId
-        };
+            filters.Add((filterItem.Type, filterItem.SelectedValue ?? ""));
+        }
 
-        // тут потом соберешь Filters в BudgetFilter
 
-        await CloseAsync(budget);
+        await CloseAsync(new BudgetCreateDTO(name,
+            limit,
+            startDate,
+            endDate,
+            filters));
     }
 
     private void Clear()
     {
         NameEntry.Text = string.Empty;
+        LimitEntry.Text = string.Empty;
 
         StartDatePicker.Date = DateTime.Now;
         EndDatePicker.Date = DateTime.Now.AddMonths(1);
 
-        Filters.Clear();
+        SelectedFiltersDisplay.Clear();
+        SelectedFiltersReturned.Clear();
+
         FiltersView.ItemsSource = null;
-        FiltersView.ItemsSource = Filters;
+        FiltersView.ItemsSource = SelectedFiltersDisplay;
     }
 }

@@ -7,7 +7,7 @@
              x:Class="UI.Views.BudgetView"
              x:DataType="viewmodel:BudgetViewModel">
 
-    <Grid RowDefinitions="*,*"
+    <Grid RowDefinitions="*,*, Auto"
           Padding="10"
           RowSpacing="10">
 
@@ -54,15 +54,14 @@
 
                             <ProgressBar Grid.Column="1"
                                  Progress="{Binding UsedPercent}"
-                                 HeightRequest="10"
                                  VerticalOptions="Center"/>
                         </Grid>
 
                         <Label Grid.Column="2"
-                            Text="{Binding StartDate, StringFormat='{0:dd.MM}'}" />
+                            Text="{Binding Budget.StartDate, StringFormat='{0:dd.MM.yyyy}'}" />
 
                         <Label Grid.Column="3"
-                            Text="{Binding EndDate, StringFormat='{0:dd.MM}'}" />
+                            Text="{Binding Budget.StartDate, StringFormat='{0:dd.MM.yyyy}'}" />
 
                     </Grid>
 
@@ -106,6 +105,14 @@
             </CollectionView.ItemTemplate>
 
         </CollectionView>
+
+        <Button Grid.Row="2"
+            Text="Add Budget"
+            Command="{Binding CreateBudgetCommand}" 
+            BackgroundColor="#2196F3"
+            TextColor="White"
+            CornerRadius="10"
+            HeightRequest="45"/>
 
     </Grid>
 
