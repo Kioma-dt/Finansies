@@ -41,6 +41,7 @@ namespace UI.ViewModels
         private readonly AccountView _accountView;
         private readonly CategoryView _categoryView;
         private readonly BudgetView _budgetView;
+        private readonly DebtView _debtView;
 
         public MainPageViewModel( IUserContext user,
             ITransactionService transactionService,
@@ -49,7 +50,8 @@ namespace UI.ViewModels
             TransactionView transactionView,
             PlannedTransactionView plannedTransactionView,
             CategoryView categoryView,
-            BudgetView budgetView)
+            BudgetView budgetView,
+            DebtView debtView)
         {
             _user = user;
             _transactionService = transactionService;
@@ -60,6 +62,7 @@ namespace UI.ViewModels
             _plannedTransactionView = plannedTransactionView;
             _categoryView = categoryView;
             _budgetView = budgetView;
+            _debtView = debtView;
 
             LeftView = _accountView;
             RightView = _transactionView;
@@ -97,6 +100,15 @@ namespace UI.ViewModels
             RightView = null;
 
             CentralView = _budgetView;
+        }
+
+        [RelayCommand]
+        public void ShowDebts()
+        {
+            LeftView = null;
+            RightView = null;
+
+            CentralView = _debtView;
         }
 
         [RelayCommand]

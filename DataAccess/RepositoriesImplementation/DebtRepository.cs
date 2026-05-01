@@ -19,6 +19,17 @@ namespace DataAccess.RepositoriesImplementation
 
             return await db.Debts
                 .Where(x => x.UserId == userId)
+                .Include(x => x.FamilyMember)
+                .Include(x => x.Category)
+                .ToListAsync();
+        }
+
+        public async Task<List<Debt>> GetAllScalar(Guid userId)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.Debts
+                .Where(x => x.UserId == userId)
                 .ToListAsync();
         }
 
@@ -98,5 +109,7 @@ namespace DataAccess.RepositoriesImplementation
 
             await db.SaveChangesAsync();
         }
+
+
     }
 }

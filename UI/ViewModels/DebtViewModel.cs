@@ -1,0 +1,93 @@
+﻿using BuisnessLogic.Entities;
+using BuisnessLogic.Services;
+using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using System.Collections.ObjectModel;
+using UI.Messages;
+using UI.Popups;
+
+namespace UI.ViewModels
+{
+    public partial class DebtViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
+    {
+        private readonly IDebtService _debtService;
+        private readonly IUserContext _user;
+        private readonly BudgetCreatePopUp _popup;
+
+
+        public ObservableCollection<Debt> Debts { get; set; } = new();
+        //public ObservableCollection<Transaction> Transactions { get; set; } = new();
+
+        //[ObservableProperty]
+        //public partial BudgetItem? SelectedBudget { get; set; } = null;
+
+
+        public DebtViewModel(
+            IDebtService debtService,
+            IUserContext user,
+            BudgetCreatePopUp popup)
+        {
+            _debtService = debtService;
+            _user = user;
+            _popup = popup;
+
+            WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
+        }
+        public async void Receive(DataBaseChangedMessage message)
+        {
+            if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Debts)
+            {
+                var data = await _debtService.GetAll(_user.UserId);
+
+                Debts.Clear();
+                foreach (var t in data)
+                    Debts.Add(t);
+            }
+        }
+
+        //[RelayCommand]
+        //public async Task SelectBudget()
+        //{
+        //    Transactions.Clear();
+        //    if (SelectedBudget is not null)
+        //    {
+        //        var transactions = await _budgetService.GetRelevantTransactions(_user.UserId, SelectedBudget.Budget.Id);
+
+        //        foreach (var transaction in transactions)
+        //        {
+        //            Transactions.Add(transaction);
+        //        }
+        //    }
+        //}
+
+        //[RelayCommand]
+        //public async Task CreateBudget()
+        //{
+        //    try
+        //    {
+        //        var result = await Application.Current.MainPage
+        //        .ShowPopupAsync<BudgetCreateDTO?>(_popup);
+
+        //        var data = result.Result;
+
+        //        if (data is null)
+        //            return;
+
+        //        await _budgetService.CreateBudget(_user.UserId, data.Name, data.Limit, data.StartDate, data.EndDate, data.Filters);
+
+        //        WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Budgets));
+        //    }
+        //    catch (FormatException ex)
+        //    {
+        //        await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+        //    }
+
+        //}
+    }
+}

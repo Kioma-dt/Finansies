@@ -11,6 +11,7 @@ namespace BuisnessLogic.Services
 {
     public interface IDebtService
     {
+        Task<List<Debt>> GetAll(Guid userId);
         Task PayOffDebt(Guid userId,
             Guid debtId,
             decimal amount,
@@ -30,6 +31,8 @@ namespace BuisnessLogic.Services
             _debtRepository = debtRepository;
             _debtInterestCalculatorProvider = debtInterestCalculatorProvider;
         }
+
+        public Task<List<Debt>> GetAll(Guid userId) => _debtRepository.GetAll(userId);
 
         public async Task PayOffDebt(Guid userId, Guid debtId, decimal amount, DateTime date)
         {

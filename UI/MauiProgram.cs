@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using BuisnessLogic.BudgetService;
+using BuisnessLogic.DebtInterestCalculator;
 
 namespace UI
 {
@@ -41,6 +42,13 @@ namespace UI
 
             builder.Services.AddSingleton<IBudgetSpecificationsCreatorsProvider, BudgetSpecificationsCreatorsProvider>();
             builder.Services.AddSingleton<IBudgetSpecificationsExtender, BudgetSpecificationsExtender>();
+
+            builder.Services.AddSingleton<IDebtInterestCalculator, ComplexInterestCalcilator>();
+            builder.Services.AddSingleton<IDebtInterestCalculator, FixedInterestCalcilator>();
+            builder.Services.AddSingleton<IDebtInterestCalculator, NoneInterestCalculator>();
+            builder.Services.AddSingleton<IDebtInterestCalculator, SimpleInterestCalculator>();
+
+            builder.Services.AddSingleton<IDebtInterestCalculatorProvider, DebtInterestCalculatorProvider>();
 
             builder.Services.AddSingleton<IUserContext, UserContext>();
 
@@ -72,6 +80,7 @@ namespace UI
             builder.Services.AddSingleton<AccountViewModel>();
             builder.Services.AddSingleton<CategoryViewModel>();
             builder.Services.AddSingleton<BudgetViewModel>();
+            builder.Services.AddSingleton<DebtViewModel>();
 
             builder.Services.AddSingleton<MainPageViewModel>();
 
@@ -80,6 +89,7 @@ namespace UI
             builder.Services.AddSingleton<AccountView>();
             builder.Services.AddSingleton<CategoryView>();
             builder.Services.AddSingleton<BudgetView>();
+            builder.Services.AddSingleton<DebtView>();
 
             builder.Services.AddSingleton<MainPage>();
 

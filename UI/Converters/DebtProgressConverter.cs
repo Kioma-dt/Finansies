@@ -1,20 +1,21 @@
 ﻿using BuisnessLogic.Entities;
-using BuisnessLogic.Enums;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UI.Converters
 {
-    public class IndentConverter : IValueConverter
+    public class DebtProgressConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var level = (int)value;
-            return new Thickness(level * 15, 0, 0, 0);
+            if (value is Debt debt)
+            {
+                if (debt.TotalAmount == 0)
+                    return 0;
+
+                return (double)(debt.PaidAmount / debt.TotalAmount);
+            }
+
+            return 0;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

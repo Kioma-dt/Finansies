@@ -86,6 +86,9 @@
 	  <Compile Update="PopUps\AccountCreatePopUp.xaml.cs">
 	    <DependentUpon>AccountCreatePopUp.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\DebtView.xaml.cs">
+	    <DependentUpon>DebtView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\BudgetView.xaml.cs">
 	    <DependentUpon>BudgetView.xaml</DependentUpon>
 	  </Compile>
@@ -114,6 +117,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="PopUps\CategoryCreaterPopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\DebtView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\BudgetView.xaml">

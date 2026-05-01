@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:UI.ViewModels"
+             xmlns:converter="clr-namespace:UI.Converters"
+             xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
+             x:Class="UI.Views.DebtView"
+             x:DataType="viewmodel:DebtViewModel">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converter:DebtProgressConverter x:Key="debtProgressConverter"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Grid ColumnDefinitions="2*,*,*,*,*,*,3*"
+              Padding="10"
+              BackgroundColor="#2d2d2d">
+
+            <Label Text="Name"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+
+            <Label Text="Type"
+                   Grid.Column="1"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+
+            <Label Text="Category"
+                   Grid.Column="2"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+
+            <Label Text="Family"
+                   Grid.Column="3"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+
+            <Label Text="Total"
+                   Grid.Column="4"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+
+            <Label Text="Paid"
+                   Grid.Column="5"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+
+            <Label Text="Progress"
+                   Grid.Column="6"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+
+        </Grid>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Debts}">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="entity:Debt">
+
+                    <Grid ColumnDefinitions="2*,*,*,*,*,*,3*"
+                          Padding="10">
+
+                        <Label Text="{Binding Name}"
+                               TextColor="White"/>
+
+                        <Label Text="{Binding Type}"
+                               Grid.Column="1"
+                               TextColor="LightGray"/>
+
+                        <Label Text="{Binding Category.Name, TargetNullValue='-'}"
+                               Grid.Column="2"
+                               TextColor="LightBlue"/>
+
+                        <Label Text="{Binding FamilyMember.Name, TargetNullValue='-'}"
+                               Grid.Column="3"
+                               TextColor="LightBlue"/>
+                        
+                        <Label Text="{Binding TotalAmount}"
+                               Grid.Column="4"
+                               TextColor="White"/>
+
+                        <Label Text="{Binding PaidAmount}"
+                               Grid.Column="5"
+                               TextColor="LightGreen"/>
+
+                        <ProgressBar Grid.Column="6"
+                                     Progress="{Binding ., Converter={StaticResource debtProgressConverter}}"
+                                     HeightRequest="8"
+                                     VerticalOptions="Center"/>
+
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+</ContentView>

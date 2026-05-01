@@ -27,6 +27,9 @@
 
             <Button Text="Budgets"
                 Command="{Binding ShowBudgetsCommand}" />
+            
+            <Button Text="Debts"
+                Command="{Binding ShowDebtsCommand}" />
 
             <Button Text="Create Transactiom"
                 Command="{Binding CreateTransactionCommand}" />
