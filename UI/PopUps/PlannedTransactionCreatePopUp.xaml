@@ -62,6 +62,11 @@
                             Title="Family Member"
                             TextColor="Black"/>
 
+                    <Picker x:Name="DebtPicker"
+                        Title="Select debt"
+                        TextColor="Black"
+                        TitleColor="Gray"/>
+
                 </VerticalStackLayout>
             </ScrollView>
 

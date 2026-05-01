@@ -3,7 +3,6 @@ using UI.ViewModels;
 using UI.Popups;
 using BuisnessLogic.Repositories;
 using BuisnessLogic.Services;
-using DataAccess.DbProxy;
 using CommunityToolkit.Maui;
 using DataAccess;
 using DataAccess.RepositoriesImplementation;

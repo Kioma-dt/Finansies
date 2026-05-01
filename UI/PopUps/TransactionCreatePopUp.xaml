@@ -63,6 +63,11 @@
                             TextColor="Black"
                             TitleColor="Gray"/>
 
+                    <Picker x:Name="DebtPicker"
+                            Title="Select debt"
+                            TextColor="Black"
+                            TitleColor="Gray"/>
+
                 </VerticalStackLayout>
             </ScrollView>
 

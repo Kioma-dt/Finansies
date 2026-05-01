@@ -23,7 +23,7 @@
                         ItemsSource="{Binding PlannedTransactions}">
 
             <CollectionView.Header>
-                <Grid ColumnDefinitions="*,*,*,*,*,*,*,*"
+                <Grid ColumnDefinitions="*,*,*,*,*,*,*,*,*"
                       Padding="10"
                       BackgroundColor="#2d2d2d">
 
@@ -36,13 +36,14 @@
                     <Label Text="Account" Grid.Column="5" TextColor="White"/>
                     <Label Text="Category" Grid.Column="6" TextColor="White"/>
                     <Label Text="FamilyMember" Grid.Column="7" TextColor="White"/>
+                    <Label Text="Debt" Grid.Column="8" TextColor="White"/>
 
                 </Grid>
             </CollectionView.Header>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="entity:PlannedTransaction">
-                    <Grid ColumnDefinitions="*,*,*,*,*,*,*,*"
+                    <Grid ColumnDefinitions="*,*,*,*,*,*,*,*,*"
                           Padding="10">
 
                         <FlyoutBase.ContextFlyout>
@@ -63,6 +64,7 @@
                         <Label Text="{Binding Account.Name, TargetNullValue='-'}" Grid.Column="5"/>
                         <Label Text="{Binding Category.Name, TargetNullValue='-'}" Grid.Column="6"/>
                         <Label Text="{Binding FamilyMember.Name, TargetNullValue='-'}" Grid.Column="7"/>
+                        <Label Text="{Binding Debt.Name, TargetNullValue='-'}" Grid.Column="8"/>
 
                     </Grid>
                 </DataTemplate>

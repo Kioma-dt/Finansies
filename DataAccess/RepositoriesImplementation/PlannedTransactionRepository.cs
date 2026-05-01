@@ -23,6 +23,7 @@ namespace DataAccess.RepositoriesImplementation
                 .Include(x => x.Category)
                 .Include(x => x.FamilyMember)
                 .Include(x => x.TransactionTags)
+                .Include(x => x.Debt)
                 .Include(x => x.User)
                 .ToListAsync();
         }

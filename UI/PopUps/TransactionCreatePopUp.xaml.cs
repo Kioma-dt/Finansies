@@ -10,16 +10,20 @@ public partial class TransactionCreatePopUp : Popup<Transaction?>
     readonly IAccountRepository _accountRepository;
     readonly ICategoryRepository _categoryRepository;
     readonly IFamilyMemberRepository _familyRepository;
+    readonly IDebtRepository _debtRepository;
+
     readonly IUserContext _user;
 
     List<Account> Accounts = new();
     List<Category> Categories = new();
     List<FamilyMember> FamilyMembers = new();
+    List<Debt> Debts = new();
 
     public TransactionCreatePopUp(
         IAccountRepository accountRepository,
         ICategoryRepository categoryRepository,
         IFamilyMemberRepository familyRepository,
+        IDebtRepository debtRepository,
         IUserContext user)
     {
         InitializeComponent();
@@ -27,6 +31,7 @@ public partial class TransactionCreatePopUp : Popup<Transaction?>
         _accountRepository = accountRepository;
         _categoryRepository = categoryRepository;
         _familyRepository = familyRepository;
+        _debtRepository = debtRepository;
         _user = user;
 
         Loaded += OnLoad;
@@ -41,6 +46,7 @@ public partial class TransactionCreatePopUp : Popup<Transaction?>
         Accounts = await _accountRepository.GetAllScalar(userId) ?? new();
         Categories = await _categoryRepository.GetAllScalar(userId) ?? new();
         FamilyMembers = await _familyRepository.GetAllScalar(userId) ?? new();
+        Debts = await _debtRepository.GetAllScalar(userId) ?? new();
 
         if (Accounts.Count == 0)
         {
@@ -48,6 +54,7 @@ public partial class TransactionCreatePopUp : Popup<Transaction?>
         }
 
         TypePicker.ItemsSource = Enum.GetValues(typeof(TransactionType));
+        TypePicker.SelectedIndexChanged += OnTypeChanged;
         TypePicker.SelectedItem = TransactionType.Expense;
 
         AccountPicker.ItemsSource = Accounts;
@@ -65,6 +72,8 @@ public partial class TransactionCreatePopUp : Popup<Transaction?>
         FamilyMemberPicker.ItemsSource = FamilyMembers;
         FamilyMemberPicker.ItemDisplayBinding = new Binding("Name");
         FamilyMemberPicker.SelectedIndex = 0;
+
+        DebtPicker.ItemDisplayBinding = new Binding("Name");
 
         TransactionDatePicker.Date = DateTime.Now;
     }
@@ -85,6 +94,7 @@ public partial class TransactionCreatePopUp : Popup<Transaction?>
         var account = AccountPicker.SelectedItem as Account;
         var category = CategoryPicker.SelectedItem as Category;
         var family = FamilyMemberPicker.SelectedItem as FamilyMember;
+        var debt = DebtPicker.SelectedItem as Debt;
 
         if (account is null)
         {
@@ -109,10 +119,37 @@ public partial class TransactionCreatePopUp : Popup<Transaction?>
                 ? null
                 : family.Id,
 
+            DebtId = debt == null || debt.Id == Guid.Empty
+                ? null
+                : debt.Id,
+
             UserId = _user.UserId
         };
 
         await CloseAsync(transaction);
+    }
+
+    private void OnTypeChanged(object sender, EventArgs e)
+    {
+        var type = (TransactionType)TypePicker.SelectedItem;
+
+        IEnumerable<Debt> filtered = Enumerable.Empty<Debt>();
+
+        if (type == TransactionType.Expense)
+        {
+            filtered = Debts.Where(d => d.Type == DebtType.Credit);
+        }
+        else if (type == TransactionType.Income)
+        {
+            filtered = Debts.Where(d => d.Type == DebtType.Debit);
+        }
+
+        var list = filtered.ToList();
+
+        list.Insert(0, new Debt { Id = Guid.Empty, Name = "-No Debt-" });
+
+        DebtPicker.ItemsSource = list;
+        DebtPicker.SelectedIndex = 0;
     }
 
     public void Clear()

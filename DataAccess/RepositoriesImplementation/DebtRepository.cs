@@ -21,6 +21,8 @@ namespace DataAccess.RepositoriesImplementation
                 .Where(x => x.UserId == userId)
                 .Include(x => x.FamilyMember)
                 .Include(x => x.Category)
+                .Include(x => x.PlannedTransactions)
+                .Include(x => x.Transactions)
                 .ToListAsync();
         }
 
