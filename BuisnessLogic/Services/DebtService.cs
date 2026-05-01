@@ -1,4 +1,5 @@
 ﻿using BuisnessLogic.DebtInterestCalculator;
+using BuisnessLogic.DTO;
 using BuisnessLogic.Entities;
 using BuisnessLogic.Repositories;
 using System;
@@ -9,9 +10,12 @@ using System.Threading.Tasks;
 
 namespace BuisnessLogic.Services
 {
+    
+
     public interface IDebtService
     {
         Task<List<Debt>> GetAll(Guid userId);
+        Task CreateDebt(Guid userId, DebtCreateDTO dto);
         Task PayOffDebt(Guid userId,
             Guid debtId,
             decimal amount,
@@ -30,6 +34,30 @@ namespace BuisnessLogic.Services
         {
             _debtRepository = debtRepository;
             _debtInterestCalculatorProvider = debtInterestCalculatorProvider;
+        }
+
+        public async Task CreateDebt(Guid userId, DebtCreateDTO dto)
+        {
+            var debt = new Debt()
+            {
+                Name = dto.Name,
+                StartAmount = dto.Amount,
+                TotalAmount = dto.Amount,
+                PaidAmount = 0,
+                InterestRate = dto.InterestRate,
+                CapitalisationsPerYear = dto.CapitalisatonsPerYear,
+                FixedAddition = dto.FixedAddition,
+                Type = dto.Type,
+                InterestType = dto.InterestType,
+                StartDate = dto.StartDate,
+                LastPaidDate = dto.StartDate,
+                EndDate = dto.EndDate,
+                CategoryId = dto.CategoryId,
+                FamilyMemberId = dto.FamilyMemberId,
+                UserId = userId
+            };
+
+            await _debtRepository.Add(debt);
         }
 
         public Task<List<Debt>> GetAll(Guid userId) => _debtRepository.GetAll(userId);

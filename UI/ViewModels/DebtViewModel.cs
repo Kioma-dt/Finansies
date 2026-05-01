@@ -1,4 +1,5 @@
-﻿using BuisnessLogic.Entities;
+﻿using BuisnessLogic.DTO;
+using BuisnessLogic.Entities;
 using BuisnessLogic.Services;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,7 +15,7 @@ namespace UI.ViewModels
     {
         private readonly IDebtService _debtService;
         private readonly IUserContext _user;
-        private readonly BudgetCreatePopUp _popup;
+        private readonly DebtCreatePopUp _popup;
 
 
         public ObservableCollection<Debt> Debts { get; set; } = new();
@@ -27,7 +28,7 @@ namespace UI.ViewModels
         public DebtViewModel(
             IDebtService debtService,
             IUserContext user,
-            BudgetCreatePopUp popup)
+            DebtCreatePopUp popup)
         {
             _debtService = debtService;
             _user = user;
@@ -62,32 +63,35 @@ namespace UI.ViewModels
         //    }
         //}
 
-        //[RelayCommand]
-        //public async Task CreateBudget()
-        //{
-        //    try
-        //    {
-        //        var result = await Application.Current.MainPage
-        //        .ShowPopupAsync<BudgetCreateDTO?>(_popup);
+        [RelayCommand]
+        public async Task CreateDebt()
+        {
+            try
+            {
+                var result = await Application.Current.MainPage
+                .ShowPopupAsync<DebtCreateDTO?>(_popup);
 
-        //        var data = result.Result;
+                var data = result.Result;
 
-        //        if (data is null)
-        //            return;
+                if (data is null)
+                    return;
 
-        //        await _budgetService.CreateBudget(_user.UserId, data.Name, data.Limit, data.StartDate, data.EndDate, data.Filters);
+                await _debtService.CreateDebt(_user.UserId, data);
+                WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
+                if (data.IsAutoPlanned)
+                {
+                    WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
+                }
+            }
+            catch (FormatException ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+            }
+            catch (ArgumentException ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+            }
 
-        //        WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Budgets));
-        //    }
-        //    catch (FormatException ex)
-        //    {
-        //        await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
-        //    }
-
-        //}
+        }
     }
 }

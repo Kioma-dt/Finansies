@@ -6,6 +6,15 @@
     x:TypeArguments="dto:BudgetCreateDTO"
     x:Class="UI.Popups.BudgetCreatePopUp">
 
+    <toolkit:Popup.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Picker">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="TitleColor" Value="Black"/>
+            </Style>
+        </ResourceDictionary>
+    </toolkit:Popup.Resources>
+
     <Border Padding="20"
             BackgroundColor="White"
             WidthRequest="350"

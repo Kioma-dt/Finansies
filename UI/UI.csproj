@@ -74,6 +74,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="PopUps\DebtCreatePopUp.xaml.cs">
+	    <DependentUpon>DebtCreatePopUp.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="PopUps\BudgetCreatePopUp.xaml.cs">
 	    <DependentUpon>BudgetCreatePopUp.xaml</DependentUpon>
 	  </Compile>
@@ -104,6 +107,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="PopUps\DebtCreatePopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="PopUps\BudgetCreatePopUp.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

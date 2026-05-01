@@ -13,7 +13,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*, Auto">
 
         <Grid ColumnDefinitions="2*,*,*,*,*,*,3*"
               Padding="10"
@@ -98,6 +98,14 @@
             </CollectionView.ItemTemplate>
 
         </CollectionView>
+
+        <Button Grid.Row="2"
+            Text="Add Debt"
+            Command="{Binding CreateDebtCommand}" 
+            BackgroundColor="#2196F3"
+            TextColor="White"
+            CornerRadius="10"
+            HeightRequest="45"/>
 
     </Grid>
 </ContentView>

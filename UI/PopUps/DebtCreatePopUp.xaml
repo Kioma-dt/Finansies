@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
+    xmlns:dto="clr-namespace:BuisnessLogic.DTO;assembly=BuisnessLogic"
+    x:TypeArguments="dto:DebtCreateDTO"
+    x:Class="UI.Popups.DebtCreatePopUp">
+
+    <toolkit:Popup.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Picker">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="TitleColor" Value="Black"/>
+            </Style>
+        </ResourceDictionary>
+    </toolkit:Popup.Resources>
+
+    <Border Padding="20"
+            BackgroundColor="White"
+            WidthRequest="350"
+            Stroke="LightGray"
+            StrokeThickness="1">
+
+        <ScrollView>
+            <VerticalStackLayout Spacing="12">
+
+                <Label Text="Create Debt"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="Black"/>
+
+                <Entry x:Name="NameEntry"
+                       Placeholder="Debt name"
+                       TextColor="Black"/>
+
+                <Picker x:Name="DebtTypePicker"
+                        Title="Debt Type"/>
+
+                <Entry x:Name="AmountEntry"
+                       Placeholder="Start Amount"
+                       Keyboard="Numeric"
+                       TextColor="Black"/>
+
+                <DatePicker x:Name="StartDatePicker"
+                            TextColor="Black"/>
+                <DatePicker x:Name="EndDatePicker"
+                            TextColor="Black"/>
+
+                <Picker x:Name="CategoryPicker"
+                        Title="Select category"/>
+
+                <Picker x:Name="FamilyPicker"
+                        Title="Select family member"/>
+
+                <Picker x:Name="CapitalisationPicker"
+                        Title="Capitalisation"/>
+
+                <Picker x:Name="InterestTypePicker"
+                        Title="Interest Type"
+                        SelectedIndexChanged="OnInterestTypeChanged"/>
+                
+                <Entry x:Name="InterestValueEntry"
+                       Placeholder="Value"
+                       Keyboard="Numeric"
+                       TextColor="Black"/>
+
+
+                <HorizontalStackLayout Spacing="10">
+                    <CheckBox x:Name="AutoCalculateCheckBox"
+                        CheckedChanged="OnAutoCalculateChanged"/>
+
+                    <Label Text="Auto calculate payments"
+                       VerticalOptions="Center"
+                       TextColor="Black"/>
+                </HorizontalStackLayout>
+                
+                <Entry x:Name="PaymentsPerYearEntry"
+                   Placeholder="Payments per year"
+                   Keyboard="Numeric"
+                   IsEnabled="False"
+                   TextColor="Black"/>
+
+                <HorizontalStackLayout Spacing="10">
+
+                    <Button Text="Cancel"
+                            BackgroundColor="#9E9E9E"
+                            TextColor="White"
+                            Clicked="OnCancel"/>
+
+                    <Button Text="Create"
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            Clicked="OnCreate"/>
+
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Border>
+</toolkit:Popup>
