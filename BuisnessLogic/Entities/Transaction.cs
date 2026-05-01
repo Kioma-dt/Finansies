@@ -13,6 +13,9 @@ namespace BuisnessLogic.Entities
         public Guid AccountId { get; set; }
         public Account? Account { get; set; }
 
+        public Guid? DebtId { get; set; }
+        public Debt? Debt { get; set; }
+
         public Guid? CategoryId { get; set; } = null;
         public Category? Category { get; set; } = null;
 

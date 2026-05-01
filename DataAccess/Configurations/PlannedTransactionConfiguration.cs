@@ -29,6 +29,11 @@ namespace DataAccess.Configurations
                 .HasConversion<string>()
                 .IsRequired();
 
+            builder.HasOne(pt => pt.Debt)
+                .WithMany(d => d.PlannedTransactions)
+                .HasForeignKey(pt => pt.DebtId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             builder.HasOne(pt => pt.Account)
                 .WithMany(a => a.PlannedTransactions)
                 .HasForeignKey(pt => pt.AccountId)
@@ -56,6 +61,7 @@ namespace DataAccess.Configurations
             builder.HasIndex(pt => pt.AccountId);
             builder.HasIndex(pt => pt.CategoryId);
             builder.HasIndex(pt => pt.FamilyMemberId);
+            builder.HasIndex(pt => pt.DebtId);
             builder.HasIndex(pt => pt.UserId);
 
             builder.ToTable(t =>  t.HasCheckConstraint("CK_PlannedTransaction_Amount", "`Amount` >= 0"));

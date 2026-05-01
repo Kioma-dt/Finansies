@@ -55,6 +55,16 @@ namespace DataAccess.Configurations
             builder.Property(d => d.EndDate)
                 .IsRequired();
 
+            builder.HasMany(d => d.Transactions)
+                .WithOne(t => t.Debt)
+                .HasForeignKey(t => t.DebtId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasMany(d => d.PlannedTransactions)
+               .WithOne(pt => pt.Debt)
+               .HasForeignKey(pt => pt.DebtId)
+               .OnDelete(DeleteBehavior.SetNull);
+
             builder.HasOne(d => d.Category)
                 .WithMany(c => c.Debts)
                 .HasForeignKey(d => d.CategoryId)

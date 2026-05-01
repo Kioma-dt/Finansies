@@ -21,6 +21,9 @@ namespace BuisnessLogic.Entities
         public DateTime LastPaidDate { get; set; }
         public DateTime EndDate { get; set; }
 
+        public List<Transaction> Transactions { get; set; } = new();
+        public List<PlannedTransaction> PlannedTransactions { get; set; } = new();
+
         public Guid? CategoryId { get; set; } = null;
         public Category? Category { get; set; } = null;
 
