@@ -188,29 +188,41 @@ public partial class BudgetCreatePopUp : Popup<BudgetCreateDTO?>
 
     private async void OnCreate(object sender, EventArgs e)
     {
-        var name = NameEntry.Text;
-
-        var limit = decimal.Parse(LimitEntry.Text);
-
-        var startDate = StartDatePicker.Date;
-
-        var endDate = EndDatePicker.Date;
-
-        var filters = new List<(BudgetFilterType Type, string Value)>();
-
-        filters.Add((BudgetFilterType.TransactionType, (TypePicker.SelectedItem as TransactionType?)?.ToString() ?? "Income"));
-
-        foreach (var filterItem in SelectedFiltersReturned)
+        try
         {
-            filters.Add((filterItem.Type, filterItem.SelectedValue ?? ""));
+            var name = NameEntry.Text;
+
+            var limit = decimal.Parse(LimitEntry.Text);
+
+            var startDate = StartDatePicker.Date;
+
+            var endDate = EndDatePicker.Date;
+
+            var filters = new List<(BudgetFilterType Type, string Value)>();
+
+            filters.Add((BudgetFilterType.TransactionType, (TypePicker.SelectedItem as TransactionType?)?.ToString() ?? "Income"));
+
+            foreach (var filterItem in SelectedFiltersReturned)
+            {
+                filters.Add((filterItem.Type, filterItem.SelectedValue ?? ""));
+            }
+
+
+            await CloseAsync(new BudgetCreateDTO(name,
+                limit,
+                startDate,
+                endDate,
+                filters));
+        }
+        catch (FormatException ex)
+        {
+            await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+        }
+        catch (ArgumentException ex)
+        {
+            await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
         }
 
-
-        await CloseAsync(new BudgetCreateDTO(name,
-            limit,
-            startDate,
-            endDate,
-            filters));
     }
 
     private void Clear()

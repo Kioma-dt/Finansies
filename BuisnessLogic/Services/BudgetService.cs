@@ -102,7 +102,7 @@ namespace BuisnessLogic.Services
 
             foreach (var transaction in transactions)
             {
-                result += transaction.SignedAmount;
+                result += transaction.Amount;
             }
 
             return result;

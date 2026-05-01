@@ -29,10 +29,14 @@ namespace BuisnessLogic.BudgetService
 
         public Expression Create(ParameterExpression parameter, BudgetFilter filter)
         {
+            var property = Expression.Property(parameter, nameof(Transaction.CategoryId));
+
+            var value = Guid.Parse(filter.Value);
+
             return Expression.Equal(
-                Expression.Property(parameter, nameof(Transaction.CategoryId)),
-                Expression.Constant(Guid.Parse(filter.Value))
-                );
+                property,
+                Expression.Constant(value, property.Type)
+            );
         }
     }
 
@@ -44,7 +48,7 @@ namespace BuisnessLogic.BudgetService
         {
             return Expression.Equal(
                 Expression.Property(parameter, nameof(Transaction.FamilyMemberId)),
-                Expression.Constant(Guid.Parse(filter.Value))
+                Expression.Constant((Guid?)Guid.Parse(filter.Value))
                 );
         }
     }

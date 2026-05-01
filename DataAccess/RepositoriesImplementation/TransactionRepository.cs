@@ -52,6 +52,11 @@ namespace DataAccess.RepositoriesImplementation
             return await db.Transactions
                 .Where(x => x.UserId == userId)
                 .Where(specification)
+                .Include(x => x.Account)
+                .Include(x => x.Category)
+                .Include(x => x.FamilyMember)
+                .Include(x => x.TransactionTags)
+                .Include(x => x.User)
                 .ToListAsync();
         }
 
