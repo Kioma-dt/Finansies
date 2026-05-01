@@ -102,19 +102,7 @@ namespace BuisnessLogic.Services
 
         public Task<List<Debt>> GetAll(Guid userId) => _debtRepository.GetAll(userId);
 
-        public async Task PayOffDebt(Guid userId, Guid debtId, decimal amount, DateTime date)
-        {
-            var debt = await _debtRepository.GetById(userId, debtId);
-
-            if (debt is null)
-            {
-                throw new ArgumentException($"No Debt with Id: {debtId}");
-            }
-
-            debt.MakeAPayment(amount, date);
-
-            await _debtRepository.Update(debt);
-        }
+        public async Task PayOffDebt(Guid userId, Guid debtId, decimal amount, DateTime date) => await _debtRepository.PayOffDebt(userId, debtId, amount, date);
 
         public async Task UpdateDebt(Guid userId, Guid debtId, DateTime date)
         {

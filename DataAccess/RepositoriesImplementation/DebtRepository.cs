@@ -112,6 +112,20 @@ namespace DataAccess.RepositoriesImplementation
             await db.SaveChangesAsync();
         }
 
+        public async Task PayOffDebt(Guid userId, Guid debtId, decimal amount, DateTime date)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
 
+            var debt = db.Debts.FirstOrDefault(x => x.Id == debtId && x.UserId == userId);
+
+            if (debt is null)
+            {
+                throw new ArgumentException($"No Debt with Id: {debtId}");
+            }
+
+            debt.MakeAPayment(amount, date);
+
+            await db.SaveChangesAsync();
+        }
     }
 }

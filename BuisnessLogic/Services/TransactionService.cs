@@ -160,16 +160,7 @@ namespace BuisnessLogic.Services
 
             if (debtId is not null)
             {
-                var debt = await _debtRepository.GetById(userId, debtId.Value);
-
-                if (debt is null)
-                {
-                    throw new ArgumentException($"No Debt with Id: {debtId.Value}");
-                }
-
-                debt.MakeAPayment(amount, date);
-
-                await _debtRepository.Update(debt);
+                await _debtRepository.PayOffDebt(userId, debtId.Value, amount, date);
             }
 
             var transaction = new Transaction

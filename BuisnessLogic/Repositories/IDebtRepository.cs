@@ -9,6 +9,8 @@ namespace BuisnessLogic.Repositories
         Task Add(Debt debt);
         Task<Debt?> GetById(Guid userId, Guid id);
         Task Update(Debt debt);
+
+        Task PayOffDebt(Guid userId, Guid debtId, decimal amount, DateTime date);
     }
 
 }
