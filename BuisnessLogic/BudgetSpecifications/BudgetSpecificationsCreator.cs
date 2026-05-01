@@ -46,10 +46,14 @@ namespace BuisnessLogic.BudgetService
 
         public Expression Create(ParameterExpression parameter, BudgetFilter filter)
         {
+            var property = Expression.Property(parameter, nameof(Transaction.FamilyMemberId));
+
+            var value = Guid.Parse(filter.Value);
+
             return Expression.Equal(
-                Expression.Property(parameter, nameof(Transaction.FamilyMemberId)),
-                Expression.Constant((Guid?)Guid.Parse(filter.Value))
-                );
+                property,
+                Expression.Constant(value, property.Type)
+            );
         }
     }
     public class BudgetTransactionTagSpecificationsCreator : IBudgetSpecificationsCreator
