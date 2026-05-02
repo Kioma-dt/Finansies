@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodel="clr-namespace:UI.ViewModels"
+    x:Class="UI.Views.FamilyMemberView"
+    x:DataType="viewmodel:FamilyMemberViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <Grid ColumnDefinitions="2*,*,*"
+              Padding="10"
+              BackgroundColor="#2d2d2d">
+
+            <Label Text="Name"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+
+            <Label Text="Transactions"
+                   Grid.Column="1"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+
+            <Label Text="Total Amount"
+                   Grid.Column="2"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+
+        </Grid>
+        
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding FamilyMemberItems}">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="viewmodel:FamilyMemberViewItem">
+
+                    <Grid ColumnDefinitions="2*,*,*"
+                          Padding="10">
+
+                        <Label Text="{Binding FamilyMember.Name}"
+                               TextColor="White"/>
+
+                        <Label Text="{Binding TransactionsCount}"
+                               Grid.Column="1"
+                               TextColor="LightGray"/>
+
+                        <Label Text="{Binding TotalAmount}"
+                               Grid.Column="2"
+                               TextColor="LightGreen"/>
+
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+
+        <Button Grid.Row="2"
+                Text="Add Family Member"
+                Command="{Binding AddFamilyMemberCommand}" 
+                 BackgroundColor="#2196F3"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="45"/>
+
+    </Grid>
+</ContentView>

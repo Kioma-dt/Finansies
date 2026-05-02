@@ -20,6 +20,7 @@ namespace UI.ViewModels
     {
         public Category Category { get; set; } = null!;
         public decimal Amount { get; set; } = 0;
+        public int NumberOfTransactions {  get; set; } = 0;
         public int Level { get; set; }
     }
 
@@ -54,7 +55,9 @@ namespace UI.ViewModels
 
         public async void Receive(DataBaseChangedMessage message)
         {
-            if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Categories)
+            if (message.Type == DataBaseChangedMessageType.Init 
+                || message.Type == DataBaseChangedMessageType.Categories
+                || message.Type == DataBaseChangedMessageType.Transactions)
             {
                 _categories = await _categoryRepository.GetAll(_user.UserId) ?? new();
 
@@ -109,6 +112,7 @@ namespace UI.ViewModels
                 {
                     Category = cat,
                     Amount = cat.PeriodTransactionsSum(_startDate, _endDate),
+                    NumberOfTransactions = cat.PeriodTransactionsNumber(_startDate, _endDate),
                     Level = level
                 });
 

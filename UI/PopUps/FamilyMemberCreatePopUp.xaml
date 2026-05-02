@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
+    xmlns:dto="clr-namespace:BuisnessLogic.DTO;assembly=BuisnessLogic"
+    x:TypeArguments="dto:FamilyMemberCreateDTO"
+    x:Class="UI.Popups.FamilyMemberCreatePopUp">
+
+    <Border Padding="20"
+            BackgroundColor="White"
+            WidthRequest="320"
+            Stroke="LightGray"
+            StrokeThickness="1">
+
+        <VerticalStackLayout Spacing="12">
+
+            <Label Text="Create Family Member"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="Black"/>
+
+            <Entry x:Name="NameEntry"
+                   Placeholder="Name"
+                   TextColor="Black"
+                   PlaceholderColor="Gray"/>
+
+            <HorizontalStackLayout Spacing="10">
+
+                <Button Text="Cancel"
+                        BackgroundColor="#9E9E9E"
+                        TextColor="White"
+                        CornerRadius="8"
+                        Clicked="OnCancel"/>
+
+                <Button Text="Create"
+                        BackgroundColor="#4CAF50"
+                        TextColor="White"
+                        CornerRadius="8"
+                        Clicked="OnCreate"/>
+
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+
+    </Border>
+</toolkit:Popup>

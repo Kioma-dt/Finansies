@@ -12,5 +12,22 @@
 
         public Guid UserId { get; set; }
         public User? User { get; set; }
+
+        public decimal PeriodTransactionsSum(DateTime startDate, DateTime endDate)
+        {
+            var sum = 0m;
+
+            foreach (var transaction in Transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date))
+            {
+                sum += transaction.SignedAmount;
+            }
+
+            return sum;
+        }
+
+        public int PeriodTransactionsNumber(DateTime startDate, DateTime endDate)
+        {
+            return Transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date).Count();
+        }
     }
 }

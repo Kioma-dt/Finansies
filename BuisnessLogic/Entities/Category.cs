@@ -54,5 +54,16 @@
 
             return sum;
         }
+
+        public int PeriodTransactionsNumber(DateTime startDate, DateTime endDate)
+        {
+            var count = Transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date).Count();
+
+            foreach (var child in Children)
+            {
+                count += child.PeriodTransactionsNumber(startDate, endDate);
+            }
+            return count;
+        }
     }
 }

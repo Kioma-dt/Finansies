@@ -43,6 +43,7 @@ namespace UI.ViewModels
         private readonly PlannedTransactionView _plannedTransactionView;
         private readonly AccountView _accountView;
         private readonly CategoryView _categoryView;
+        private readonly FamilyMemberView _familyMemberView;
         private readonly BudgetView _budgetView;
         private readonly DebtView _debtView;
 
@@ -55,6 +56,7 @@ namespace UI.ViewModels
             TransactionView transactionView,
             PlannedTransactionView plannedTransactionView,
             CategoryView categoryView,
+            FamilyMemberView familyMemberView,
             BudgetView budgetView,
             DebtView debtView,
             DateRangeSelectorView dateRangeSelectorView)
@@ -67,6 +69,7 @@ namespace UI.ViewModels
             _transactionView = transactionView;
             _plannedTransactionView = plannedTransactionView;
             _categoryView = categoryView;
+            _familyMemberView = familyMemberView;
             _budgetView = budgetView;
             _debtView = debtView;
 
@@ -93,6 +96,16 @@ namespace UI.ViewModels
             RightView = _categoryView;
             CentralView = null;
         }
+
+        [RelayCommand]
+        public void ShowFamilyMembers()
+        {
+            LeftView = _accountView;
+            RightView = _familyMemberView;
+
+            CentralView = null;
+        }
+
 
         [RelayCommand]
         public void ShowPlannedTransactions()

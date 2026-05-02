@@ -30,7 +30,6 @@ namespace UI.ViewModels
         private readonly IUserContext _user;
         private readonly BudgetCreatePopUp _popup;
 
-
         public ObservableCollection<BudgetItem> Budgets { get; set; } = new();
         public ObservableCollection<Transaction> Transactions { get; set; } = new();
 

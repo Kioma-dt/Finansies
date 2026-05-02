@@ -22,6 +22,9 @@
             <Button Text="Categories"
                 Command="{Binding ShowCategoriesCommand}" />
 
+            <Button Text="FamilyMembers"
+                Command="{Binding ShowFamilyMembersCommand}" />
+
             <Button Text="Plan Transactions"
                 Command="{Binding ShowPlannedTransactionsCommand}" />
 

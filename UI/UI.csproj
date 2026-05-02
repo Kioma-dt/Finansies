@@ -77,6 +77,9 @@
 	  <Compile Update="PopUps\DateRangePopUp.xaml.cs">
 	    <DependentUpon>DateRangePopUp.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="PopUps\FamilyMemberCreatePopUp.xaml.cs">
+	    <DependentUpon>FamilyMemberCreatePopUp.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="PopUps\DebtCreatePopUp.xaml.cs">
 	    <DependentUpon>DebtCreatePopUp.xaml</DependentUpon>
 	  </Compile>
@@ -91,6 +94,9 @@
 	  </Compile>
 	  <Compile Update="PopUps\AccountCreatePopUp.xaml.cs">
 	    <DependentUpon>AccountCreatePopUp.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\FamilyMemberView.xaml.cs">
+	    <DependentUpon>FamilyMemberView.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\DateRangeSelectorView.xaml.cs">
 	    <DependentUpon>DateRangeSelectorView.xaml</DependentUpon>
@@ -116,6 +122,9 @@
 	  <MauiXaml Update="PopUps\DateRangePopUp.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="PopUps\FamilyMemberCreatePopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="PopUps\DebtCreatePopUp.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -132,6 +141,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="PopUps\CategoryCreaterPopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\FamilyMemberView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\DateRangeSelectorView.xaml">

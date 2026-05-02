@@ -78,6 +78,7 @@ namespace UI
             builder.Services.AddSingleton<PlannedTransactionsViewModel>();
             builder.Services.AddSingleton<AccountViewModel>();
             builder.Services.AddSingleton<CategoryViewModel>();
+            builder.Services.AddSingleton<FamilyMemberViewModel>();
             builder.Services.AddSingleton<BudgetViewModel>();
             builder.Services.AddSingleton<DebtViewModel>();
 
@@ -89,6 +90,7 @@ namespace UI
             builder.Services.AddSingleton<PlannedTransactionView>();
             builder.Services.AddSingleton<AccountView>();
             builder.Services.AddSingleton<CategoryView>();
+            builder.Services.AddSingleton<FamilyMemberView>();
             builder.Services.AddSingleton<BudgetView>();
             builder.Services.AddSingleton<DebtView>();
 
@@ -98,6 +100,7 @@ namespace UI
 
             builder.Services.AddTransient<AccountCreatePopUp>();
             builder.Services.AddTransient<CategoryCreatePopUp>();
+            builder.Services.AddSingleton<FamilyMemberCreatePopUp>();
             builder.Services.AddTransient<TransactionCreatePopUp>();
             builder.Services.AddTransient<PlannedTransactionCreatePopUp>();
             builder.Services.AddTransient<BudgetCreatePopUp>();

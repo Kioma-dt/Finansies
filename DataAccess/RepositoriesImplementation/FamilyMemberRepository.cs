@@ -19,6 +19,9 @@ namespace DataAccess.RepositoriesImplementation
 
             return await db.FamilyMembers
                 .Where(x => x.UserId == userId)
+                .Include(x => x.Transactions)
+                .Include(x => x.PlannedTransactions)
+                .Include(x => x.Debts)
                 .ToListAsync();
         }
 
@@ -29,9 +32,6 @@ namespace DataAccess.RepositoriesImplementation
 
             return await db.FamilyMembers
                 .Where(x => x.UserId == userId)
-                .Include(x => x.Transactions)
-                .Include(x => x.PlannedTransactions)
-                .Include(x => x.Debts)
                 .ToListAsync();
         }
 
