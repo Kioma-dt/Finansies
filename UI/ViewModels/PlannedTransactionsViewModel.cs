@@ -14,12 +14,16 @@ namespace UI.ViewModels
 
     public partial class PlannedTransactionsViewModel : ObservableObject, 
         IRecipient<DataBaseChangedMessage>,
-        IRecipient<CurrentTimeMessage>
+        IRecipient<CurrentTimeMessage>,
+        IRecipient<DateRangeChangedMessage>
     {
         private readonly IPlannedTransactionService _plannedTransactionService;
         private readonly IUserContext _user;
         private readonly PlannedTransactionCreatePopUp _popUp;
 
+        private List<PlannedTransaction> _allTransactions = new();
+        private DateTime _startDate = DateTime.Now.AddMonths(-1);
+        private DateTime _endDate = DateTime.Now;
 
         public ObservableCollection<PlannedTransaction> PlannedTransactions { get; set; } = new();
 
@@ -37,6 +41,7 @@ namespace UI.ViewModels
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<CurrentTimeMessage>(this);
+            WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
         }
         public async void Receive(DataBaseChangedMessage message)
         {
@@ -44,9 +49,11 @@ namespace UI.ViewModels
             {
                 var data = await _plannedTransactionService.GetAll(_user.UserId);
 
-                PlannedTransactions.Clear();
+                _allTransactions.Clear();
                 foreach (var t in data)
-                    PlannedTransactions.Add(t);
+                    _allTransactions.Add(t);
+
+                this.FilterTransactions();
             }
         }
 
@@ -60,6 +67,26 @@ namespace UI.ViewModels
             }
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
+        }
+
+        public void Receive(DateRangeChangedMessage message)
+        {
+            _startDate = message.StartDate;
+            _endDate = message.EndDate;
+
+            this.FilterTransactions();
+        }
+
+        private void FilterTransactions()
+        {
+            PlannedTransactions.Clear();
+
+            var trans = _allTransactions.Where(x => x.PlannedDate >= _startDate.Date && x.PlannedDate <= _endDate.AddDays(1).AddMinutes(-1).Date);
+
+            foreach (var t in trans)
+            {
+                PlannedTransactions.Add(t);
+            }
         }
 
         [RelayCommand]

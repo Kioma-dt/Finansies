@@ -64,9 +64,6 @@ namespace UI.ViewModels
 
         public ObservableCollection<Transaction> Transactions { get; set; } = new();
 
-        [ObservableProperty]
-        public partial bool IsLoaded { get; set; } = false;
-
         public TransactionsViewModel(
             ITransactionService transactionService,
             ICategoryRepository categoryRepository,

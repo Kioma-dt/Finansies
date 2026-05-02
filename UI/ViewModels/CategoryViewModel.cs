@@ -22,19 +22,22 @@ namespace UI.ViewModels
         public int Level { get; set; }
     }
 
-    public partial class CategoryViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
+    public partial class CategoryViewModel : ObservableObject, 
+        IRecipient<DataBaseChangedMessage>
+        //IRecipient<DateRangeChangedMessage>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserContext _user;
         private readonly CategoryCreatePopUp _categoryCreatePopUp;
 
+        //private List<Category> _allCategories = new();
         private List<Category> _categories = new();
 
+        //private DateTime _startDate = DateTime.Now.AddMonths(-1);
+        //private DateTime _endDate = DateTime.Now;
 
         public ObservableCollection<CategoryNode> FlatCategories { get; } = new();
 
-        [ObservableProperty]
-        public partial bool IsLoaded { get; set; } = false;
 
         public CategoryViewModel(
             ICategoryRepository categoryRepository,
@@ -46,6 +49,7 @@ namespace UI.ViewModels
             _categoryCreatePopUp = categoryCreatePopUp;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
+            //WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
         }
 
         public async void Receive(DataBaseChangedMessage message)
@@ -54,18 +58,35 @@ namespace UI.ViewModels
             {
                 _categories = await _categoryRepository.GetAll(_user.UserId) ?? new();
 
+                //this.FilterCategoryTransactions();
                 BuildTree();
             }
         }
 
-
-        //[RelayCommand]
-        //public async Task Load()
+        //public void Receive(DateRangeChangedMessage message)
         //{
-        //    _categories = await _categoryRepository.GetAll(_user.UserId) ?? new();
+        //    _startDate = message.StartDate;
+        //    _endDate = message.EndDate;
 
+        //    this.FilterCategoryTransactions();
         //    BuildTree();
         //}
+
+        //private void FilterCategoryTransactions()
+        //{
+        //    _categories.Clear();
+            
+        //    foreach(var cat in _allCategories)
+        //    {
+        //        _categories.Add(cat);
+        //    }
+
+        //    foreach (var category in _categories)
+        //    {
+        //        category.Transactions = category.Transactions.Where(x => x.Date >= _startDate && x.Date <= _endDate).ToList();
+        //    }
+        //}
+
 
         [RelayCommand]
         public async Task AddCategory()
