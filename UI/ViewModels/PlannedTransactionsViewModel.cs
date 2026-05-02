@@ -81,7 +81,7 @@ namespace UI.ViewModels
         {
             PlannedTransactions.Clear();
 
-            var trans = _allTransactions.Where(x => x.PlannedDate >= _startDate.Date && x.PlannedDate <= _endDate.AddDays(1).AddMinutes(-1).Date);
+            var trans = _allTransactions.Where(x => x.PlannedDate.Date >= _startDate.Date && x.PlannedDate.Date <= _endDate.Date).ToList();
 
             foreach (var t in trans)
             {

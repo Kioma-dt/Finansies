@@ -42,7 +42,7 @@
         {
             var sum = 0m;
 
-            foreach (var transaction in Transactions.Where(x => x.Date >= startDate && x.Date <= endDate))
+            foreach (var transaction in Transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date))
             {
                 sum += transaction.SignedAmount;
             }

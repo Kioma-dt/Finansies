@@ -22,7 +22,9 @@ namespace UI.ViewModels
         public string LimitText => $"{UsedAmount:F0} / {Budget.Limit:F0}";
     }
 
-    public partial class BudgetViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
+    public partial class BudgetViewModel : ObservableObject,
+        IRecipient<DataBaseChangedMessage>,
+        IRecipient<DateRangeChangedMessage>
     {
         private readonly IBudgetService _budgetService;
         private readonly IUserContext _user;
@@ -35,6 +37,8 @@ namespace UI.ViewModels
         [ObservableProperty]
         public partial BudgetItem? SelectedBudget { get; set; } = null;
 
+        private DateTime _startDate = DateTime.Now.AddMonths(-1);
+        private DateTime _endDate = DateTime.Now;
 
         public BudgetViewModel(
             IBudgetService budgetService,
@@ -43,9 +47,10 @@ namespace UI.ViewModels
         {
             _budgetService = budgetService;
             _user = user;
+            _popup = popup;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
-            _popup = popup;
+            WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
         }
         public async void Receive(DataBaseChangedMessage message)
         {
@@ -62,6 +67,13 @@ namespace UI.ViewModels
                     });
             }
         }
+        public async void Receive(DateRangeChangedMessage message)
+        {
+            _startDate = message.StartDate;
+            _endDate = message.EndDate;
+
+            await this.SelectBudgetCommand.ExecuteAsync(null);
+        }
 
         [RelayCommand]
         public async Task SelectBudget()
@@ -71,7 +83,9 @@ namespace UI.ViewModels
             {
                 var transactions = await _budgetService.GetRelevantTransactions(_user.UserId, SelectedBudget.Budget.Id);
 
-                foreach(var transaction in transactions)
+                transactions = transactions.Where(x => x.Date.Date >= _startDate.Date && x.Date.Date <= _endDate.Date).ToList();
+
+                foreach (var transaction in transactions)
                 {
                     Transactions.Add(transaction);
                 }

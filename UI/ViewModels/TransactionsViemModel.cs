@@ -117,7 +117,7 @@ namespace UI.ViewModels
         {
             Transactions.Clear();
 
-            var trans = _allTransactions.Where(x => x.Date >= _startDate.Date && x.Date <= _endDate.AddDays(1).AddMinutes(-1).Date);
+            var trans = _allTransactions.Where(x => x.Date.Date >= _startDate.Date && x.Date.Date <= _endDate.Date).ToList();
 
             foreach(var t in trans)
             {
