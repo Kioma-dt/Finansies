@@ -48,6 +48,10 @@ namespace DataAccess.RepositoriesImplementation
             await using var db = await _factory.CreateDbContextAsync();
 
             return await db.Debts
+                .Include(x => x.Transactions)
+                .Include(x => x.PlannedTransactions)
+                .Include (x => x.Category)
+                .Include(x => x.FamilyMember)
                 .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
         }
 

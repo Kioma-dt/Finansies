@@ -22,6 +22,7 @@ namespace BuisnessLogic.Services
             decimal amount,
             DateTime date);
 
+        Task<List<Transaction>> GetRelevantTransactions(Guid userId, Guid debtId);
         Task UpdateDebt(Guid userId,
             Guid debtId,
             DateTime date);
@@ -73,6 +74,18 @@ namespace BuisnessLogic.Services
         }
 
         public Task<List<Debt>> GetAll(Guid userId) => _debtRepository.GetAll(userId);
+
+        public async Task<List<Transaction>> GetRelevantTransactions(Guid userId, Guid debtId)
+        {
+            var debt = await _debtRepository.GetById(userId, debtId);
+
+            if (debt is null)
+            {
+                throw new ArgumentException($"No Debt With Id: {debtId}");
+            }
+
+            return debt.Transactions;
+        }
 
         public async Task PayOffDebt(Guid userId, Guid debtId, decimal amount, DateTime date) => await _debtRepository.PayOffDebt(userId, debtId, amount, date);
 

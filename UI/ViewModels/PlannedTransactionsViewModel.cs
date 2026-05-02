@@ -123,7 +123,7 @@ namespace UI.ViewModels
                 if (planned is null)
                     return;
 
-                await _plannedTransactionService.ConfirmTransaction(_user.UserId, planned.Id, DateTime.Now);
+                await _plannedTransactionService.ConfirmTransaction(_user.UserId, planned.Id);
 
                 WeakReferenceMessenger.Default.Send(
                     new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));

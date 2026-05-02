@@ -13,9 +13,10 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid RowDefinitions="Auto,*, Auto">
+    <Grid RowDefinitions="Auto,*, *, Auto">
 
-        <Grid ColumnDefinitions="2*,*,*,*,*,*,3*"
+        <Grid Grid.Row="0" 
+            ColumnDefinitions="2*,*,*,*,*,*,3*"
               Padding="10"
               BackgroundColor="#2d2d2d">
 
@@ -56,7 +57,10 @@
         </Grid>
 
         <CollectionView Grid.Row="1"
-                        ItemsSource="{Binding Debts}">
+                        ItemsSource="{Binding Debts}"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedDebt}"
+                        SelectionChangedCommand="{Binding SelectDebtCommand}">
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="entity:Debt">
@@ -99,7 +103,41 @@
 
         </CollectionView>
 
-        <Button Grid.Row="2"
+        <CollectionView Grid.Row="2"
+                ItemsSource="{Binding Transactions}">
+
+            <CollectionView.Header>
+                <Grid ColumnDefinitions="*,*,*,*"
+              Padding="10"
+              BackgroundColor="#2d2d2d">
+
+                    <Label Text="Amount" TextColor="White"/>
+                    <Label Text="Type" Grid.Column="1" TextColor="White"/>
+                    <Label Text="Date" Grid.Column="2" TextColor="White"/>
+                    <Label Text="Description" Grid.Column="3" TextColor="White"/>
+
+                </Grid>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="entity:Transaction">
+
+                    <Grid ColumnDefinitions="*,*,*,*"
+                  Padding="10">
+
+                        <Label Text="{Binding Amount}" />
+                        <Label Text="{Binding Type}" Grid.Column="1"/>
+                        <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="2"/>
+                        <Label Text="{Binding Description}" Grid.Column="3"/>
+
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <Button Grid.Row="3"
             Text="Add Debt"
             Command="{Binding CreateDebtCommand}" 
             BackgroundColor="#2196F3"

@@ -41,7 +41,7 @@ namespace BuisnessLogic.Services
 
         Task ConfirmTransaction(Guid userId,
             Guid plannedTransactionId,
-            DateTime date);
+            DateTime? date = null);
 
         Task UpdatePlannedTransaction(Guid userId,
             Guid plannedTransactionId,
@@ -198,7 +198,7 @@ namespace BuisnessLogic.Services
             //await _familyMemberRepository.Update(familyMember);
         }
 
-        public async Task ConfirmTransaction(Guid userId, Guid plannedTransactionId, DateTime date)
+        public async Task ConfirmTransaction(Guid userId, Guid plannedTransactionId, DateTime? date = null)
         {
 
             var plannedTransaction = await _plannedTransactionRepository.GetById(userId, plannedTransactionId);
@@ -219,11 +219,16 @@ namespace BuisnessLogic.Services
                 throw new Exception("Planned Transaction Does't Contain Account");
             }
 
+            if (date is null)
+            {
+                date = plannedTransaction.PlannedDate;
+            }
+
             await _transactionService.RegsiterTransaction(
                 plannedTransaction.UserId,
                 plannedTransaction.Amount,
                 plannedTransaction.Description,
-                date,
+                date.Value,
                 plannedTransaction.Type,
                 plannedTransaction.AccountId.Value,
                 plannedTransaction.CategoryId,

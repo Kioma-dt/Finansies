@@ -21,10 +21,10 @@ namespace UI.ViewModels
 
 
         public ObservableCollection<Debt> Debts { get; set; } = new();
-        //public ObservableCollection<Transaction> Transactions { get; set; } = new();
+        public ObservableCollection<Transaction> Transactions { get; set; } = new();
 
-        //[ObservableProperty]
-        //public partial BudgetItem? SelectedBudget { get; set; } = null;
+        [ObservableProperty]
+        public partial Debt? SelectedDebt { get; set; } = null;
 
 
         public DebtViewModel(
@@ -63,20 +63,20 @@ namespace UI.ViewModels
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
         }
 
-        //[RelayCommand]
-        //public async Task SelectBudget()
-        //{
-        //    Transactions.Clear();
-        //    if (SelectedBudget is not null)
-        //    {
-        //        var transactions = await _budgetService.GetRelevantTransactions(_user.UserId, SelectedBudget.Budget.Id);
+        [RelayCommand]
+        public async Task SelectDebt()
+        {
+            Transactions.Clear();
+            if (SelectedDebt is not null)
+            {
+                var transactions = await _debtService.GetRelevantTransactions(_user.UserId, SelectedDebt.Id);
 
-        //        foreach (var transaction in transactions)
-        //        {
-        //            Transactions.Add(transaction);
-        //        }
-        //    }
-        //}
+                foreach (var transaction in transactions)
+                {
+                    Transactions.Add(transaction);
+                }
+            }
+        }
 
         [RelayCommand]
         public async Task CreateDebt()

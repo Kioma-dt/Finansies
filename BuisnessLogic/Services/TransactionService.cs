@@ -173,6 +173,7 @@ namespace BuisnessLogic.Services
                 AccountId = account.Id,
                 CategoryId = categoryId,
                 FamilyMemberId = familyMemberId,
+                DebtId = debtId,
                 UserId = userId
             };
 
