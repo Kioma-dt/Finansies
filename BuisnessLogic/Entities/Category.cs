@@ -37,5 +37,22 @@
                 return sum;
             }
         }
+
+        public decimal PeriodTransactionsSum(DateTime startDate, DateTime endDate)
+        {
+            var sum = 0m;
+
+            foreach (var transaction in Transactions.Where(x => x.Date >= startDate && x.Date <= endDate))
+            {
+                sum += transaction.SignedAmount;
+            }
+
+            foreach (var child in Children)
+            {
+                sum += child.PeriodTransactionsSum(startDate, endDate);
+            }
+
+            return sum;
+        }
     }
 }

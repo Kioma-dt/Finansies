@@ -19,22 +19,22 @@ namespace UI.ViewModels
     public class CategoryNode
     {
         public Category Category { get; set; } = null!;
+        public decimal Amount { get; set; } = 0;
         public int Level { get; set; }
     }
 
     public partial class CategoryViewModel : ObservableObject, 
-        IRecipient<DataBaseChangedMessage>
-        //IRecipient<DateRangeChangedMessage>
+        IRecipient<DataBaseChangedMessage>,
+        IRecipient<DateRangeChangedMessage>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserContext _user;
         private readonly CategoryCreatePopUp _categoryCreatePopUp;
 
-        //private List<Category> _allCategories = new();
         private List<Category> _categories = new();
 
-        //private DateTime _startDate = DateTime.Now.AddMonths(-1);
-        //private DateTime _endDate = DateTime.Now;
+        private DateTime _startDate = DateTime.Now.AddMonths(-1);
+        private DateTime _endDate = DateTime.Now;
 
         public ObservableCollection<CategoryNode> FlatCategories { get; } = new();
 
@@ -49,7 +49,7 @@ namespace UI.ViewModels
             _categoryCreatePopUp = categoryCreatePopUp;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
-            //WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
+            WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
         }
 
         public async void Receive(DataBaseChangedMessage message)
@@ -58,32 +58,24 @@ namespace UI.ViewModels
             {
                 _categories = await _categoryRepository.GetAll(_user.UserId) ?? new();
 
-                //this.FilterCategoryTransactions();
                 BuildTree();
+                //this.FilterCategoryTransactions();
             }
         }
 
-        //public void Receive(DateRangeChangedMessage message)
-        //{
-        //    _startDate = message.StartDate;
-        //    _endDate = message.EndDate;
+        public void Receive(DateRangeChangedMessage message)
+        {
+            _startDate = message.StartDate;
+            _endDate = message.EndDate;
 
-        //    this.FilterCategoryTransactions();
-        //    BuildTree();
-        //}
+            this.BuildTree();
+        }
 
         //private void FilterCategoryTransactions()
         //{
-        //    _categories.Clear();
-            
-        //    foreach(var cat in _allCategories)
+        //    foreach(var categoryNode in FlatCategories)
         //    {
-        //        _categories.Add(cat);
-        //    }
-
-        //    foreach (var category in _categories)
-        //    {
-        //        category.Transactions = category.Transactions.Where(x => x.Date >= _startDate && x.Date <= _endDate).ToList();
+        //        categoryNode.Amount = categoryNode.Category.PeriodTransactionsSum(_startDate, _endDate);
         //    }
         //}
 
@@ -116,6 +108,7 @@ namespace UI.ViewModels
                 FlatCategories.Add(new CategoryNode
                 {
                     Category = cat,
+                    Amount = cat.PeriodTransactionsSum(_startDate, _endDate),
                     Level = level
                 });
 
