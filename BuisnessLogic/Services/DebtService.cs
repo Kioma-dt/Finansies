@@ -85,10 +85,10 @@ namespace BuisnessLogic.Services
                 throw new ArgumentException($"No Debt with Id: {debtId}");
             }
 
-            if (date > debt.EndDate)
-            {
-                throw new Exception("The Debt Is Overdue!");
-            }
+            //if (date > debt.EndDate)
+            //{
+            //    throw new Exception("The Debt Is Overdue!");
+            //}
 
             var calculator = _debtInterestCalculatorProvider.GetCalculator(debt.InterestType);
 
@@ -99,7 +99,9 @@ namespace BuisnessLogic.Services
                                                   debt.StartDate,
                                                   date);
 
-            var interests = debt.TotalAmount - new_amount;
+            var interests = new_amount - debt.TotalAmount;
+
+            //interests = interests >= 0 ? interests : -interests;
 
             debt.ChargeInterest(interests);
 

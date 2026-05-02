@@ -35,10 +35,10 @@ namespace BuisnessLogic.Entities
 
         public void ChargeInterest(decimal amount)
         {
-            if (amount < 0)
-            {
-                throw new Exception("Negative Amount");
-            }
+            //if (amount < 0)
+            //{
+            //    throw new Exception("Negative Amount");
+            //}
 
             TotalAmount += amount;
         }

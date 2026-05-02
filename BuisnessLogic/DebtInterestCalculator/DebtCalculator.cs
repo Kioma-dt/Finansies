@@ -31,7 +31,7 @@ namespace BuisnessLogic.DebtInterestCalculator
                 throw new Exception("Wrong Dates");
             }
 
-            var years = Math.Floor((decimal)days / 365);
+            var years = (decimal)days / 365;
 
             return amount * (decimal)Math.Pow((double)(1 + interestRate / capitalisatonsPerYear), (double)(years * capitalisatonsPerYear));
         }

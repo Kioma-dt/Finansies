@@ -12,7 +12,9 @@ using UI.Popups;
 namespace UI.ViewModels
 {
 
-    public partial class PlannedTransactionsViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
+    public partial class PlannedTransactionsViewModel : ObservableObject, 
+        IRecipient<DataBaseChangedMessage>,
+        IRecipient<CurrentTimeMessage>
     {
         private readonly IPlannedTransactionService _plannedTransactionService;
         private readonly IUserContext _user;
@@ -34,6 +36,7 @@ namespace UI.ViewModels
             _popUp = popUp;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
+            WeakReferenceMessenger.Default.Register<CurrentTimeMessage>(this);
         }
         public async void Receive(DataBaseChangedMessage message)
         {
@@ -45,6 +48,18 @@ namespace UI.ViewModels
                 foreach (var t in data)
                     PlannedTransactions.Add(t);
             }
+        }
+
+        public async void Receive(CurrentTimeMessage message)
+        {
+            var data = await _plannedTransactionService.GetAll(_user.UserId);
+
+            foreach (var pt in data)
+            {
+                await _plannedTransactionService.UpdatePlannedTransaction(_user.UserId, pt.Id, message.CurrentTime);
+            }
+
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
         }
 
         [RelayCommand]

@@ -41,6 +41,10 @@ namespace BuisnessLogic.Entities
             {
                 Status = PlannedTransactionStatus.WaitingForConfirm;
             }
+            else if (Status != PlannedTransactionStatus.Confirmed && date < PlannedDate)
+            {
+                Status = PlannedTransactionStatus.Planned;
+            }
         }
     }
 }
