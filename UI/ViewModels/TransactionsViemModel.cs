@@ -45,7 +45,9 @@ namespace UI.ViewModels
         public List<Transaction> Transactions { get; set; } = new();
     }
 
-    public partial class TransactionsViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
+    public partial class TransactionsViewModel : ObservableObject, 
+        IRecipient<DataBaseChangedMessage>,
+        IRecipient<DateRangeChangedMessage>
     {
         private readonly ITransactionService _transactionService;
         private readonly ICategoryRepository _categoryRepository;
@@ -55,6 +57,10 @@ namespace UI.ViewModels
         //public List<Category> _categories { get; } = new();
 
         //public ObservableCollection<object> FlatItems { get; } = new();
+
+        private List<Transaction> _allTransactions = new();
+        private DateTime _startDate = DateTime.Now.AddMonths(-1);
+        private DateTime _endDate = DateTime.Now;
 
         public ObservableCollection<Transaction> Transactions { get; set; } = new();
 
@@ -71,19 +77,19 @@ namespace UI.ViewModels
             _user = user;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
+            WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
         }
         public async void Receive(DataBaseChangedMessage message)
         {
-            bool isUpdated = false;
             if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Transactions)
             {
                 var data = await _transactionService.GetAll(_user.UserId);
 
-                Transactions.Clear();
+                _allTransactions.Clear();
                 foreach (var t in data)
-                    Transactions.Add(t);
+                    _allTransactions.Add(t);
 
-                isUpdated = true;
+                this.FilterTransactions();
             }
 
             //if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Categories)
@@ -101,6 +107,25 @@ namespace UI.ViewModels
             //{
             //    BuildTree(_categories, _transactions);
             //}
+        }
+        public void Receive(DateRangeChangedMessage message)
+        {
+            _startDate = message.StartDate;
+            _endDate = message.EndDate;
+
+            this.FilterTransactions();
+        }
+
+        private void FilterTransactions()
+        {
+            Transactions.Clear();
+
+            var trans = _allTransactions.Where(x => x.Date >= _startDate.Date && x.Date <= _endDate.AddDays(1).AddMinutes(-1).Date);
+
+            foreach(var t in trans)
+            {
+                Transactions.Add(t);
+            }
         }
 
         //private void BuildTree(List<Category> categories, List<Transaction> transactions)

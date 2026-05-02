@@ -2,7 +2,9 @@
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using UI.Popups;
+using UI.Messages;
 
 namespace UI.ViewModels
 {
@@ -61,6 +63,8 @@ namespace UI.ViewModels
                     EndDate = prevSartDate.AddYears(1);
                     break;
             }
+
+            WeakReferenceMessenger.Default.Send(new DateRangeChangedMessage(StartDate, EndDate));
         }
 
         [RelayCommand]
@@ -83,6 +87,8 @@ namespace UI.ViewModels
                     EndDate = StartDate.AddYears(1).AddDays(-1);
                     break;
             }
+
+            WeakReferenceMessenger.Default.Send(new DateRangeChangedMessage(StartDate, EndDate));
         }
 
         [RelayCommand]
@@ -105,6 +111,8 @@ namespace UI.ViewModels
                     EndDate = StartDate.AddYears(1);
                     break;
             }
+
+            WeakReferenceMessenger.Default.Send(new DateRangeChangedMessage(StartDate, EndDate));
         }
 
         [RelayCommand]
