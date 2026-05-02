@@ -1,0 +1,51 @@
+<toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:dto="clr-namespace:UI.Popups"
+    x:TypeArguments="dto:DateRangeDTO"
+    x:Class="UI.Popups.DateRangePopUp">
+
+    <Border Padding="20"
+            BackgroundColor="White"
+            WidthRequest="350"
+            Stroke="LightGray"
+            StrokeThickness="1">
+
+        <ScrollView>
+            <Grid RowDefinitions="*, *"
+                  ColumnDefinitions="*, Auto">
+
+                
+                <DatePicker Grid.Row="0"
+                            Grid.Column="0"
+                            x:Name="StartDatePicker"
+                            TextColor="Black"/>
+
+                <DatePicker Grid.Row="0"
+                            Grid.Column="1" 
+                            x:Name="EndDatePicker"
+                            TextColor="Black"/>
+
+                <HorizontalStackLayout Grid.Row="1"
+                                       Grid.ColumnSpan="2"
+                                       Spacing="10">
+
+                    <Button Text="Cancel"
+                            BackgroundColor="#9E9E9E"
+                            TextColor="White"
+                            Clicked="OnCancel"/>
+
+                    <Button Text="Select"
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            Clicked="OnCreate"/>
+
+                </HorizontalStackLayout>
+
+            </Grid>
+        </ScrollView>
+
+    </Border>
+
+</toolkit:Popup>

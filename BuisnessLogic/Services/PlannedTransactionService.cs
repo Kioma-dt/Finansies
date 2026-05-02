@@ -216,7 +216,7 @@ namespace BuisnessLogic.Services
 
             if (plannedTransaction.AccountId is null)
             {
-                throw new Exception("Planned Transaction Does't Contain Account");
+                throw new ArgumentException("Planned Transaction Does't Contain Account");
             }
 
             if (date is null)

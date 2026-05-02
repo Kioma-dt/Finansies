@@ -34,6 +34,8 @@
             <Button Text="Create Transactiom"
                 Command="{Binding CreateTransactionCommand}" />
 
+            <ContentView Content="{Binding DateRangeSelectorView}"/>
+
         </HorizontalStackLayout>
 
         <ContentView Grid.Row="1"

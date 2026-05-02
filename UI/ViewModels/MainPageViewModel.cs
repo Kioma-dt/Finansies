@@ -35,6 +35,9 @@ namespace UI.ViewModels
         [ObservableProperty]
         public partial View? CentralView { get; set; }
 
+        [ObservableProperty]
+        public partial View? DateRangeSelectorView { get; set; }
+
 
         private readonly TransactionView _transactionView;
         private readonly PlannedTransactionView _plannedTransactionView;
@@ -42,6 +45,8 @@ namespace UI.ViewModels
         private readonly CategoryView _categoryView;
         private readonly BudgetView _budgetView;
         private readonly DebtView _debtView;
+
+        private readonly DateRangeSelectorView _dateRangeSelectorView;
 
         public MainPageViewModel( IUserContext user,
             ITransactionService transactionService,
@@ -51,7 +56,8 @@ namespace UI.ViewModels
             PlannedTransactionView plannedTransactionView,
             CategoryView categoryView,
             BudgetView budgetView,
-            DebtView debtView)
+            DebtView debtView,
+            DateRangeSelectorView dateRangeSelectorView)
         {
             _user = user;
             _transactionService = transactionService;
@@ -64,9 +70,12 @@ namespace UI.ViewModels
             _budgetView = budgetView;
             _debtView = debtView;
 
+            _dateRangeSelectorView = dateRangeSelectorView;
+
             LeftView = _accountView;
             RightView = _transactionView;
             CentralView = null;
+            DateRangeSelectorView = dateRangeSelectorView;
         }
 
         [RelayCommand]

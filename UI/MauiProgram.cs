@@ -81,6 +81,8 @@ namespace UI
             builder.Services.AddSingleton<BudgetViewModel>();
             builder.Services.AddSingleton<DebtViewModel>();
 
+            builder.Services.AddSingleton<DateRangeSelectorViewModel>();
+
             builder.Services.AddSingleton<MainPageViewModel>();
 
             builder.Services.AddSingleton<TransactionView>();
@@ -90,6 +92,8 @@ namespace UI
             builder.Services.AddSingleton<BudgetView>();
             builder.Services.AddSingleton<DebtView>();
 
+            builder.Services.AddSingleton<DateRangeSelectorView>();
+
             builder.Services.AddSingleton<MainPage>();
 
             builder.Services.AddTransient<AccountCreatePopUp>();
@@ -98,6 +102,8 @@ namespace UI
             builder.Services.AddTransient<PlannedTransactionCreatePopUp>();
             builder.Services.AddTransient<BudgetCreatePopUp>();
             builder.Services.AddTransient<DebtCreatePopUp>();
+
+            builder.Services.AddTransient<DateRangePopUp>();
 
 #if DEBUG
             builder.Logging.AddDebug();
