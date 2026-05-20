@@ -9,6 +9,9 @@ using System.Collections.ObjectModel;
 using UI.Messages;
 using UI.Popups;
 
+using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Queries;
+using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;
+
 namespace UI.ViewModels
 {
 
@@ -17,7 +20,7 @@ namespace UI.ViewModels
         IRecipient<CurrentTimeMessage>,
         IRecipient<DateRangeChangedMessage>
     {
-        private readonly IPlannedTransactionService _plannedTransactionService;
+        private readonly IMediator _mediator;
         private readonly IUserContext _user;
         private readonly PlannedTransactionCreatePopUp _popUp;
 
@@ -31,11 +34,11 @@ namespace UI.ViewModels
         public partial bool IsLoaded { get; set; } = false;
 
         public PlannedTransactionsViewModel(
-            IPlannedTransactionService plannedTransactionService,
+            IMediator mediator,
             IUserContext user,
             PlannedTransactionCreatePopUp popUp)
         {
-            _plannedTransactionService = plannedTransactionService;
+            _mediator = mediator;
             _user = user;
             _popUp = popUp;
 
@@ -47,7 +50,7 @@ namespace UI.ViewModels
         {
             if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.PlannedTransactions)
             {
-                var data = await _plannedTransactionService.GetAll(_user.UserId);
+                var data = await _mediator.Send(new GetAllPlannedTransactionsQuery(_user.UserId));
 
                 _allTransactions.Clear();
                 foreach (var t in data)
@@ -59,11 +62,11 @@ namespace UI.ViewModels
 
         public async void Receive(CurrentTimeMessage message)
         {
-            var data = await _plannedTransactionService.GetAll(_user.UserId);
+            var data = await _mediator.Send(new GetAllPlannedTransactionsQuery(_user.UserId));
 
             foreach (var pt in data)
             {
-                await _plannedTransactionService.UpdatePlannedTransaction(_user.UserId, pt.Id, message.CurrentTime);
+                await _mediator.Send(new UpdatePlannedTransactionCommand(_user.UserId, pt.Id, message.CurrentTime));
             }
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
@@ -104,7 +107,7 @@ namespace UI.ViewModels
 
                 if (data.Periodicity == TransactionPeriodicity.Once)
                 {
-                    await _plannedTransactionService.PlanTransaction(_user.UserId,
+                    await _mediator.Send(new CreatePlannedTransactionCommand(_user.UserId,
                         data.Amount,
                         data.Description,
                         data.Type,
@@ -112,21 +115,21 @@ namespace UI.ViewModels
                         data.AccountId,
                         data.CategoryId,
                         data.FamilyMemberId,
-                        data.DebtId);
+                        data.DebtId));
                 }
                 else
                 {
-                    await _plannedTransactionService.PlanMultipleTransactions(_user.UserId,
+                    await _mediator.Send(new CreatePlannedTransactionCommand(_user.UserId,
                         data.Amount,
                         data.Description,
                         data.Type,
                         data.StartDate,
-                        data.Periodicity,
-                        data.Count, 
                         data.AccountId,
                         data.CategoryId,
                         data.FamilyMemberId,
-                        data.DebtId);
+                        data.DebtId,
+                        data.Count,
+                        data.Periodicity));
                 }
 
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
@@ -150,7 +153,7 @@ namespace UI.ViewModels
                 if (planned is null)
                     return;
 
-                await _plannedTransactionService.ConfirmTransaction(_user.UserId, planned.Id);
+                await _mediator.Send(new ConfirmPlannedTransactionCommand(_user.UserId, planned.Id));
 
                 WeakReferenceMessenger.Default.Send(
                     new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));

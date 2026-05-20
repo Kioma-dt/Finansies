@@ -3,11 +3,14 @@ using BuisnessLogic.DTO;
 using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;
 
 namespace BuisnessLogic.Services
 {
@@ -29,16 +32,16 @@ namespace BuisnessLogic.Services
     }
     public class DebtService : IDebtService
     {
+        readonly IMediator _mediator;
         readonly IDebtRepository _debtRepository;
-        readonly IPlannedTransactionService _plannedTransactionService;
         readonly IDebtInterestCalculatorProvider _debtInterestCalculatorProvider;
 
         public DebtService(IDebtRepository debtRepository, 
             IDebtInterestCalculatorProvider debtInterestCalculatorProvider,
-            IPlannedTransactionService plannedTransactionService)
+            IMediator mediator)
         {
             _debtRepository = debtRepository;
-            _plannedTransactionService = plannedTransactionService;
+            _mediator = mediator;
             _debtInterestCalculatorProvider = debtInterestCalculatorProvider;
         }
 
@@ -69,7 +72,7 @@ namespace BuisnessLogic.Services
 
             if (dto.IsAutoPlanned)
             {
-                await _plannedTransactionService.PlanDebtPayments(userId, id, dto.TransactionPeriodicity);
+                await _mediator.Send(new PlanDebtPaymentsCommand(userId, id, dto.TransactionPeriodicity));
             }
         }
 
