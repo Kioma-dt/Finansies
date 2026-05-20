@@ -1,8 +1,7 @@
 ﻿namespace BuisnessLogic.Entities
 {
-    public class FamilyMember
+    public class FamilyMember : Entity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = String.Empty;
 
         public List<Account> Accounts { get; set; } = new();

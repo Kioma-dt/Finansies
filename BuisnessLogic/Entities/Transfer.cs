@@ -1,8 +1,7 @@
 ﻿namespace BuisnessLogic.Entities
 {
-    public class Transfer
+    public class Transfer : Entity
     {
-        public Guid Id { get; set; }
         public decimal Amount { get; set; } = 0;
         public string Description { get; set; } = String.Empty;
         public DateTime Date { get; set; }

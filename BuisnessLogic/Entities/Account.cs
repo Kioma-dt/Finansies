@@ -1,8 +1,7 @@
 ﻿namespace BuisnessLogic.Entities
 {
-    public class Account
+    public class Account : Entity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = String.Empty;
         public decimal Balance { get; set; }
 

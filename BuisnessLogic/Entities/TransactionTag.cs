@@ -1,8 +1,7 @@
 ﻿namespace BuisnessLogic.Entities
 {
-    public class TransactionTag
+    public class TransactionTag : Entity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = String.Empty;
 
         public List<Transaction> Transactions { get; set; } = new();

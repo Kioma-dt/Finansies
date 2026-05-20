@@ -2,9 +2,8 @@
 
 namespace BuisnessLogic.Entities
 {
-    public class BudgetFilter
+    public class BudgetFilter : Entity
     {
-        public Guid Id { get; set; }
         public BudgetFilterType Type { get; set; }
         public string Value { get; set; } = String.Empty;
 

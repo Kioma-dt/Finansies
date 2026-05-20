@@ -2,9 +2,8 @@
 
 namespace BuisnessLogic.Entities
 {
-    public class Budget
+    public class Budget : Entity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = String.Empty;
         public decimal Limit { get; set; } = 0;
         public DateTime StartDate { get; set; }

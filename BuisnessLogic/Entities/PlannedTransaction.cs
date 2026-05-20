@@ -3,9 +3,8 @@ using System.Diagnostics.Contracts;
 
 namespace BuisnessLogic.Entities
 {
-    public class PlannedTransaction
+    public class PlannedTransaction : Entity
     {
-        public Guid Id { get; set; }
         public decimal Amount { get; set; } = 0;
         public string Description { get; set; } = String.Empty;
         public TransactionType Type { get; set; }

@@ -2,9 +2,8 @@
 
 namespace BuisnessLogic.Entities
 {
-    public class Debt
+    public class Debt : Entity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = String.Empty;
 
         public decimal StartAmount { get; set; }
