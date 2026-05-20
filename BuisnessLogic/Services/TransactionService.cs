@@ -54,7 +54,15 @@ namespace BuisnessLogic.Services
             _debtRepository = debtRepository;
         }
 
-        public async Task<List<Transaction>> GetAll(Guid userId) => (await _transactionRepository.GetAll(userId));
+        public async Task<List<Transaction>> GetAll(Guid userId) 
+            => (await _transactionRepository.GetAll(userId,
+                x => x.Account,
+                x => x.Category,
+                x => x.FamilyMember,
+                x => x.TransactionTags,
+                x => x.Debt,
+                x => x.User)).ToList();
+
         public async Task AddCategory(Guid userId, Guid transactionId, Guid categoryId)
         {
             var transaction = await _transactionRepository.GetById(userId, transactionId);
@@ -71,7 +79,6 @@ namespace BuisnessLogic.Services
                 throw new ArgumentException($"No Category with Id: {categoryId}");
             }
 
-            //transaction.Category = category;
             transaction.CategoryId = categoryId;
 
 
@@ -80,7 +87,6 @@ namespace BuisnessLogic.Services
 
 
             await _transactionRepository.Update(transaction);
-            //await _familyMemberRepository.Update(familyMember);
         }
 
         public async Task AddFamilyMember(Guid userId, Guid transactionId, Guid familyMemberId)
@@ -99,13 +105,11 @@ namespace BuisnessLogic.Services
                 throw new ArgumentException($"No Family Member with Id: {familyMemberId}");
             }
 
-            //transaction.FamilyMember = familyMember;
             transaction.FamilyMemberId = familyMemberId;
 
             familyMember.Transactions.Add(transaction);
 
             await _transactionRepository.Update(transaction);
-            //await _familyMemberRepository.Update(familyMember);
         }
 
         public async Task AddTag(Guid userId, Guid transactionId, Guid transactionTagId)
@@ -129,7 +133,6 @@ namespace BuisnessLogic.Services
             transactionTag.Transactions.Add(transaction);
 
             await _transactionRepository.Update(transaction);
-            //await _familyMemberRepository.Update(familyMember);
         }
 
         public async Task RegsiterTransaction(Guid userId, 
