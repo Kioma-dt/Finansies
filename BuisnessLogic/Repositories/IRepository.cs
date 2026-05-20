@@ -1,20 +1,23 @@
-﻿using System;
+﻿using BuisnessLogic.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-
-using BuisnessLogic.Entities;
 
 namespace BuisnessLogic.Repositories
 {
     public interface IRepository<T>
-        where T : Entity
+        where T : UsersEntity
     {
-        Task<IEnumerable<T>> GetAll();
-        Task<T?> GetById(Guid id);
+        Task<IEnumerable<T>> GetAll(Guid userId, 
+            params Expression<Func<T, object>>[] includes);
+        Task<T?> GetById(Guid userId, 
+            Guid id,
+            params Expression<Func<T, object>>[] includes);
         Task Add(T entity);
         Task Update(T entity);
-        Task Delete(Guid id);
+        Task Delete(T entity);
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace BuisnessLogic.Entities
 {
-    public class Account : Entity
+    public class Account
+        : UsersEntity
     {
         public string Name { get; set; } = String.Empty;
         public decimal Balance { get; set; }
@@ -18,9 +19,6 @@
 
         public Guid? FamilyMemberId { get; set; } = null;
         public FamilyMember? FamilyMember { get; set; } = null;
-
-        public Guid UserId {  get; set; }
-        public User? User { get; set; }
 
         public decimal TotalBalance
         {

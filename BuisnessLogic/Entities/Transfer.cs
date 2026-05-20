@@ -1,6 +1,7 @@
 ﻿namespace BuisnessLogic.Entities
 {
-    public class Transfer : Entity
+    public class Transfer 
+        : UsersEntity
     {
         public decimal Amount { get; set; } = 0;
         public string Description { get; set; } = String.Empty;
@@ -11,8 +12,5 @@
 
         public Guid ToAccountId { get; set; }
         public Account? ToAccount { get; set; }
-
-        public Guid UserId { get; set;}
-        public User? User { get; set; }
     }
 }

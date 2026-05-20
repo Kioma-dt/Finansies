@@ -1,6 +1,7 @@
 ﻿namespace BuisnessLogic.Entities
 {
-    public class FamilyMember : Entity
+    public class FamilyMember 
+        : UsersEntity
     {
         public string Name { get; set; } = String.Empty;
 
@@ -8,9 +9,6 @@
         public List<Transaction> Transactions { get; set; } = new();
         public List<PlannedTransaction> PlannedTransactions { get; set; } = new();
         public List<Debt> Debts { get; set; } = new();
-
-        public Guid UserId { get; set; }
-        public User? User { get; set; }
 
         public decimal PeriodTransactionsSum(DateTime startDate, DateTime endDate)
         {

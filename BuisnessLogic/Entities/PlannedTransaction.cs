@@ -3,7 +3,8 @@ using System.Diagnostics.Contracts;
 
 namespace BuisnessLogic.Entities
 {
-    public class PlannedTransaction : Entity
+    public class PlannedTransaction 
+        : UsersEntity
     {
         public decimal Amount { get; set; } = 0;
         public string Description { get; set; } = String.Empty;
@@ -25,9 +26,6 @@ namespace BuisnessLogic.Entities
 
         public Guid? FamilyMemberId { get; set; } = null;
         public FamilyMember? FamilyMember { get; set; } = null;
-
-        public Guid UserId { get; set; }
-        public User? User { get; set; }
 
         public void Conirm()
         {

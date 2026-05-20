@@ -1,6 +1,7 @@
 ﻿namespace BuisnessLogic.Entities
 {
-    public class Category : Entity
+    public class Category 
+        : UsersEntity
     {
         public string Name { get; set; } = String.Empty;
         public string Description { get; set; } = String.Empty;
@@ -13,9 +14,6 @@
         public List<Transaction> Transactions { get; set; } = new();
         public List<PlannedTransaction> PlannedTransactions { get; set; } = new();
         public List<Debt> Debts { get; set; } = new();
-
-        public Guid UserId { get; set; }
-        public User? User { get; set; }
 
         public decimal TransactionsSum
         {

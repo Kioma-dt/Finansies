@@ -10,4 +10,11 @@ namespace BuisnessLogic.Entities
     {
         public Guid Id { get; set; }
     }
+
+    public class UsersEntity
+        : Entity
+    {
+        public Guid UserId { get; set; }
+        public User? User { get; set; }
+    }
 }

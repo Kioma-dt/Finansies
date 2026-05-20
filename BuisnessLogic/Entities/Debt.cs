@@ -2,7 +2,8 @@
 
 namespace BuisnessLogic.Entities
 {
-    public class Debt : Entity
+    public class Debt 
+        : UsersEntity
     {
         public string Name { get; set; } = String.Empty;
 
@@ -28,9 +29,6 @@ namespace BuisnessLogic.Entities
 
         public Guid? FamilyMemberId { get; set; } = null;
         public FamilyMember? FamilyMember { get; set; } = null;
-
-        public Guid UserId { get; set; }
-        public User? User { get; set; }
 
         public void ChargeInterest(decimal amount)
         {
