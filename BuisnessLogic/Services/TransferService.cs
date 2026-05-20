@@ -4,63 +4,63 @@ using System.Security.Principal;
 
 namespace BuisnessLogic.Services
 {
-    public interface ITransferService
-    {
-        Task<List<Transfer>> GetAll(Guid userId);
-        Task TransferMoney(Guid userId,
-            decimal amount,
-            string description,
-            DateTime date,
-            Guid fromAccountId,
-            Guid toAccountId);
-    }
-    public class TransferService : ITransferService
-    {
-        readonly IAccountRepository _accountRepository;
-        readonly ITransferRepository _transferRepository;
+    //public interface ITransferService
+    //{
+    //    Task<List<Transfer>> GetAll(Guid userId);
+    //    Task TransferMoney(Guid userId,
+    //        decimal amount,
+    //        string description,
+    //        DateTime date,
+    //        Guid fromAccountId,
+    //        Guid toAccountId);
+    //}
+    //public class TransferService : ITransferService
+    //{
+    //    readonly IAccountRepository _accountRepository;
+    //    readonly ITransferRepository _transferRepository;
 
-        public TransferService(IAccountRepository accountRepository, ITransferRepository transferRepository)
-        {
-            _accountRepository = accountRepository;
-            _transferRepository = transferRepository;
-        }
-        public async Task<List<Transfer>> GetAll(Guid userId)
-            => (await _transferRepository.GetAll(userId,
-                x => x.FromAccount,
-                x => x.ToAccount,
-                x => x.User)).ToList();
+    //    public TransferService(IAccountRepository accountRepository, ITransferRepository transferRepository)
+    //    {
+    //        _accountRepository = accountRepository;
+    //        _transferRepository = transferRepository;
+    //    }
+    //    public async Task<List<Transfer>> GetAll(Guid userId)
+    //        => (await _transferRepository.GetAll(userId,
+    //            x => x.FromAccount,
+    //            x => x.ToAccount,
+    //            x => x.User)).ToList();
 
-        public async Task TransferMoney(Guid userId, decimal amount, string description, DateTime date, Guid fromAccountId, Guid toAccountId)
-        {
-            var fromAccount = await _accountRepository.GetById(userId, fromAccountId);
-            var toAccount = await _accountRepository.GetById(userId, toAccountId);
+    //    public async Task TransferMoney(Guid userId, decimal amount, string description, DateTime date, Guid fromAccountId, Guid toAccountId)
+    //    {
+    //        var fromAccount = await _accountRepository.GetById(userId, fromAccountId);
+    //        var toAccount = await _accountRepository.GetById(userId, toAccountId);
 
-            if (fromAccount is null)
-            {
-                throw new ArgumentException($"No Account with Id: {fromAccountId}");
-            }
+    //        if (fromAccount is null)
+    //        {
+    //            throw new ArgumentException($"No Account with Id: {fromAccountId}");
+    //        }
 
 
-            if (toAccount is null)
-            {
-                throw new ArgumentException($"No Account with Id: {toAccountId}");
-            }
+    //        if (toAccount is null)
+    //        {
+    //            throw new ArgumentException($"No Account with Id: {toAccountId}");
+    //        }
 
-            fromAccount.RemoveFromBalance(amount);
-            toAccount.AddToBalance(amount);
+    //        fromAccount.RemoveFromBalance(amount);
+    //        toAccount.AddToBalance(amount);
 
-            await _transferRepository.Add(new Transfer
-            {
-                Amount = amount,
-                Description = description,
-                Date = date,
-                FromAccountId = fromAccountId,
-                ToAccountId = toAccountId,
-                UserId = userId
-            });
+    //        await _transferRepository.Add(new Transfer
+    //        {
+    //            Amount = amount,
+    //            Description = description,
+    //            Date = date,
+    //            FromAccountId = fromAccountId,
+    //            ToAccountId = toAccountId,
+    //            UserId = userId
+    //        });
 
-            await _accountRepository.Update(fromAccount);
-            await _accountRepository.Update(toAccount);
-        }
-    }
+    //        await _accountRepository.Update(fromAccount);
+    //        await _accountRepository.Update(toAccount);
+    //    }
+    //}
 }

@@ -18,12 +18,14 @@ using UI.Messages;
 using UI.Popups;
 using UI.Views;
 
+using BuisnessLogic.UseCases.TransactionsUseCasses.Commands;
+
 namespace UI.ViewModels
 {
     public partial class MainPageViewModel : ObservableObject
     {
         private readonly IUserContext _user;
-        private readonly ITransactionService _transactionService;
+        private readonly IMediator _mediator;
         private readonly TransactionCreatePopUp _transctionCreatePopUp;
 
         [ObservableProperty]
@@ -50,7 +52,7 @@ namespace UI.ViewModels
         private readonly DateRangeSelectorView _dateRangeSelectorView;
 
         public MainPageViewModel( IUserContext user,
-            ITransactionService transactionService,
+            IMediator mediator,
             TransactionCreatePopUp transactionCreatePopUp,
             AccountView accountView, 
             TransactionView transactionView,
@@ -62,7 +64,7 @@ namespace UI.ViewModels
             DateRangeSelectorView dateRangeSelectorView)
         {
             _user = user;
-            _transactionService = transactionService;
+            _mediator = mediator;
             _transctionCreatePopUp = transactionCreatePopUp;
 
             _accountView = accountView;
@@ -146,7 +148,7 @@ namespace UI.ViewModels
                 if (transaction is null)
                     return;
 
-                await _transactionService.RegsiterTransaction(_user.UserId,
+                await _mediator.Send(new CreateTransactionCommand(_user.UserId,
                     transaction.Amount,
                     transaction.Description,
                     transaction.Date,
@@ -154,7 +156,7 @@ namespace UI.ViewModels
                     transaction.AccountId,
                     transaction.CategoryId,
                     transaction.FamilyMemberId,
-                    transaction.DebtId);
+                    transaction.DebtId));
 
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Transactions));

@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using BuisnessLogic.Shared;
 using BuisnessLogic.DebtInterestCalculator;
+using MediatR;
+using BuisnessLogic.UseCases.TransactionsUseCasses.Commands;
 
 namespace BuisnessLogic.Services
 {
@@ -64,7 +66,7 @@ namespace BuisnessLogic.Services
     }
     public class PlannedTransactionService : IPlannedTransactionService
     {
-        readonly ITransactionService _transactionService;
+        readonly IMediator _mediator;
         readonly IAccountRepository _accountRepository;
         readonly ICategoryRepository _categoryRepository;
         readonly IFamilyMemberRepository _familyMemberRepository;
@@ -74,7 +76,7 @@ namespace BuisnessLogic.Services
 
         readonly IDebtInterestCalculatorProvider _debtInterestCalculatorProvider;
 
-        public PlannedTransactionService(ITransactionService trasnsactionService, 
+        public PlannedTransactionService(IMediator mediator, 
             IPlannedTransactionRepository plannedTransactionRepository,
             IAccountRepository accountRepository,
             ICategoryRepository categoryRepository, 
@@ -83,7 +85,7 @@ namespace BuisnessLogic.Services
             ITransactionTagRepository transactionTagRepository,
             IDebtInterestCalculatorProvider debtInterestCalculatorProvider)
         {
-            _transactionService = trasnsactionService;
+            _mediator = mediator;
             _plannedTransactionRepository = plannedTransactionRepository;
             _accountRepository = accountRepository;
             _categoryRepository = categoryRepository;
@@ -223,7 +225,7 @@ namespace BuisnessLogic.Services
                 date = plannedTransaction.PlannedDate;
             }
 
-            await _transactionService.RegsiterTransaction(
+            await _mediator.Send(new  CreateTransactionCommand(
                 plannedTransaction.UserId,
                 plannedTransaction.Amount,
                 plannedTransaction.Description,
@@ -233,7 +235,7 @@ namespace BuisnessLogic.Services
                 plannedTransaction.CategoryId,
                 plannedTransaction.FamilyMemberId,
                 plannedTransaction.DebtId
-            );
+            ));
 
             plannedTransaction.Conirm();
             await _plannedTransactionRepository.Update(plannedTransaction);

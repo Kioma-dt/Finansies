@@ -66,10 +66,8 @@ namespace UI
             //builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddTransient<IDebtService, DebtService>();
             //builder.Services.AddScoped<IFamilyMemberService, FamilyMemberService>();
-            builder.Services.AddTransient<ITransactionService, TransactionService>();
             builder.Services.AddTransient<IPlannedTransactionService, PlannedTransactionService>();
             //builder.Services.AddScoped<ITransactionTagService, TransactionTagService>();
-            builder.Services.AddTransient<ITransferService, TransferService>();
             //builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddUseCassess();

@@ -2,6 +2,7 @@
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using BuisnessLogic.Services;
+using BuisnessLogic.UseCases.TransactionsUseCasses.Queries;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -49,7 +50,7 @@ namespace UI.ViewModels
         IRecipient<DataBaseChangedMessage>,
         IRecipient<DateRangeChangedMessage>
     {
-        private readonly ITransactionService _transactionService;
+        private readonly IMediator _mediator;
         private readonly IUserContext _user;
 
         //public List<Transaction> _transactions { get; } = new();
@@ -64,10 +65,10 @@ namespace UI.ViewModels
         public ObservableCollection<Transaction> Transactions { get; set; } = new();
 
         public TransactionsViewModel(
-            ITransactionService transactionService,
+            IMediator mediator,
             IUserContext user)
         {
-            _transactionService = transactionService;
+            _mediator = mediator;
             _user = user;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
@@ -77,7 +78,7 @@ namespace UI.ViewModels
         {
             if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Transactions)
             {
-                var data = await _transactionService.GetAll(_user.UserId);
+                var data = await _mediator.Send(new GetAllTransactionsQuery(_user.UserId));
 
                 _allTransactions.Clear();
                 foreach (var t in data)
