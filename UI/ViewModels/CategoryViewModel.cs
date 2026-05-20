@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UI.Popups;
 using UI.Messages;
+using BuisnessLogic.UseCases.CategoryUseCasses.Queries;
+using BuisnessLogic.UseCases.CategoryUseCasses.Commands;
 
 namespace UI.ViewModels
 {
@@ -28,7 +30,7 @@ namespace UI.ViewModels
         IRecipient<DataBaseChangedMessage>,
         IRecipient<DateRangeChangedMessage>
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IMediator _mediator;
         private readonly IUserContext _user;
         private readonly CategoryCreatePopUp _categoryCreatePopUp;
 
@@ -41,11 +43,11 @@ namespace UI.ViewModels
 
 
         public CategoryViewModel(
-            ICategoryRepository categoryRepository,
+            IMediator mediator,
             IUserContext user,
             CategoryCreatePopUp categoryCreatePopUp)
         {
-            _categoryRepository = categoryRepository;
+            _mediator = mediator;
             _user = user;
             _categoryCreatePopUp = categoryCreatePopUp;
 
@@ -59,12 +61,7 @@ namespace UI.ViewModels
                 || message.Type == DataBaseChangedMessageType.Categories
                 || message.Type == DataBaseChangedMessageType.Transactions)
             {
-                _categories = (await _categoryRepository.GetAll(_user.UserId,
-                    x => x.Parent,
-                    x => x.Children,
-                    x => x.Transactions,
-                    x => x.PlannedTransactions,
-                    x => x.Debts)).ToList();
+                _categories = (await _mediator.Send(new GetAllCategoriesQuery(_user.UserId))).ToList();
 
                 BuildTree();
                 //this.FilterCategoryTransactions();
@@ -92,16 +89,15 @@ namespace UI.ViewModels
         public async Task AddCategory()
         {
             var result = await Application.Current.MainPage
-                .ShowPopupAsync<Category?>(_categoryCreatePopUp);
+                .ShowPopupAsync<CreateCategoryCommand?>(_categoryCreatePopUp);
 
-            var category = result.Result;
+            var command = result.Result;
 
-            if (category is null)
+            if (command is null)
                 return;
 
-            category.UserId = _user.UserId;
 
-            await _categoryRepository.Add(category);
+            await _mediator.Send(command);
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Categories));
         }

@@ -32,6 +32,7 @@ namespace BuisnessLogic.UseCases.CategoryUseCasses.Commands
 
             await categoryRepository.Add(new Category()
             {
+                UserId = request.UserId,
                 Name = request.Name,
                 Description = request.Description,
                 ParentId = request.ParentId

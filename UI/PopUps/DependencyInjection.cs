@@ -23,6 +23,7 @@ namespace UI.PopUps
             services.AddTransient<DateRangePopUp>();
 
             services.AddTransient<AccountCreatePopUpModel>();
+            services.AddTransient<CategoryCreatePopUpModel>();
 
             return services;
         }

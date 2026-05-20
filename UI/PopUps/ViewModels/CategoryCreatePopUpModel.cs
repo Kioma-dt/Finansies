@@ -1,26 +1,23 @@
 ﻿using BuisnessLogic.Entities;
 using BuisnessLogic.UseCases.AccountsUseCases.Commands;
 using BuisnessLogic.UseCases.AccountsUseCases.Queries;
+using BuisnessLogic.UseCases.CategoryUseCasses.Commands;
+using BuisnessLogic.UseCases.CategoryUseCasses.Queries;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UI.PopUps.ViewModels
 {
-    public partial class AccountCreatePopUpModel
+    public partial class CategoryCreatePopUpModel
         : ObservableObject
     {
         readonly IMediator _mediator;
         readonly IUserContext _userContext;
 
-        public Action<CreateAccountCommand?>? CloseAction {  get; set; }
+        public Action<CreateCategoryCommand?>? CloseAction { get; set; }
 
-        public AccountCreatePopUpModel(IMediator mediator,
+        public CategoryCreatePopUpModel(IMediator mediator,
             IUserContext userContext)
         {
             _mediator = mediator;
@@ -28,25 +25,25 @@ namespace UI.PopUps.ViewModels
         }
 
         [ObservableProperty]
-        public partial string? Name {  get; set; }
+        public partial string? Name { get; set; }
 
         [ObservableProperty]
-        public partial string? Balance {  get; set; }
+        public partial string? Description { get; set; }
 
         [ObservableProperty]
-        public partial Account? SelectedParent {  get; set; }
+        public partial Category? SelectedParent { get; set; }
 
-        public ObservableCollection<Account> Parents { get; set; } = new();
+        public ObservableCollection<Category> Parents { get; set; } = new();
 
         public async Task Initialize()
         {
             Parents.Clear();
 
-            Parents.Insert(0, new Account() { Id = Guid.Empty, Name = "-No Parent-" });
+            Parents.Insert(0, new Category() { Id = Guid.Empty, Name = "-No Parent-" });
 
-            var parents = await _mediator.Send(new GetAllAccountsQuery(_userContext.UserId));
+            var parents = await _mediator.Send(new GetAllCategoriesQuery(_userContext.UserId));
 
-            foreach (var parent in parents) 
+            foreach (var parent in parents)
             {
                 Parents.Add(parent);
             }
@@ -54,7 +51,7 @@ namespace UI.PopUps.ViewModels
             SelectedParent = Parents.FirstOrDefault();
 
             Name = string.Empty;
-            Balance = string.Empty;
+            Description = string.Empty;
         }
 
         [RelayCommand]
@@ -73,15 +70,19 @@ namespace UI.PopUps.ViewModels
                 throw new ArgumentException($"Enter Name!");
             }
 
-            var balance = decimal.TryParse(Balance, out var b) ? b : 0;
+            var description = Description;
+
+            if (description is null)
+            {
+                throw new ArgumentException($"Enter Description!");
+            }
 
             var parent = SelectedParent;
 
 
-            CloseAction?.Invoke(new CreateAccountCommand(
-                _userContext.UserId,
+            CloseAction?.Invoke(new CreateCategoryCommand(_userContext.UserId, 
                 name, 
-                balance,
+                description,
                 parent == null || parent.Id == Guid.Empty ? null : parent.Id));
         }
     }
