@@ -93,7 +93,13 @@ namespace BuisnessLogic.Services
             _debtInterestCalculatorProvider = debtInterestCalculatorProvider;
         }
 
-        public async Task<List<PlannedTransaction>> GetAll(Guid userId) => await _plannedTransactionRepository.GetAll(userId);
+        public async Task<List<PlannedTransaction>> GetAll(Guid userId) 
+            => (await _plannedTransactionRepository.GetAll(userId,
+                x => x.Category,
+                x => x.FamilyMember,
+                x => x.TransactionTags,
+                x => x.Debt,
+                x => x.User)).ToList();
 
         public async Task AddAccount(Guid userId, Guid plannedTransactionId, Guid accountId)
         {
@@ -112,13 +118,11 @@ namespace BuisnessLogic.Services
             }
 
 
-            //plannedTransaction.Account = account;
             plannedTransaction.AccountId = accountId;
 
             account.PlannedTransactions.Add(plannedTransaction);
 
             await _plannedTransactionRepository.Update(plannedTransaction);
-            //await _familyMemberRepository.Update(familyMember);
         }
 
         public async Task AddCategory(Guid userId, Guid plannedTransactionId, Guid categoryId)
@@ -138,13 +142,11 @@ namespace BuisnessLogic.Services
                 throw new ArgumentException($"No Category with Id: {categoryId}");
             }
 
-            //plannedTransaction.Category = category;
             plannedTransaction.CategoryId = categoryId;
 
             category.PlannedTransactions.Add(plannedTransaction);
 
             await _plannedTransactionRepository.Update(plannedTransaction);
-            //await _familyMemberRepository.Update(familyMember);
         }
 
         public async Task AddFamilyMember(Guid userId, Guid plannedTransactionId, Guid familyMemberId)
@@ -164,13 +166,11 @@ namespace BuisnessLogic.Services
                 throw new ArgumentException($"No Family Member with Id: {familyMemberId}");
             }
 
-            //plannedTransaction.FamilyMember = familyMember;
             plannedTransaction.FamilyMemberId = familyMemberId;
 
             familyMember.PlannedTransactions.Add(plannedTransaction);
 
             await _plannedTransactionRepository.Update(plannedTransaction);
-            //await _familyMemberRepository.Update(familyMember);
         }
 
         public async Task AddTag(Guid userId, Guid plannedTransactionId, Guid transactionTagId)
@@ -195,7 +195,6 @@ namespace BuisnessLogic.Services
             transactionTag.PlannedTransactions.Add(plannedTransaction);
 
             await _plannedTransactionRepository.Update(plannedTransaction);
-            //await _familyMemberRepository.Update(familyMember);
         }
 
         public async Task ConfirmTransaction(Guid userId, Guid plannedTransactionId, DateTime? date = null)
