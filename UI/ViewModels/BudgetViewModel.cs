@@ -62,7 +62,7 @@ namespace UI.ViewModels
                     Budgets.Add(new BudgetItem()
                     {
                         Budget = t,
-                        UsedAmount = await _budgetService.CountTransactions(_user.UserId, t.Id)
+                        UsedAmount = (await _budgetService.GetRelevantTransactions(_user.UserId, t.Id)).Sum(x => x.Amount),
                     });
             }
         }

@@ -19,7 +19,7 @@ namespace BuisnessLogic.Services
         Task<IEnumerable<Transaction>> GetRelevantTransactions(Guid userId,
             Guid budgetId);
 
-        Task<decimal> CountTransactions(Guid userId, Guid budgetId);
+        //Task<decimal> CountTransactions(Guid userId, Guid budgetId);
 
         Task AddFilter(Guid userId, Guid budgetId, BudgetFilterType type, string value);
     }
@@ -38,7 +38,8 @@ namespace BuisnessLogic.Services
             _budgetRepository = budgetRepository;
         }
 
-        public Task<List<Budget>> GetAll(Guid userId) => _budgetRepository.GetAll(userId);
+        public async Task<List<Budget>> GetAll(Guid userId) => (await _budgetRepository.GetAll(userId,
+            x => x.Filters)).ToList();
 
         public async Task CreateBudget(Guid userId, 
             string name, 
@@ -82,7 +83,7 @@ namespace BuisnessLogic.Services
 
         public async Task<IEnumerable<Transaction>> GetRelevantTransactions(Guid userId, Guid budgetId)
         {
-            var budget = await _budgetRepository.GetById(userId, budgetId);
+            var budget = await _budgetRepository.GetById(userId, budgetId, x => x.Filters);
 
             if (budget is null)
             {
@@ -94,19 +95,19 @@ namespace BuisnessLogic.Services
             return await _transactionRepository.GetWithSpecification(userId, specification) ?? new List<Transaction>();
         }
 
-        public async Task<decimal> CountTransactions(Guid userId, Guid budgetId)
-        {
-            var transactions = await this.GetRelevantTransactions(userId, budgetId);
+        //public async Task<decimal> CountTransactions(Guid userId, Guid budgetId)
+        //{
+        //    var transactions = await this.GetRelevantTransactions(userId, budgetId);
 
-            var result = 0m;
+        //    var result = 0m;
 
-            foreach (var transaction in transactions)
-            {
-                result += transaction.Amount;
-            }
+        //    foreach (var transaction in transactions)
+        //    {
+        //        result += transaction.Amount;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
     }
 }
