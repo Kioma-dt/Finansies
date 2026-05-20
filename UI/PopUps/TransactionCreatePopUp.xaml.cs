@@ -43,7 +43,7 @@ public partial class TransactionCreatePopUp : Popup<Transaction?>
 
         var userId = _user.UserId;
 
-        Accounts = await _accountRepository.GetAllScalar(userId) ?? new();
+        Accounts = (await _accountRepository.GetAll(userId)).ToList();
         Categories = await _categoryRepository.GetAllScalar(userId) ?? new();
         FamilyMembers = await _familyRepository.GetAllScalar(userId) ?? new();
         Debts = await _debtRepository.GetAllScalar(userId) ?? new();

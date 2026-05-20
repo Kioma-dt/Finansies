@@ -21,8 +21,17 @@ namespace BuisnessLogic.Services
         {
             _accountRepository = accountRepository;
         }
-
-        public async Task<List<Account>> GetAll(Guid userId) => (await _accountRepository.GetAll(userId)) ?? new();
+            
+        public async Task<List<Account>> GetAll(Guid userId) => 
+            (await _accountRepository.GetAll(userId,
+                x => x.Parent,
+                x => x.Children,
+                x => x.Transactions,
+                x => x.PlannedTransactions,
+                x => x.TransfersFrom,
+                x => x.TransfersTo,
+                x => x.FamilyMember,
+                x => x.User)).ToList();
 
         public async Task Add(Account account) => await _accountRepository.Add(account);
     }

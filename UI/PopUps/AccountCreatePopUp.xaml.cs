@@ -23,7 +23,7 @@ public partial class AccountCreatePopUp : Popup<Account?>
     {
         this.Clear();
 
-        Accounts = await _accountRepository.GetAllScalar(UserId) ?? new();
+        Accounts = (await _accountRepository.GetAll(UserId)).ToList();
 
         Accounts.Insert(0, new Account() {Id=Guid.Empty, Name = "-No Parent-"});
         ParentPicker.ItemsSource = Accounts;

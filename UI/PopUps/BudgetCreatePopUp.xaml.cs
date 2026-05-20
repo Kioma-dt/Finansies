@@ -65,7 +65,7 @@ public partial class BudgetCreatePopUp : Popup<BudgetCreateDTO?>
         TypePicker.SelectedItem = TransactionType.Expense;
 
 
-        Accounts = await _accountsRepository.GetAllScalar(_user.UserId) ?? new();
+        Accounts = (await _accountsRepository.GetAll(_user.UserId)).ToList();
         Categories = await _categoriesRepository.GetAllScalar(_user.UserId) ?? new();
         FamilyMembers = await _familyMembersRepository.GetAllScalar(_user.UserId) ?? new();
 
