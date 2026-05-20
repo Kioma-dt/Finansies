@@ -20,13 +20,13 @@ namespace DataAccess.RepositoriesImplementation
         //    await dbContext.BudgetFilters.AddAsync(filter);
         //    await dbContext.SaveChangesAsync();
         //}
-        public async Task AddBudgetFilter(Guid userId, Guid id, BudgetFilter filter)
+        public async Task AddBudgetFilter(Guid userId, BudgetFilter filter)
         {
             await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
             var budget = await dbContext.Budgets
                 .Include(b => b.Filters)
-                .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
+                .FirstOrDefaultAsync(b => b.Id == filter.BudgetId && b.UserId == userId);
 
             if (budget is not null)
             {

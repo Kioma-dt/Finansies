@@ -63,7 +63,6 @@ namespace UI
             builder.Services.AddTransient<ITransferRepository, TransferRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
 
-            builder.Services.AddTransient<IBudgetService, BudgetService>();
             //builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddTransient<IDebtService, DebtService>();
             //builder.Services.AddScoped<IFamilyMemberService, FamilyMemberService>();

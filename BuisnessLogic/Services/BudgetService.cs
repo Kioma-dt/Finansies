@@ -5,95 +5,95 @@ using BuisnessLogic.Enums;
 
 namespace BuisnessLogic.Services
 {
-    public interface IBudgetService
-    {
-        Task<List<Budget>> GetAll(Guid userId);
+    //public interface IBudgetService
+    //{
+    //    Task<List<Budget>> GetAll(Guid userId);
 
-        Task CreateBudget(Guid userId,
-            string name,
-            decimal limit,
-            DateTime startDate,
-            DateTime endDate,
-            List<(BudgetFilterType Type, string Value)> filters);
+    //    Task CreateBudget(Guid userId,
+    //        string name,
+    //        decimal limit,
+    //        DateTime startDate,
+    //        DateTime endDate,
+    //        List<(BudgetFilterType Type, string Value)> filters);
 
-        Task<IEnumerable<Transaction>> GetRelevantTransactions(Guid userId,
-            Guid budgetId);
+    //    Task<IEnumerable<Transaction>> GetRelevantTransactions(Guid userId,
+    //        Guid budgetId);
 
-        //Task<decimal> CountTransactions(Guid userId, Guid budgetId);
+    //    //Task<decimal> CountTransactions(Guid userId, Guid budgetId);
 
-        Task AddFilter(Guid userId, Guid budgetId, BudgetFilterType type, string value);
-    }
-    public class BudgetService : IBudgetService
-    {
-        readonly IBudgetSpecificationsExtender _budgetExtender;
-        readonly ITransactionRepository _transactionRepository;
-        readonly IBudgetRepository _budgetRepository;
+    //    Task AddFilter(Guid userId, Guid budgetId, BudgetFilterType type, string value);
+    //}
+    //public class BudgetService : IBudgetService
+    //{
+    //    readonly IBudgetSpecificationsExtender _budgetExtender;
+    //    readonly ITransactionRepository _transactionRepository;
+    //    readonly IBudgetRepository _budgetRepository;
 
 
 
-        public BudgetService(IBudgetSpecificationsExtender budgetExtender, ITransactionRepository transactionRepository, IBudgetRepository budgetRepository)
-        {
-            _budgetExtender = budgetExtender;
-            _transactionRepository = transactionRepository;
-            _budgetRepository = budgetRepository;
-        }
+    //    public BudgetService(IBudgetSpecificationsExtender budgetExtender, ITransactionRepository transactionRepository, IBudgetRepository budgetRepository)
+    //    {
+    //        _budgetExtender = budgetExtender;
+    //        _transactionRepository = transactionRepository;
+    //        _budgetRepository = budgetRepository;
+    //    }
 
-        public async Task<List<Budget>> GetAll(Guid userId) => (await _budgetRepository.GetAll(userId,
-            x => x.Filters)).ToList();
+    //    public async Task<List<Budget>> GetAll(Guid userId) => (await _budgetRepository.GetAll(userId,
+    //        x => x.Filters)).ToList();
 
-        public async Task CreateBudget(Guid userId, 
-            string name, 
-            decimal limit,
-            DateTime startDate,
-            DateTime endDate,
-            List<(BudgetFilterType Type, string Value)> filters)
-        {
-            var id = Guid.NewGuid();
-            var budget = new Budget()
-            {
-                Id = id,
-                Name = name,
-                Limit = limit,
-                StartDate = startDate,
-                EndDate = endDate,
-                UserId = userId
-            };
+    //    public async Task CreateBudget(Guid userId, 
+    //        string name, 
+    //        decimal limit,
+    //        DateTime startDate,
+    //        DateTime endDate,
+    //        List<(BudgetFilterType Type, string Value)> filters)
+    //    {
+    //        var id = Guid.NewGuid();
+    //        var budget = new Budget()
+    //        {
+    //            Id = id,
+    //            Name = name,
+    //            Limit = limit,
+    //            StartDate = startDate,
+    //            EndDate = endDate,
+    //            UserId = userId
+    //        };
 
-            await _budgetRepository.Add(budget);
+    //        await _budgetRepository.Add(budget);
 
-            foreach (var (type, value) in filters) 
-            {
-                await this.AddFilter(userId, id, type, value);
-            }
-        }
+    //        foreach (var (type, value) in filters) 
+    //        {
+    //            await this.AddFilter(userId, id, type, value);
+    //        }
+    //    }
 
-        public async Task AddFilter(Guid userId, Guid budgetId, BudgetFilterType type, string value)
-        {
-            var budget = await _budgetRepository.GetById(userId, budgetId);
+    //    public async Task AddFilter(Guid userId, Guid budgetId, BudgetFilterType type, string value)
+    //    {
+    //        var budget = await _budgetRepository.GetById(userId, budgetId);
 
-            if (budget is null)
-            {
-                throw new ArgumentException($"No Budget with Id: {budgetId}");
-            }
+    //        if (budget is null)
+    //        {
+    //            throw new ArgumentException($"No Budget with Id: {budgetId}");
+    //        }
 
-            var budgetFilter = new BudgetFilter() { BudgetId = budgetId, Type = type, Value = value };
+    //        var budgetFilter = new BudgetFilter() { BudgetId = budgetId, Type = type, Value = value };
 
-            await _budgetRepository.AddBudgetFilter(userId, budgetId, budgetFilter);
-        }
+    //        await _budgetRepository.AddBudgetFilter(userId, budgetId, budgetFilter);
+    //    }
 
-        public async Task<IEnumerable<Transaction>> GetRelevantTransactions(Guid userId, Guid budgetId)
-        {
-            var budget = await _budgetRepository.GetById(userId, budgetId, x => x.Filters);
+    //    public async Task<IEnumerable<Transaction>> GetRelevantTransactions(Guid userId, Guid budgetId)
+    //    {
+    //        var budget = await _budgetRepository.GetById(userId, budgetId, x => x.Filters);
 
-            if (budget is null)
-            {
-                throw new ArgumentException($"No Budget with Id: {budgetId}");
-            }
+    //        if (budget is null)
+    //        {
+    //            throw new ArgumentException($"No Budget with Id: {budgetId}");
+    //        }
 
-            var specification = _budgetExtender.GetFullExpression(budget);
+    //        var specification = _budgetExtender.GetFullExpression(budget);
 
-            return await _transactionRepository.GetWithSpecification(userId, specification) ?? new List<Transaction>();
-        }
+    //        return await _transactionRepository.GetWithSpecification(userId, specification) ?? new List<Transaction>();
+    //    }
 
         //public async Task<decimal> CountTransactions(Guid userId, Guid budgetId)
         //{
@@ -109,5 +109,5 @@ namespace BuisnessLogic.Services
         //    return result;
         //}
 
-    }
+    //}
 }

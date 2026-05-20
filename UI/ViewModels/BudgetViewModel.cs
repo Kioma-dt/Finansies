@@ -1,6 +1,8 @@
 ﻿using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
 using BuisnessLogic.Services;
+using BuisnessLogic.UseCases.BudgetUseCasses.Queries;
+using BuisnessLogic.UseCases.BudgetUseCasses.Commands;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -26,7 +28,7 @@ namespace UI.ViewModels
         IRecipient<DataBaseChangedMessage>,
         IRecipient<DateRangeChangedMessage>
     {
-        private readonly IBudgetService _budgetService;
+        private readonly IMediator _mediator;
         private readonly IUserContext _user;
         private readonly BudgetCreatePopUp _popup;
 
@@ -40,11 +42,11 @@ namespace UI.ViewModels
         private DateTime _endDate = DateTime.Now;
 
         public BudgetViewModel(
-            IBudgetService budgetService,
+            IMediator mediator,
             IUserContext user,
             BudgetCreatePopUp popup)
         {
-            _budgetService = budgetService;
+            _mediator = mediator;
             _user = user;
             _popup = popup;
 
@@ -55,14 +57,14 @@ namespace UI.ViewModels
         {
             if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Budgets)
             {
-                var data = await _budgetService.GetAll(_user.UserId);
+                var data = await _mediator.Send(new GetAllBudgetsQuery(_user.UserId));
 
                 Budgets.Clear();
                 foreach (var t in data)
                     Budgets.Add(new BudgetItem()
                     {
                         Budget = t,
-                        UsedAmount = (await _budgetService.GetRelevantTransactions(_user.UserId, t.Id)).Sum(x => x.Amount),
+                        UsedAmount = (await _mediator.Send(new GetRelevantTransactionsQuery(_user.UserId, t.Id))).Sum(x => x.Amount),
                     });
             }
         }
@@ -80,7 +82,7 @@ namespace UI.ViewModels
             Transactions.Clear();
             if (SelectedBudget is not null)
             {
-                var transactions = await _budgetService.GetRelevantTransactions(_user.UserId, SelectedBudget.Budget.Id);
+                var transactions = await _mediator.Send(new GetRelevantTransactionsQuery(_user.UserId, SelectedBudget.Budget.Id));
 
                 transactions = transactions.Where(x => x.Date.Date >= _startDate.Date && x.Date.Date <= _endDate.Date).ToList();
 
@@ -104,7 +106,12 @@ namespace UI.ViewModels
                 if (data is null)
                     return;
 
-                await _budgetService.CreateBudget(_user.UserId, data.Name, data.Limit, data.StartDate, data.EndDate, data.Filters);
+                await _mediator.Send(new CreateBudgetCommand(_user.UserId, 
+                    data.Name, 
+                    data.Limit, 
+                    data.StartDate,
+                    data.EndDate, 
+                    data.Filters));
 
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Budgets));
             }
