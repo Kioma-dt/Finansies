@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using UI.Popups;
+using UI.PopUps;
 using UI.ViewModels;
 using UI.Views;
 
@@ -89,15 +90,17 @@ namespace UI
 
             builder.Services.AddSingleton<MainPage>();
 
-            builder.Services.AddTransient<AccountCreatePopUp>();
-            builder.Services.AddTransient<CategoryCreatePopUp>();
-            builder.Services.AddSingleton<FamilyMemberCreatePopUp>();
-            builder.Services.AddTransient<TransactionCreatePopUp>();
-            builder.Services.AddTransient<PlannedTransactionCreatePopUp>();
-            builder.Services.AddTransient<BudgetCreatePopUp>();
-            builder.Services.AddTransient<DebtCreatePopUp>();
+            //builder.Services.AddTransient<AccountCreatePopUp>();
+            //builder.Services.AddTransient<CategoryCreatePopUp>();
+            //builder.Services.AddSingleton<FamilyMemberCreatePopUp>();
+            //builder.Services.AddTransient<TransactionCreatePopUp>();
+            //builder.Services.AddTransient<PlannedTransactionCreatePopUp>();
+            //builder.Services.AddTransient<BudgetCreatePopUp>();
+            //builder.Services.AddTransient<DebtCreatePopUp>();
 
-            builder.Services.AddTransient<DateRangePopUp>();
+            //builder.Services.AddTransient<DateRangePopUp>();
+
+            builder.Services.AddPopUps();
 
 #if DEBUG
             builder.Logging.AddDebug();

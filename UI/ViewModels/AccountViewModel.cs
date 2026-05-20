@@ -76,19 +76,14 @@ namespace UI.ViewModels
         public async Task AddAccount()
         {
             var result = await Application.Current.MainPage
-                .ShowPopupAsync<Account?>(_popup);
+                .ShowPopupAsync<CreateAccountCommand?>(_popup);
 
-            var acc = result.Result;
+            var command = result.Result;
 
-            if (acc is null)
+            if (command is null)
                 return;
 
-            acc.UserId = _user.UserId;
-
-            await _mediator.Send(new CreateAccountCommand(_user.UserId,
-                acc.Name,
-                acc.Balance,
-                acc.ParentId));
+            await _mediator.Send(command);
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
         }

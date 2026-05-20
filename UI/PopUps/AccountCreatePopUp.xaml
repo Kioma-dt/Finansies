@@ -3,9 +3,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
-    x:TypeArguments="entity:Account"
-    x:Class="UI.Popups.AccountCreatePopUp">
+    xmlns:entity="clr-namespace:BuisnessLogic.UseCases.AccountsUseCases.Commands;assembly=BuisnessLogic"
+    x:TypeArguments="entity:CreateAccountCommand"
+    xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
+    x:Class="UI.Popups.AccountCreatePopUp"
+    x:DataType="viewmodel:AccountCreatePopUpModel">
 
     <Border Padding="20"
             BackgroundColor="White"
@@ -23,18 +25,23 @@
             <Entry x:Name="NameEntry"
                    Placeholder="Account name"
                    TextColor="Black"
-                   PlaceholderColor="Gray"/>
+                   PlaceholderColor="Gray"
+                   Text="{Binding Name}"/>
 
             <Entry x:Name="BalanceEntry"
                    Placeholder="Balance"
                    Keyboard="Numeric"
                    TextColor="Black"
-                   PlaceholderColor="Gray"/>
+                   PlaceholderColor="Gray"
+                   Text="{Binding Balance}"/>
 
             <Picker x:Name="ParentPicker"
                     Title="Select parent account"
                     TextColor="Black"
-                    TitleColor="Gray"/>
+                    TitleColor="Gray"
+                    ItemsSource="{Binding Parents}"
+                    SelectedItem="{Binding SelectedParent}"
+                    ItemDisplayBinding="{Binding Name}"/>
 
             <HorizontalStackLayout Spacing="10">
 
@@ -42,13 +49,13 @@
                         BackgroundColor="#9E9E9E"
                         TextColor="White"
                         CornerRadius="8"
-                        Clicked="OnCancel"/>
+                        Command="{Binding CancelCommand}"/>
 
                 <Button Text="Create"
                         BackgroundColor="#4CAF50"
                         TextColor="White"
                         CornerRadius="8"
-                        Clicked="OnCreate"/>
+                        Command="{Binding CreateCommand}"/>
 
             </HorizontalStackLayout>
 
