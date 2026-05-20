@@ -1,6 +1,5 @@
 ﻿using BuisnessLogic.DTO;
 using BuisnessLogic.Entities;
-using BuisnessLogic.Services;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,6 +8,9 @@ using System.Collections.ObjectModel;
 using UI.Messages;
 using UI.Popups;
 
+using BuisnessLogic.UseCases.DebtsUseCasses.Queries;
+using BuisnessLogic.UseCases.DebtsUseCasses.Commands;
+
 namespace UI.ViewModels
 {
     public partial class DebtViewModel : ObservableObject, 
@@ -16,7 +18,7 @@ namespace UI.ViewModels
         IRecipient<CurrentTimeMessage>,
         IRecipient<DateRangeChangedMessage>
     {
-        private readonly IDebtService _debtService;
+        private readonly IMediator _mediator;
         private readonly IUserContext _user;
         private readonly DebtCreatePopUp _popup;
 
@@ -32,11 +34,11 @@ namespace UI.ViewModels
 
 
         public DebtViewModel(
-            IDebtService debtService,
+            IMediator mediator,
             IUserContext user,
             DebtCreatePopUp popup)
         {
-            _debtService = debtService;
+            _mediator = mediator;
             _user = user;
             _popup = popup;
 
@@ -48,7 +50,7 @@ namespace UI.ViewModels
         {
             if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Debts)
             {
-                var data = await _debtService.GetAll(_user.UserId);
+                var data = await _mediator.Send(new GetAllDebtsQuery(_user.UserId));
 
                 Debts.Clear();
                 foreach (var t in data)
@@ -58,11 +60,11 @@ namespace UI.ViewModels
 
         public async void Receive(CurrentTimeMessage message)
         {
-            var data = await _debtService.GetAll(_user.UserId);
+            var data = await _mediator.Send(new GetAllDebtsQuery(_user.UserId));
 
             foreach (var debt in data)
             {
-                await _debtService.UpdateDebt(_user.UserId, debt.Id, message.CurrentTime);
+                await _mediator.Send(new UpdateDebtCommand(_user.UserId, debt.Id, message.CurrentTime));
             }
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
@@ -82,7 +84,7 @@ namespace UI.ViewModels
             Transactions.Clear();
             if (SelectedDebt is not null)
             {
-                var transactions = await _debtService.GetRelevantTransactions(_user.UserId, SelectedDebt.Id);
+                var transactions = await _mediator.Send(new GetRelevantTransactionsForDebtQuery(_user.UserId, SelectedDebt.Id));
 
                 transactions = transactions.Where(x => x.Date.Date >= _startDate.Date && x.Date.Date <= _endDate.Date).ToList();
 
@@ -106,7 +108,20 @@ namespace UI.ViewModels
                 if (data is null)
                     return;
 
-                await _debtService.CreateDebt(_user.UserId, data);
+                await _mediator.Send(new CreateDebtCommand(_user.UserId, 
+                    data.Name,
+                    data.Amount,
+                    data.Type,
+                    data.StartDate,
+                    data.EndDate,
+                    data.CategoryId,
+                    data.FamilyMemberId,
+                    data.CapitalisatonsPerYear,
+                    data.InterestType,
+                    data.InterestRate,
+                    data.FixedAddition,
+                    data.IsAutoPlanned,
+                    data.TransactionPeriodicity));
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
                 if (data.IsAutoPlanned)
                 {

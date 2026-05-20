@@ -1,6 +1,5 @@
 ﻿using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
-using BuisnessLogic.Services;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm;
 using CommunityToolkit.Mvvm.ComponentModel;

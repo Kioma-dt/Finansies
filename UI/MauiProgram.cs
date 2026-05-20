@@ -1,7 +1,6 @@
 ﻿using BuisnessLogic.BudgetService;
 using BuisnessLogic.DebtInterestCalculator;
 using BuisnessLogic.Repositories;
-using BuisnessLogic.Services;
 using BuisnessLogic.UseCases;
 using CommunityToolkit.Maui;
 using DataAccess;
@@ -62,12 +61,6 @@ namespace UI
             builder.Services.AddTransient<ITransactionTagRepository, TransactionTagRepository>();
             builder.Services.AddTransient<ITransferRepository, TransferRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
-
-            //builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddTransient<IDebtService, DebtService>();
-            //builder.Services.AddScoped<IFamilyMemberService, FamilyMemberService>();
-            //builder.Services.AddScoped<ITransactionTagService, TransactionTagService>();
-            //builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddUseCassess();
 

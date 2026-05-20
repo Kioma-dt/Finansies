@@ -1,7 +1,6 @@
 ﻿using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
-using BuisnessLogic.Services;
 using BuisnessLogic.UseCases.TransactionsUseCasses.Queries;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm;
