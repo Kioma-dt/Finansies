@@ -1,8 +1,8 @@
-﻿using UI.Views;
-using UI.ViewModels;
-using UI.Popups;
+﻿using BuisnessLogic.BudgetService;
+using BuisnessLogic.DebtInterestCalculator;
 using BuisnessLogic.Repositories;
 using BuisnessLogic.Services;
+using BuisnessLogic.UseCases;
 using CommunityToolkit.Maui;
 using DataAccess;
 using DataAccess.RepositoriesImplementation;
@@ -10,8 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using BuisnessLogic.BudgetService;
-using BuisnessLogic.DebtInterestCalculator;
+using UI.Popups;
+using UI.ViewModels;
+using UI.Views;
 
 namespace UI
 {
@@ -62,7 +63,6 @@ namespace UI
             builder.Services.AddTransient<ITransferRepository, TransferRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
 
-            builder.Services.AddTransient<IAccountService, AccountService>();
             builder.Services.AddTransient<IBudgetService, BudgetService>();
             //builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddTransient<IDebtService, DebtService>();
@@ -72,6 +72,8 @@ namespace UI
             //builder.Services.AddScoped<ITransactionTagService, TransactionTagService>();
             builder.Services.AddTransient<ITransferService, TransferService>();
             //builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddUseCassess();
 
 
             builder.Services.AddSingleton<TransactionsViewModel>();

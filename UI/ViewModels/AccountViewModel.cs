@@ -18,6 +18,8 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using UI.Popups;
 using UI.Messages;
+using BuisnessLogic.UseCases.AccountsUseCases.Queries;
+using BuisnessLogic.UseCases.AccountsUseCases.Commands;
 
 namespace UI.ViewModels
 {
@@ -29,7 +31,7 @@ namespace UI.ViewModels
 
     public partial class AccountViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
     {
-        private readonly IAccountService _accountService;
+        private readonly IMediator _mediator;
         private readonly IUserContext _user;
         private readonly AccountCreatePopUp _popup;
 
@@ -41,12 +43,12 @@ namespace UI.ViewModels
         public ObservableCollection<AccountNode> FlatAccounts { get; } = new();
 
         public AccountViewModel(
-            IAccountService accountService,
+            IMediator mediator,
             IUserContext user,
             AccountCreatePopUp popup)
         {
 
-            _accountService = accountService;
+            _mediator = mediator;
             _user = user;
             _popup = popup;
 
@@ -57,7 +59,7 @@ namespace UI.ViewModels
         {
             if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Accounts)
             {
-                _accounts = await _accountService.GetAll(_user.UserId);
+                _accounts = (await _mediator.Send(new GetAllAccountsQuery(_user.UserId))).ToList();
 
                 BuildTree();
             }
@@ -84,7 +86,10 @@ namespace UI.ViewModels
 
             acc.UserId = _user.UserId;
 
-            await _accountService.Add(acc);
+            await _mediator.Send(new CreateAccountCommand(_user.UserId,
+                acc.Name,
+                acc.Balance,
+                acc.ParentId));
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
         }
