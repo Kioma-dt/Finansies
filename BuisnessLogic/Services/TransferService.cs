@@ -6,6 +6,7 @@ namespace BuisnessLogic.Services
 {
     public interface ITransferService
     {
+        Task<List<Transfer>> GetAll(Guid userId);
         Task TransferMoney(Guid userId,
             decimal amount,
             string description,
@@ -23,6 +24,11 @@ namespace BuisnessLogic.Services
             _accountRepository = accountRepository;
             _transferRepository = transferRepository;
         }
+        public async Task<List<Transfer>> GetAll(Guid userId)
+            => (await _transferRepository.GetAll(userId,
+                x => x.FromAccount,
+                x => x.ToAccount,
+                x => x.User)).ToList();
 
         public async Task TransferMoney(Guid userId, decimal amount, string description, DateTime date, Guid fromAccountId, Guid toAccountId)
         {

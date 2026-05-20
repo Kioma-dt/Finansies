@@ -2,9 +2,8 @@
 namespace BuisnessLogic.Repositories
 {
     public interface ITransferRepository
+        : IRepository<Transfer>
     {
-        Task Add(Transfer transfer);
-        Task Update(Transfer transfer);
     }
 
 }
