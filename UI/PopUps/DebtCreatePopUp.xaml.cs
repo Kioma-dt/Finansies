@@ -3,6 +3,7 @@ using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using CommunityToolkit.Maui.Views;
+using DataAccess.RepositoriesImplementation;
 
 namespace UI.Popups;
 
@@ -34,7 +35,7 @@ public partial class DebtCreatePopUp : Popup<DebtCreateDTO?>
         Clear();
 
         Categories = (await _categoryRepo.GetAll(_user.UserId)).ToList();
-        Families = await _familyRepo.GetAllScalar(_user.UserId) ?? new();
+        Families = (await _familyRepo.GetAll(_user.UserId)).ToList();
 
         Categories.Insert(0, new Category { Id = Guid.Empty, Name = "-No Category-" });
         Families.Insert(0, new FamilyMember { Id = Guid.Empty, Name = "-No Member-" });

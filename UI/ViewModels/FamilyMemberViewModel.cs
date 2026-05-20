@@ -53,14 +53,19 @@ namespace UI.ViewModels
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
         }
-
+        //.Include()
+        //            .Include(
+        //            .Include()
         public async void Receive(DataBaseChangedMessage message)
         {
             if (message.Type == DataBaseChangedMessageType.Init
                 || message.Type == DataBaseChangedMessageType.FamilyMembers
                 || message.Type == DataBaseChangedMessageType.Transactions)
             {
-                _familyMembers= await _familyMemberRepository.GetAll(_user.UserId) ?? new();
+                _familyMembers= (await _familyMemberRepository.GetAll(_user.UserId,
+                    x => x.Transactions,
+                    x => x.PlannedTransactions,
+                    x => x.Debts)).ToList();
 
                 this.CreateItems();
             }

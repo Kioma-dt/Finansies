@@ -69,7 +69,7 @@ public partial class PlannedTransactionCreatePopUp : Popup<PlannedTransactionCre
 
         Accounts = (await _accountRepository.GetAll(userId)).ToList();
         Categories = (await _categoryRepository.GetAll(_user.UserId)).ToList();
-        Families = await _familyRepository.GetAllScalar(userId) ?? new();
+        Families = (await _familyRepository.GetAll(_user.UserId)).ToList();
         Debts = (await _debtRepository.GetAll(userId)).ToList();
 
         TypePicker.ItemsSource = Enum.GetValues(typeof(TransactionType));

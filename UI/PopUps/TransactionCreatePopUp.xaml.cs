@@ -2,6 +2,7 @@ using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using CommunityToolkit.Maui.Views;
+using DataAccess.RepositoriesImplementation;
 
 namespace UI.Popups;
 
@@ -45,7 +46,7 @@ public partial class TransactionCreatePopUp : Popup<Transaction?>
 
         Accounts = (await _accountRepository.GetAll(userId)).ToList();
         Categories = (await _categoryRepository.GetAll(_user.UserId)).ToList();
-        FamilyMembers = await _familyRepository.GetAllScalar(userId) ?? new();
+        FamilyMembers = (await _familyRepository.GetAll(_user.UserId)).ToList();
         Debts = (await _debtRepository.GetAll(userId)).ToList();
 
         if (Accounts.Count == 0)

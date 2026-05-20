@@ -67,7 +67,7 @@ public partial class BudgetCreatePopUp : Popup<BudgetCreateDTO?>
 
         Accounts = (await _accountsRepository.GetAll(_user.UserId)).ToList();
         Categories = (await _categoriesRepository.GetAll(_user.UserId)).ToList();
-        FamilyMembers = await _familyMembersRepository.GetAllScalar(_user.UserId) ?? new();
+        FamilyMembers = (await _familyMembersRepository.GetAll(_user.UserId)).ToList();
 
         FilterTypePicker.ItemsSource = Enum.GetValues(typeof(BudgetFilterType));
         FilterTypePicker.SelectedItem = BudgetFilterType.Account;
