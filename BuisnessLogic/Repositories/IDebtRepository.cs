@@ -3,13 +3,9 @@
 namespace BuisnessLogic.Repositories
 {
     public interface IDebtRepository
+        : IRepository<Debt>
     {
-        Task<List<Debt>> GetAll(Guid userId);
-        Task<List<Debt>> GetAllScalar(Guid userId);
-        Task Add(Debt debt);
-        Task<Debt?> GetById(Guid userId, Guid id);
-        Task Update(Debt debt);
-        Task PayOffDebt(Guid userId, Guid debtId, decimal amount, DateTime date);
+        //Task PayOffDebt(Guid userId, Guid debtId, decimal amount, DateTime date);
     }
 
 }

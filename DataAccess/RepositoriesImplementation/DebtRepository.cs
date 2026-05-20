@@ -4,132 +4,60 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.RepositoriesImplementation
 {
-    public class DebtRepository : IDebtRepository
+
+    public class DebtRepository 
+        : Repository<Debt>,
+        IDebtRepository
     {
-        private readonly IDbContextFactory<FinansiesDbContext> _factory;
 
         public DebtRepository(IDbContextFactory<FinansiesDbContext> factory)
+            :base(factory)
         {
-            _factory = factory;
         }
 
-        public async Task<List<Debt>> GetAll(Guid userId)
-        {
-            await using var db = await _factory.CreateDbContextAsync();
 
-            return await db.Debts
-                .Where(x => x.UserId == userId)
-                .Include(x => x.FamilyMember)
-                .Include(x => x.Category)
-                .Include(x => x.PlannedTransactions)
-                .Include(x => x.Transactions)
-                .ToListAsync();
-        }
+        //public async Task AddCategory(Guid userId, Guid id, Category category)
+        //{
+        //    await using var db = await _factory.CreateDbContextAsync();
 
-        public async Task<List<Debt>> GetAllScalar(Guid userId)
-        {
-            await using var db = await _factory.CreateDbContextAsync();
+        //    var entity = await db.Debts
+        //        .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
 
-            return await db.Debts
-                .Where(x => x.UserId == userId)
-                .ToListAsync();
-        }
+        //    if (entity is not null)
+        //    {
+        //        entity.CategoryId = category.Id;
+        //        await db.SaveChangesAsync();
+        //    }
+        //}
 
-        public async Task Add(Debt debt)
-        {
-            await using var db = await _factory.CreateDbContextAsync();
+        //public async Task AddFamilyMember(Guid userId, Guid id, FamilyMember familyMember)
+        //{
+        //    await using var db = await _factory.CreateDbContextAsync();
 
-            await db.Debts.AddAsync(debt);
-            await db.SaveChangesAsync();
-        }
+        //    var entity = await db.Debts
+        //        .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
 
-        public async Task<Debt?> GetById(Guid userId, Guid id)
-        {
-            await using var db = await _factory.CreateDbContextAsync();
+        //    if (entity is not null)
+        //    {
+        //        entity.FamilyMemberId = familyMember.Id;
+        //        await db.SaveChangesAsync();
+        //    }
+        //}
 
-            return await db.Debts
-                .Include(x => x.Transactions)
-                .Include(x => x.PlannedTransactions)
-                .Include (x => x.Category)
-                .Include(x => x.FamilyMember)
-                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
-        }
+        //public async Task PayOffDebt(Guid userId, Guid debtId, decimal amount, DateTime date)
+        //{
+        //    await using var db = await _factory.CreateDbContextAsync();
 
-        public async Task AddCategory(Guid userId, Guid id, Category category)
-        {
-            await using var db = await _factory.CreateDbContextAsync();
+        //    var debt = db.Debts.FirstOrDefault(x => x.Id == debtId && x.UserId == userId);
 
-            var entity = await db.Debts
-                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+        //    if (debt is null)
+        //    {
+        //        throw new ArgumentException($"No Debt with Id: {debtId}");
+        //    }
 
-            if (entity is not null)
-            {
-                entity.CategoryId = category.Id;
-                await db.SaveChangesAsync();
-            }
-        }
+        //    debt.MakeAPayment(amount, date);
 
-        public async Task AddFamilyMember(Guid userId, Guid id, FamilyMember familyMember)
-        {
-            await using var db = await _factory.CreateDbContextAsync();
-
-            var entity = await db.Debts
-                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
-
-            if (entity is not null)
-            {
-                entity.FamilyMemberId = familyMember.Id;
-                await db.SaveChangesAsync();
-            }
-        }
-
-        public async Task Update(Debt debt)
-        {
-            await using var db = await _factory.CreateDbContextAsync();
-
-            var dbEntity = await db.Debts
-                .FirstOrDefaultAsync(x => x.Id == debt.Id && x.UserId == debt.UserId);
-
-            if (dbEntity is null)
-            {
-                await db.Debts.AddAsync(debt);
-            }
-            else
-            {
-                dbEntity.Name = debt.Name;
-                dbEntity.StartAmount = debt.StartAmount;
-                dbEntity.TotalAmount = debt.TotalAmount;
-                dbEntity.PaidAmount = debt.PaidAmount;
-                dbEntity.InterestRate = debt.InterestRate;
-                dbEntity.CapitalisationsPerYear = debt.CapitalisationsPerYear;
-                dbEntity.FixedAddition = debt.FixedAddition;
-                dbEntity.Type = debt.Type;
-                dbEntity.InterestType = debt.InterestType;
-                dbEntity.StartDate = debt.StartDate;
-                dbEntity.LastPaidDate = debt.LastPaidDate;
-                dbEntity.EndDate = debt.EndDate;
-                dbEntity.CategoryId = debt.CategoryId;
-                dbEntity.FamilyMemberId = debt.FamilyMemberId;
-                dbEntity.UserId = debt.UserId;
-            }
-
-            await db.SaveChangesAsync();
-        }
-
-        public async Task PayOffDebt(Guid userId, Guid debtId, decimal amount, DateTime date)
-        {
-            await using var db = await _factory.CreateDbContextAsync();
-
-            var debt = db.Debts.FirstOrDefault(x => x.Id == debtId && x.UserId == userId);
-
-            if (debt is null)
-            {
-                throw new ArgumentException($"No Debt with Id: {debtId}");
-            }
-
-            debt.MakeAPayment(amount, date);
-
-            await db.SaveChangesAsync();
-        }
+        //    await db.SaveChangesAsync();
+        //}
     }
 }

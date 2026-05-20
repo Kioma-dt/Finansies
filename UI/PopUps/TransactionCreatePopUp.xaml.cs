@@ -46,7 +46,7 @@ public partial class TransactionCreatePopUp : Popup<Transaction?>
         Accounts = (await _accountRepository.GetAll(userId)).ToList();
         Categories = (await _categoryRepository.GetAll(_user.UserId)).ToList();
         FamilyMembers = await _familyRepository.GetAllScalar(userId) ?? new();
-        Debts = await _debtRepository.GetAllScalar(userId) ?? new();
+        Debts = (await _debtRepository.GetAll(userId)).ToList();
 
         if (Accounts.Count == 0)
         {
