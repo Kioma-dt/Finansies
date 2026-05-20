@@ -50,7 +50,6 @@ namespace UI.ViewModels
         IRecipient<DateRangeChangedMessage>
     {
         private readonly ITransactionService _transactionService;
-        private readonly ICategoryRepository _categoryRepository;
         private readonly IUserContext _user;
 
         //public List<Transaction> _transactions { get; } = new();
@@ -66,11 +65,9 @@ namespace UI.ViewModels
 
         public TransactionsViewModel(
             ITransactionService transactionService,
-            ICategoryRepository categoryRepository,
             IUserContext user)
         {
             _transactionService = transactionService;
-            _categoryRepository = categoryRepository;
             _user = user;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);

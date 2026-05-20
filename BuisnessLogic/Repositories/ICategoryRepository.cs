@@ -3,13 +3,9 @@
 namespace BuisnessLogic.Repositories
 {
     public interface ICategoryRepository
+        : IRepository<Category>
     {
-        Task Add(Category category);
-        Task<Category?> GetById(Guid userId, Guid id);
-
-        Task<List<Category>?> GetAll(Guid userId);
-
-        Task<List<Category>?> GetAllScalar(Guid userId);
+        Task SetParent(Guid userId, Guid id, Category parent);
     }
 
 }

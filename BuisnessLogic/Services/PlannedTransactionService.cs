@@ -112,7 +112,7 @@ namespace BuisnessLogic.Services
             }
 
 
-            plannedTransaction.Account = account;
+            //plannedTransaction.Account = account;
             plannedTransaction.AccountId = accountId;
 
             account.PlannedTransactions.Add(plannedTransaction);
@@ -138,7 +138,7 @@ namespace BuisnessLogic.Services
                 throw new ArgumentException($"No Category with Id: {categoryId}");
             }
 
-            plannedTransaction.Category = category;
+            //plannedTransaction.Category = category;
             plannedTransaction.CategoryId = categoryId;
 
             category.PlannedTransactions.Add(plannedTransaction);
@@ -164,7 +164,7 @@ namespace BuisnessLogic.Services
                 throw new ArgumentException($"No Family Member with Id: {familyMemberId}");
             }
 
-            plannedTransaction.FamilyMember = familyMember;
+            //plannedTransaction.FamilyMember = familyMember;
             plannedTransaction.FamilyMemberId = familyMemberId;
 
             familyMember.PlannedTransactions.Add(plannedTransaction);

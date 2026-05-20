@@ -33,7 +33,7 @@ public partial class DebtCreatePopUp : Popup<DebtCreateDTO?>
     {
         Clear();
 
-        Categories = await _categoryRepo.GetAllScalar(_user.UserId) ?? new();
+        Categories = (await _categoryRepo.GetAll(_user.UserId)).ToList();
         Families = await _familyRepo.GetAllScalar(_user.UserId) ?? new();
 
         Categories.Insert(0, new Category { Id = Guid.Empty, Name = "-No Category-" });

@@ -59,7 +59,12 @@ namespace UI.ViewModels
                 || message.Type == DataBaseChangedMessageType.Categories
                 || message.Type == DataBaseChangedMessageType.Transactions)
             {
-                _categories = await _categoryRepository.GetAll(_user.UserId) ?? new();
+                _categories = (await _categoryRepository.GetAll(_user.UserId,
+                    x => x.Parent,
+                    x => x.Children,
+                    x => x.Transactions,
+                    x => x.PlannedTransactions,
+                    x => x.Debts)).ToList();
 
                 BuildTree();
                 //this.FilterCategoryTransactions();

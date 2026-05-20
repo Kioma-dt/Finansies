@@ -23,7 +23,7 @@ public partial class CategoryCreatePopUp : Popup<Category?>
     {
         this.Clear();
 
-        Categories = await _categoryRepository.GetAllScalar(UserId) ?? new();
+        Categories = (await _categoryRepository.GetAll(UserId)).ToList();
 
         Categories.Insert(0, new Category() { Id = Guid.Empty, Name = "-No Parent-" });
         ParentPicker.ItemsSource = Categories;
