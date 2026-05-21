@@ -35,15 +35,19 @@ namespace UI.ViewModels
     }
     public partial class TransactionsViewModel : ObservableObject, 
         IRecipient<DataBaseChangedMessage>,
-        IRecipient<DateRangeChangedMessage>
+        IRecipient<DateRangeChangedMessage>,
+        IRecipient<SelectedAccountChangedMessage>
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _user;
 
 
         private List<Transaction> _transactions = new();
+
         private DateTime _startDate = DateTime.Now.AddMonths(-1);
         private DateTime _endDate = DateTime.Now;
+
+        private Guid? _selectedAccountId = null;
 
         public ObservableCollection<DisplayedTransaction> DisplayedTransactions { get; set; } = new();
 
@@ -56,6 +60,7 @@ namespace UI.ViewModels
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
+            WeakReferenceMessenger.Default.Register<SelectedAccountChangedMessage>(this);
         }
         public async void Receive(DataBaseChangedMessage message)
         {
@@ -78,11 +83,23 @@ namespace UI.ViewModels
             this.ShowTransactions();
         }
 
+        public void Receive(SelectedAccountChangedMessage message)
+        {
+            _selectedAccountId = message.SelectedAccountId;
+
+            this.ShowTransactions();
+        }
+
         private void ShowTransactions()
         {
             DisplayedTransactions.Clear();
 
             var trans = _transactions.Where(x => x.Date.Date >= _startDate.Date && x.Date.Date <= _endDate.Date).ToList();
+
+            if (_selectedAccountId is not null)
+            {
+                trans = trans.Where(x => x.AccountId ==  _selectedAccountId).ToList();
+            }
 
             foreach(var t in trans)
             {
@@ -100,6 +117,5 @@ namespace UI.ViewModels
                 });
             }
         }
-        
     }
 }
