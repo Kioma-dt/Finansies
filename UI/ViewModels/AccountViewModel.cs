@@ -20,9 +20,11 @@ using UI.Popups;
 
 namespace UI.ViewModels
 {
-    public class AccountNode
+    public class DisplayedAccount
     {
-        public Account Account { get; set; } = null!;
+        public Guid Id { get; set; }
+        public string? Name { get; set; }
+        public string? Balance { get; set; }
         public int Level { get; set; }
     }
 
@@ -40,7 +42,7 @@ namespace UI.ViewModels
         [ObservableProperty]
         public partial bool IsSelectedAccount { get; set; } = false;
 
-        public ObservableCollection<AccountNode> FlatAccounts { get; } = new();
+        public ObservableCollection<DisplayedAccount> DisplayedAccounts { get; } = new();
 
         public AccountViewModel(
             IMediator mediator,
@@ -66,10 +68,10 @@ namespace UI.ViewModels
         }
 
         [RelayCommand]
-        public async Task ChangeSelectedAccount(AccountNode account)
+        public async Task ChangeSelectedAccount(DisplayedAccount account)
         {
             IsSelectedAccount = true;
-            WeakReferenceMessenger.Default.Send(new SelectedAccountChangedMessage(account.Account.Id));
+            WeakReferenceMessenger.Default.Send(new SelectedAccountChangedMessage(account.Id));
         }
 
         [RelayCommand]
@@ -97,13 +99,15 @@ namespace UI.ViewModels
 
         private void BuildTree()
         {
-            FlatAccounts.Clear();
+            DisplayedAccounts.Clear();
 
             void Add(Account acc, int level)
             {
-                FlatAccounts.Add(new AccountNode
+                DisplayedAccounts.Add(new DisplayedAccount
                 {
-                    Account = acc,
+                    Id = acc.Id,
+                    Name = acc.Name,
+                    Balance = acc.TotalBalance.ToString(),
                     Level = level
                 });
 

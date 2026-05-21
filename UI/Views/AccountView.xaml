@@ -18,10 +18,10 @@
           RowSpacing="10">
 
         <CollectionView Grid.Row="0"
-                         ItemsSource="{Binding FlatAccounts}">
+                         ItemsSource="{Binding DisplayedAccounts}">
 
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="viewmodel:AccountNode">
+                <DataTemplate x:DataType="viewmodel:DisplayedAccount">
 
                     <Grid ColumnDefinitions="*, Auto">
 
@@ -42,13 +42,13 @@
 
                         <Grid Padding="{Binding Level, Converter={StaticResource indentConverter}}">
 
-                            <Label Text="{Binding Account.Name}"
+                            <Label Text="{Binding Name}"
                                    TextColor="White" />
 
                         </Grid>
 
                         <Label Grid.Column="1"
-                               Text="{Binding Account.TotalBalance}"
+                               Text="{Binding Balance}"
                                TextColor="LightGreen"
                                HorizontalOptions="End"/>
                     </Grid>

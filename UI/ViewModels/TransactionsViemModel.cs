@@ -21,30 +21,18 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class TransactionTemplateSelector : DataTemplateSelector
+    public class DisplayedTransaction
     {
-        public DataTemplate CategoryTemplate { get; set; }
-        public DataTemplate TransactionTemplate { get; set; }
-
-        protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
-        {
-            return item switch
-            {
-                TransactionNode => CategoryTemplate,
-                Transaction => TransactionTemplate,
-                _ => null
-            };
-        }
+        public Guid Id { get; set; }
+        public string? Description { get; set; }
+        public string? Amount { get; set; }
+        public string? Type { get; set; }
+        public string? Date {  get; set; }
+        public string? AccountName { get; set; }
+        public string? CategoryName { get; set; }
+        public string? FamilyMemberName { get; set; }
+        public string? DebtName { get; set; }
     }
-
-    public class TransactionNode
-    {
-        public Category Category { get; set; } = null!;
-        public int Level { get; set; }
-
-        public List<Transaction> Transactions { get; set; } = new();
-    }
-
     public partial class TransactionsViewModel : ObservableObject, 
         IRecipient<DataBaseChangedMessage>,
         IRecipient<DateRangeChangedMessage>
@@ -52,16 +40,12 @@ namespace UI.ViewModels
         private readonly IMediator _mediator;
         private readonly IUserContext _user;
 
-        //public List<Transaction> _transactions { get; } = new();
-        //public List<Category> _categories { get; } = new();
 
-        //public ObservableCollection<object> FlatItems { get; } = new();
-
-        private List<Transaction> _allTransactions = new();
+        private List<Transaction> _transactions = new();
         private DateTime _startDate = DateTime.Now.AddMonths(-1);
         private DateTime _endDate = DateTime.Now;
 
-        public ObservableCollection<Transaction> Transactions { get; set; } = new();
+        public ObservableCollection<DisplayedTransaction> DisplayedTransactions { get; set; } = new();
 
         public TransactionsViewModel(
             IMediator mediator,
@@ -79,79 +63,43 @@ namespace UI.ViewModels
             {
                 var data = await _mediator.Send(new GetAllTransactionsQuery(_user.UserId));
 
-                _allTransactions.Clear();
+                _transactions.Clear();
                 foreach (var t in data)
-                    _allTransactions.Add(t);
+                    _transactions.Add(t);
 
-                this.FilterTransactions();
+                this.ShowTransactions();
             }
-
-            //if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Categories)
-            //{
-            //    var data = await _categoryRepository.GetAll(_user.UserId) ?? new();
-
-            //    _categories.Clear();
-            //    foreach (var t in data)
-            //        _categories.Add(t);
-
-            //    isUpdated = true;
-            //}
-
-            //if (isUpdated)
-            //{
-            //    BuildTree(_categories, _transactions);
-            //}
         }
         public void Receive(DateRangeChangedMessage message)
         {
             _startDate = message.StartDate;
             _endDate = message.EndDate;
 
-            this.FilterTransactions();
+            this.ShowTransactions();
         }
 
-        private void FilterTransactions()
+        private void ShowTransactions()
         {
-            Transactions.Clear();
+            DisplayedTransactions.Clear();
 
-            var trans = _allTransactions.Where(x => x.Date.Date >= _startDate.Date && x.Date.Date <= _endDate.Date).ToList();
+            var trans = _transactions.Where(x => x.Date.Date >= _startDate.Date && x.Date.Date <= _endDate.Date).ToList();
 
             foreach(var t in trans)
             {
-                Transactions.Add(t);
+                DisplayedTransactions.Add(new DisplayedTransaction()
+                {
+                    Id = t.Id,
+                    Description = t.Description,
+                    Amount = t.Amount.ToString(),
+                    Type = t.Type.ToString(),
+                    Date = t.Date.ToString("dd.MM.yyyy"),
+                    AccountName = t.Account?.Name,
+                    CategoryName = t.Category?.Name,
+                    FamilyMemberName = t.FamilyMember?.Name,
+                    DebtName = t.Debt?.Name,
+                });
             }
         }
-
-        //private void BuildTree(List<Category> categories, List<Transaction> transactions)
-        //{
-        //    FlatItems.Clear();
-
-        //    void AddCategory(Category category, int level)
-        //    {
-        //        var catTransactions = transactions
-        //            .Where(t => t.Category?.Id == category.Id)
-        //            .ToList();
-
-        //        FlatItems.Add(new TransactionNode
-        //        {
-        //            Category = category,
-        //            Level = level,
-        //            Transactions = catTransactions
-        //        });
-
-        //        foreach (var t in catTransactions)
-        //            FlatItems.Add(t);
-
-        //        foreach (var child in category.Children)
-        //            AddCategory(child, level + 1);
-        //    }
-
-        //    var roots = categories.Where(c => c.ParentId == null);
-
-        //    foreach (var root in roots)
-        //        AddCategory(root, 0);
-        //}
-
-
+        
     }
 }
