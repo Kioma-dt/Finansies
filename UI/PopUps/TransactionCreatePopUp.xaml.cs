@@ -3,10 +3,13 @@ using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using CommunityToolkit.Maui.Views;
 using DataAccess.RepositoriesImplementation;
+using UI.PopUps.Abstraction;
 
 namespace UI.Popups;
 
-public partial class TransactionCreatePopUp : Popup<Transaction?>
+public partial class TransactionCreatePopUp 
+    : Popup<Transaction?>,
+    IPopUp<Transaction>
 {
     readonly IAccountRepository _accountRepository;
     readonly ICategoryRepository _categoryRepository;

@@ -1,42 +1,22 @@
 using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
+using BuisnessLogic.UseCases.AccountsUseCases.Commands;
 using BuisnessLogic.UseCases.BudgetUseCasses.Commands;
 using CommunityToolkit.Maui.Views;
 using DataAccess.RepositoriesImplementation;
 using System.Collections.Generic;
 
 using UI.PopUps.ViewModels;
+using UI.PopUps.Abstraction;
 
 namespace UI.Popups;
 
-//public class BudgetCreateDTO(string Name,
-//    decimal Limit,
-//    DateTime StartDate,
-//    DateTime EndDate,
-//    List<(BudgetFilterType Type, string Value)> Filters)
-//{
-//    public string Name { get; } = Name;
-//    public decimal Limit { get; } = Limit;
-//    public DateTime StartDate { get; } = StartDate;
-//    public DateTime EndDate { get; } = EndDate;
-//    public List<(BudgetFilterType Type, string Value)> Filters { get; } = Filters;
-//}
-    
 
-public partial class BudgetCreatePopUp : Popup<CreateBudgetCommand?>
+public partial class BudgetCreatePopUp
+    : Popup<CreateBudgetCommand?>,
+    IPopUp<CreateBudgetCommand>
 {
-    //readonly IAccountRepository _accountsRepository;
-    //readonly ICategoryRepository _categoriesRepository;
-    //readonly IFamilyMemberRepository _familyMembersRepository;
-    //readonly IUserContext _user;
-
-    //List<Account> Accounts { get; set; } = new();
-    //List<Category> Categories { get; set; } = new();
-    //List<FamilyMember> FamilyMembers { get; set; } = new();
-
-    //List<FilterItem> SelectedFiltersDisplay = new();
-    //List<FilterItem> SelectedFiltersReturned = new();
 
     public BudgetCreatePopUp(BudgetCreatePopUpModel viewModel)
     {

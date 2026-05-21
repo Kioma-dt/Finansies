@@ -4,6 +4,7 @@ using BuisnessLogic.Repositories;
 using CommunityToolkit.Maui.Views;
 using DataAccess.RepositoriesImplementation;
 using System.Collections.Generic;
+using UI.PopUps.Abstraction;
 
 namespace UI.Popups;
 
@@ -15,7 +16,9 @@ public class DateRangeDTO(DateTime StartDate,
 }
     
 
-public partial class DateRangePopUp : Popup<DateRangeDTO?>
+public partial class DateRangePopUp
+    : Popup<DateRangeDTO?>,
+    IPopUp<DateRangeDTO>
 {
 
     public DateRangePopUp()

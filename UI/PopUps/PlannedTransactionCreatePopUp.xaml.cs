@@ -3,6 +3,7 @@ using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using CommunityToolkit.Maui.Views;
 using DataAccess.RepositoriesImplementation;
+using UI.PopUps.Abstraction;
 
 namespace UI.Popups;
 
@@ -30,7 +31,9 @@ public class PlannedTransactionCreateDTO(decimal Amount,
     public uint Count { get; } = Count;
 }
 
-public partial class PlannedTransactionCreatePopUp : Popup<PlannedTransactionCreateDTO?>
+public partial class PlannedTransactionCreatePopUp 
+    : Popup<PlannedTransactionCreateDTO?>,
+    IPopUp<PlannedTransactionCreateDTO>
 {
     readonly IAccountRepository _accountRepository;
     readonly ICategoryRepository _categoryRepository;

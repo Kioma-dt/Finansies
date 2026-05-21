@@ -4,10 +4,13 @@ using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using CommunityToolkit.Maui.Views;
 using DataAccess.RepositoriesImplementation;
+using UI.PopUps.Abstraction;
 
 namespace UI.Popups;
 
-public partial class DebtCreatePopUp : Popup<DebtCreateDTO?>
+public partial class DebtCreatePopUp 
+    : Popup<DebtCreateDTO?>,
+    IPopUp<DebtCreateDTO>
 {
     readonly ICategoryRepository _categoryRepo;
     readonly IFamilyMemberRepository _familyRepo;

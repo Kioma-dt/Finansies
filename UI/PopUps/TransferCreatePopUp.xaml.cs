@@ -3,12 +3,14 @@ using BuisnessLogic.Repositories;
 using BuisnessLogic.UseCases.AccountsUseCases.Commands;
 using BuisnessLogic.UseCases.TransfersUseCasses.Commands;
 using CommunityToolkit.Maui.Views;
-
+using UI.PopUps.Abstraction;
 using UI.PopUps.ViewModels;
 
 namespace UI.Popups;
 
-public partial class TransferCreatePopUp : Popup<CreateTransferCommand?>
+public partial class TransferCreatePopUp 
+    : Popup<CreateTransferCommand?>,
+    IPopUp<CreateTransferCommand>
 {
     public TransferCreatePopUp(TransferCreatePopUpModel viewModel)
     {

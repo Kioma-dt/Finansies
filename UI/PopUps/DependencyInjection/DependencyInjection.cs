@@ -5,6 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using UI.Popups;
 using UI.PopUps.ViewModels;
+using UI.PopUps.Abstraction;
+using BuisnessLogic.UseCases.AccountsUseCases.Commands;
+using BuisnessLogic.UseCases.CategoryUseCasses.Commands;
+using BuisnessLogic.UseCases.FamilyMembersUseCasses.Commands;
+using BuisnessLogic.DTO;
+using BuisnessLogic.Entities;
+using BuisnessLogic.UseCases.BudgetUseCasses.Commands;
+using BuisnessLogic.UseCases.TransfersUseCasses.Commands;
+using UI.PopUps.Service;
 
 namespace UI.PopUps.DependencyInjection
 {
@@ -28,6 +37,8 @@ namespace UI.PopUps.DependencyInjection
             services.AddTransient<BudgetCreatePopUpModel>();
             services.AddTransient<CategoryCreatePopUpModel>();
             services.AddTransient<TransferCreatePopUpModel>();
+
+            services.AddSingleton<IPopUpService, PopUpService>();
 
             return services;
         }

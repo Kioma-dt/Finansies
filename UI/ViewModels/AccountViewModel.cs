@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UI.Messages;
 using UI.Popups;
+using UI.PopUps.Service;
 
 namespace UI.ViewModels
 {
@@ -35,7 +36,7 @@ namespace UI.ViewModels
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _user;
-        private readonly AccountCreatePopUp _popup;
+        private readonly IPopUpService _popupService;
 
         private List<Account> _accounts = new();
 
@@ -50,12 +51,12 @@ namespace UI.ViewModels
         public AccountViewModel(
             IMediator mediator,
             IUserContext user,
-            AccountCreatePopUp popup)
+            IPopUpService popup)
         {
 
             _mediator = mediator;
             _user = user;
-            _popup = popup;
+            _popupService = popup;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
         }
@@ -87,10 +88,7 @@ namespace UI.ViewModels
         [RelayCommand]
         public async Task AddAccount()
         {
-            var result = await Application.Current.MainPage
-                .ShowPopupAsync<CreateAccountCommand?>(_popup);
-
-            var command = result.Result;
+            var command = await _popupService.ShowPopUp<CreateAccountCommand?, AccountCreatePopUp>();
 
             if (command is null)
                 return;

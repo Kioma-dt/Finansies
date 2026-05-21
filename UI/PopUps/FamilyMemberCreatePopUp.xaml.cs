@@ -3,10 +3,13 @@ using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
 using CommunityToolkit.Maui.Views;
+using UI.PopUps.Abstraction;
 
 namespace UI.Popups;
 
-public partial class FamilyMemberCreatePopUp : Popup<FamilyMemberCreateDTO?>
+public partial class FamilyMemberCreatePopUp
+    : Popup<FamilyMemberCreateDTO?>,
+    IPopUp<FamilyMemberCreateDTO>
 {
     public FamilyMemberCreatePopUp()
     {
