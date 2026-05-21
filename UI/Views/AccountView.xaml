@@ -25,6 +25,21 @@
 
                     <Grid ColumnDefinitions="*, Auto">
 
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AccountViewModel}}, Path=ChangeSelectedAccountCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+
+                        <FlyoutBase.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem 
+                                    Text="UnSelect Account"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AccountViewModel}}, Path=UnSelectAccountCommand}"
+                                    IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AccountViewModel}}, Path=IsSelectedAccount}"/>
+                            </MenuFlyout>
+                        </FlyoutBase.ContextFlyout>
+
                         <Grid Padding="{Binding Level, Converter={StaticResource indentConverter}}">
 
                             <Label Text="{Binding Account.Name}"

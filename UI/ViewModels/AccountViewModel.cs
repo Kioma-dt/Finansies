@@ -1,9 +1,12 @@
 ﻿using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
+using BuisnessLogic.UseCases.AccountsUseCases.Commands;
+using BuisnessLogic.UseCases.AccountsUseCases.Queries;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,13 +15,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
-using CommunityToolkit.Mvvm.Messaging;
-
-using UI.Popups;
 using UI.Messages;
-using BuisnessLogic.UseCases.AccountsUseCases.Queries;
-using BuisnessLogic.UseCases.AccountsUseCases.Commands;
+using UI.Popups;
 
 namespace UI.ViewModels
 {
@@ -38,6 +36,9 @@ namespace UI.ViewModels
 
         [ObservableProperty]
         public partial bool IsLoaded { get; set; } = false;
+
+        [ObservableProperty]
+        public partial bool IsSelectedAccount { get; set; } = false;
 
         public ObservableCollection<AccountNode> FlatAccounts { get; } = new();
 
@@ -64,13 +65,19 @@ namespace UI.ViewModels
             }
         }
 
-        //[RelayCommand]
-        //public async Task Load()
-        //{
-        //    _accounts = await _accountService.GetAll(_user.UserId);
+        [RelayCommand]
+        public async Task ChangeSelectedAccount(AccountNode account)
+        {
+            IsSelectedAccount = true;
+            WeakReferenceMessenger.Default.Send(new SelectedAccountChangedMessage(account.Account.Id));
+        }
 
-        //    BuildTree();
-        //}
+        [RelayCommand]
+        public async Task UnSelectAccount()
+        {
+            IsSelectedAccount = false;
+            WeakReferenceMessenger.Default.Send(new SelectedAccountChangedMessage(null));
+        }
 
         [RelayCommand]
         public async Task AddAccount()
