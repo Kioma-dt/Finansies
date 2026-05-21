@@ -123,7 +123,7 @@ namespace UI.ViewModels
                 await _mediator.Send(command);
 
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
-                WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.AccountsTra));
+                WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
             }
             catch (FormatException ex)
             {
