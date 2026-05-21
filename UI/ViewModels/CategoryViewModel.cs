@@ -18,20 +18,28 @@ using BuisnessLogic.UseCases.CategoryUseCasses.Commands;
 
 namespace UI.ViewModels
 {
-    public class CategoryNode
+    public class DispalyedCategory(Guid Id,
+        string? Name,
+        string? Description,
+        string? Amount,
+        string? NumberOfTransactions,
+        int Level)
     {
-        public Category Category { get; set; } = null!;
-        public decimal Amount { get; set; } = 0;
-        public int NumberOfTransactions {  get; set; } = 0;
-        public int Level { get; set; }
+        public Guid Id { get; } = Id;
+        public string? Name { get; } = Name;
+        public string? Description { get; } = Description;
+        public string? Amount { get; } = Amount;
+        public string? NumberOfTransactions {  get;  } = NumberOfTransactions;
+        public int Level { get; } = Level;
     }
 
     public partial class CategoryViewModel : ObservableObject, 
         IRecipient<DataBaseChangedMessage>,
-        IRecipient<DateRangeChangedMessage>
+        IRecipient<DateRangeChangedMessage>,
+        IRecipient<SelectedAccountChangedMessage>
     {
         private readonly IMediator _mediator;
-        private readonly IUserContext _user;
+        private readonly IUserContext _userContext;
         private readonly CategoryCreatePopUp _categoryCreatePopUp;
 
         private List<Category> _categories = new();
@@ -39,7 +47,9 @@ namespace UI.ViewModels
         private DateTime _startDate = DateTime.Now.AddMonths(-1);
         private DateTime _endDate = DateTime.Now;
 
-        public ObservableCollection<CategoryNode> FlatCategories { get; } = new();
+        private Guid? _selectedAccountId = null;
+
+        public ObservableCollection<DispalyedCategory> DispalyedCategories { get; } = new();
 
 
         public CategoryViewModel(
@@ -48,11 +58,12 @@ namespace UI.ViewModels
             CategoryCreatePopUp categoryCreatePopUp)
         {
             _mediator = mediator;
-            _user = user;
+            _userContext = user;
             _categoryCreatePopUp = categoryCreatePopUp;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
+            WeakReferenceMessenger.Default.Register<SelectedAccountChangedMessage>(this);
         }
 
         public async void Receive(DataBaseChangedMessage message)
@@ -61,10 +72,16 @@ namespace UI.ViewModels
                 || message.Type == DataBaseChangedMessageType.Categories
                 || message.Type == DataBaseChangedMessageType.Transactions)
             {
-                _categories = (await _mediator.Send(new GetAllCategoriesQuery(_user.UserId))).ToList();
+                _categories.Clear();
+                
+                var categories = (await _mediator.Send(new GetAllCategoriesQuery(_userContext.UserId))).ToList();
 
-                BuildTree();
-                //this.FilterCategoryTransactions();
+                foreach(var category in categories)
+                {
+                    _categories.Add(category);
+                }
+
+                this.ShowCategories();
             }
         }
 
@@ -73,17 +90,14 @@ namespace UI.ViewModels
             _startDate = message.StartDate;
             _endDate = message.EndDate;
 
-            this.BuildTree();
+            this.ShowCategories();
         }
+        public void Receive(SelectedAccountChangedMessage message)
+        {
+            _selectedAccountId = message.SelectedAccountId;
 
-        //private void FilterCategoryTransactions()
-        //{
-        //    foreach(var categoryNode in FlatCategories)
-        //    {
-        //        categoryNode.Amount = categoryNode.Category.PeriodTransactionsSum(_startDate, _endDate);
-        //    }
-        //}
-
+            this.ShowCategories();
+        }
 
         [RelayCommand]
         public async Task AddCategory()
@@ -103,19 +117,22 @@ namespace UI.ViewModels
         }
 
 
-        private void BuildTree()
+        private void ShowCategories()
         {
-            FlatCategories.Clear();
+            DispalyedCategories.Clear();
 
             void Add(Category cat, int level)
             {
-                FlatCategories.Add(new CategoryNode
-                {
-                    Category = cat,
-                    Amount = cat.PeriodTransactionsSum(_startDate, _endDate),
-                    NumberOfTransactions = cat.PeriodTransactionsNumber(_startDate, _endDate),
-                    Level = level
-                });
+                DispalyedCategories.Add(new DispalyedCategory
+                    (
+                        cat.Id,
+                        cat.Name,
+                        cat.Description,
+                        cat.PeriodTransactionsSum(_startDate, _endDate, _selectedAccountId).ToString(),
+                        cat.PeriodTransactionsNumber(_startDate,_endDate, _selectedAccountId).ToString(),
+                        level
+                    )
+                );
 
                 foreach (var child in cat.Children)
                     Add(child, level + 1);

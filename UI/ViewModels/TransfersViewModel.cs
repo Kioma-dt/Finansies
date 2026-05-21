@@ -15,14 +15,19 @@ using BuisnessLogic.UseCases.TransfersUseCasses.Commands;
 
 namespace UI.ViewModels
 {
-    public class DisplayedTransfer
+    public class DisplayedTransfer(Guid Id,
+        string? Desciption,
+        string? Amount,
+        string? Date,
+        string? FromAccountName,
+        string? ToAccountName)
     {
-        public Guid Id { get; set; }
-        public string? Desciption { get; set; }
-        public string? Amount { get; set; }
-        public string? Date {  get; set; }
-        public string? FromAccountName { get; set; }
-        public string? ToAccountName { get; set; }
+        public Guid Id { get; } = Id;
+        public string? Desciption { get; } = Desciption;
+        public string? Amount { get;  } = Amount;
+        public string? Date {  get;  } = Date;
+        public string? FromAccountName { get; } = FromAccountName;
+        public string? ToAccountName { get; } = ToAccountName;
     }
 
     public partial class TransfersViewModel 
@@ -112,15 +117,15 @@ namespace UI.ViewModels
 
             foreach (var transfer in transfers)
             {
-                DisplayedTransfers.Add(new DisplayedTransfer()
-                {
-                    Id = transfer.Id,
-                    Desciption = transfer.Description,
-                    Amount = transfer.Amount.ToString(),
-                    Date = transfer.Date.ToString("dd.MM.yyyy"),
-                    FromAccountName = transfer?.FromAccount?.Name,
-                    ToAccountName = transfer?.ToAccount?.Name
-                });
+                DisplayedTransfers.Add(new DisplayedTransfer
+                    (
+                        transfer.Id,
+                        transfer.Description,
+                        transfer.Amount.ToString(),
+                        transfer.Date.ToString("dd.MM.yyyy"),
+                        transfer?.FromAccount?.Name,
+                        transfer?.ToAccount?.Name
+                    ));
             }
         }
 

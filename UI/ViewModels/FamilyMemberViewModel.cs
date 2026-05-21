@@ -14,23 +14,31 @@ using System.Text;
 using System.Threading.Tasks;
 using UI.Popups;
 using UI.Messages;
+using BuisnessLogic.UseCases.FamilyMembersUseCasses.Queries;
+using BuisnessLogic.UseCases.FamilyMembersUseCasses.Commands;
 
 namespace UI.ViewModels
 {
-    public class FamilyMemberViewItem
+    public class DisplayedFamilyMember(Guid Id,
+        string? Name,
+        string? TransactionsCount,
+        string? TotalAcmount)
     {
-        public FamilyMember? FamilyMember { get; set; }
+        public Guid Id { get; } = Id;
 
-        public int TransactionsCount { get; set; }
+        public string? Name { get; } = Name;
 
-        public decimal TotalAmount { get; set; }
+        public string? TransactionsCount { get; } = TransactionsCount;
+
+        public string? TotalAmount { get; } = TotalAcmount;
     }
     public partial class FamilyMemberViewModel : ObservableObject, 
         IRecipient<DataBaseChangedMessage>,
-        IRecipient<DateRangeChangedMessage>
+        IRecipient<DateRangeChangedMessage>,
+        IRecipient<SelectedAccountChangedMessage>
     {
-        private readonly IFamilyMemberRepository _familyMemberRepository;
-        private readonly IUserContext _user;
+        private readonly IMediator _mediator;
+        private readonly IUserContext _userContext;
         private readonly FamilyMemberCreatePopUp _popup;
 
         private List<FamilyMember> _familyMembers = new();
@@ -38,36 +46,41 @@ namespace UI.ViewModels
         private DateTime _startDate = DateTime.Now.AddMonths(-1);
         private DateTime _endDate = DateTime.Now;
 
-        public ObservableCollection<FamilyMemberViewItem> FamilyMemberItems { get; } = new();
+        private Guid? _selectedAccountId = null;
+
+        public ObservableCollection<DisplayedFamilyMember> DisplayedFamilyMembers { get; } = new();
 
 
         public FamilyMemberViewModel(
-            IFamilyMemberRepository familyMemberRepository,
+            IMediator mediator,
             IUserContext user,
             FamilyMemberCreatePopUp popup)
         {
-            _familyMemberRepository = familyMemberRepository;
-            _user = user;
+            _mediator = mediator;
+            _userContext = user;
             _popup = popup;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
+            WeakReferenceMessenger.Default.Register<SelectedAccountChangedMessage>(this);
         }
-        //.Include()
-        //            .Include(
-        //            .Include()
+
         public async void Receive(DataBaseChangedMessage message)
         {
             if (message.Type == DataBaseChangedMessageType.Init
                 || message.Type == DataBaseChangedMessageType.FamilyMembers
                 || message.Type == DataBaseChangedMessageType.Transactions)
             {
-                _familyMembers= (await _familyMemberRepository.GetAll(_user.UserId,
-                    x => x.Transactions,
-                    x => x.PlannedTransactions,
-                    x => x.Debts)).ToList();
+                _familyMembers.Clear();
 
-                this.CreateItems();
+                var familyMembers = await _mediator.Send(new GetAllFamilyMembersQuery(_userContext.UserId));
+
+                foreach (var familyMember in familyMembers) 
+                {
+                    _familyMembers.Add(familyMember);
+                }
+
+                this.ShowFamilyMembers();
             }
         }
 
@@ -76,9 +89,14 @@ namespace UI.ViewModels
             _startDate = message.StartDate;
             _endDate = message.EndDate;
 
-            this.CreateItems();
+            this.ShowFamilyMembers();
         }
+        public void Receive(SelectedAccountChangedMessage message)
+        {
+            _selectedAccountId = message.SelectedAccountId;
 
+            this.ShowFamilyMembers();
+        }
 
         [RelayCommand]
         public async Task AddFamilyMember()
@@ -92,29 +110,22 @@ namespace UI.ViewModels
                 return;
 
 
-            await _familyMemberRepository.Add(new FamilyMember()
-            {
-                Name = familyMember.Name,
-                UserId = _user.UserId
-            });
+            await _mediator.Send(new CreateFamilyMemberCommand(_userContext.UserId, familyMember.Name));
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.FamilyMembers));
         }
 
-        private void CreateItems()
+        private void ShowFamilyMembers()
         {
-            FamilyMemberItems.Clear();
+            DisplayedFamilyMembers.Clear();
 
             foreach (var fm in _familyMembers)
             {
-                FamilyMemberItems.Add(new FamilyMemberViewItem()
-                {
-                    FamilyMember = fm,
-                    TransactionsCount = fm.PeriodTransactionsNumber(_startDate, _endDate),
-                    TotalAmount = fm.PeriodTransactionsSum(_startDate, _endDate)
-                });
+                DisplayedFamilyMembers.Add(new DisplayedFamilyMember(fm.Id, 
+                    fm.Name, 
+                    fm.PeriodTransactionsNumber(_startDate, _endDate, _selectedAccountId).ToString(),
+                    fm.PeriodTransactionsSum(_startDate, _endDate, _selectedAccountId).ToString()));
             }
         }
-       
     }
 }

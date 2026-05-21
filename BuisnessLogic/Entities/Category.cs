@@ -35,30 +35,44 @@
             }
         }
 
-        public decimal PeriodTransactionsSum(DateTime startDate, DateTime endDate)
+        public decimal PeriodTransactionsSum(DateTime startDate, DateTime endDate, Guid? accountId = null)
         {
             var sum = 0m;
+            var transactions = Transactions;
 
-            foreach (var transaction in Transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date))
+            if (accountId is not null)
+            {
+                transactions = transactions.Where(x => x.AccountId == accountId).ToList();
+            }
+
+            foreach (var transaction in transactions.Where(x => x.Date.Date >= startDate.Date 
+                && x.Date.Date <= endDate.Date))
             {
                 sum += transaction.SignedAmount;
             }
 
             foreach (var child in Children)
             {
-                sum += child.PeriodTransactionsSum(startDate, endDate);
+                sum += child.PeriodTransactionsSum(startDate, endDate, accountId);
             }
 
             return sum;
         }
 
-        public int PeriodTransactionsNumber(DateTime startDate, DateTime endDate)
+        public int PeriodTransactionsNumber(DateTime startDate, DateTime endDate, Guid? accountId = null)
         {
-            var count = Transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date).Count();
+            var transactions = Transactions;
+
+            if (accountId is not null)
+            {
+                transactions = transactions.Where(x => x.AccountId == accountId).ToList();
+            }
+
+            var count = transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date).Count();
 
             foreach (var child in Children)
             {
-                count += child.PeriodTransactionsNumber(startDate, endDate);
+                count += child.PeriodTransactionsNumber(startDate, endDate, accountId);
             }
             return count;
         }

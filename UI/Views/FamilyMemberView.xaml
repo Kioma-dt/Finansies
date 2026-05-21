@@ -2,6 +2,7 @@
 <ContentView 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:entity="clr-namespace:UI.ViewModels"
     xmlns:viewmodel="clr-namespace:UI.ViewModels"
     x:Class="UI.Views.FamilyMemberView"
     x:DataType="viewmodel:FamilyMemberViewModel">
@@ -16,7 +17,7 @@
                    TextColor="White"
                    FontAttributes="Bold"/>
 
-            <Label Text="Transactions"
+            <Label Text="Transactions Count"
                    Grid.Column="1"
                    TextColor="White"
                    FontAttributes="Bold"/>
@@ -29,15 +30,15 @@
         </Grid>
         
         <CollectionView Grid.Row="1"
-                        ItemsSource="{Binding FamilyMemberItems}">
+                        ItemsSource="{Binding DisplayedFamilyMembers}">
 
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="viewmodel:FamilyMemberViewItem">
+                <DataTemplate x:DataType="viewmodel:DisplayedFamilyMember">
 
                     <Grid ColumnDefinitions="2*,*,*"
                           Padding="10">
 
-                        <Label Text="{Binding FamilyMember.Name}"
+                        <Label Text="{Binding Name}"
                                TextColor="White"/>
 
                         <Label Text="{Binding TransactionsCount}"

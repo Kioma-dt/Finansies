@@ -20,12 +20,15 @@ using UI.Popups;
 
 namespace UI.ViewModels
 {
-    public class DisplayedAccount
+    public class DisplayedAccount(Guid Id,
+        string? Name,
+        string? Balance,
+        int Level)
     {
-        public Guid Id { get; set; }
-        public string? Name { get; set; }
-        public string? Balance { get; set; }
-        public int Level { get; set; }
+        public Guid Id { get; } = Id;
+        public string? Name { get; } = Name;
+        public string? Balance { get; } = Balance;
+        public int Level { get; } = Level;
     }
 
     public partial class AccountViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
@@ -104,12 +107,12 @@ namespace UI.ViewModels
             void Add(Account acc, int level)
             {
                 DisplayedAccounts.Add(new DisplayedAccount
-                {
-                    Id = acc.Id,
-                    Name = acc.Name,
-                    Balance = acc.TotalBalance.ToString(),
-                    Level = level
-                });
+                    (
+                        acc.Id,
+                        acc.Name,
+                        acc.Balance.ToString(),
+                        level
+                    ));
 
                 foreach (var child in acc.Children)
                     Add(child, level + 1);

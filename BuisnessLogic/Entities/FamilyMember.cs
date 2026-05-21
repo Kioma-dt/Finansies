@@ -10,11 +10,18 @@
         public List<PlannedTransaction> PlannedTransactions { get; set; } = new();
         public List<Debt> Debts { get; set; } = new();
 
-        public decimal PeriodTransactionsSum(DateTime startDate, DateTime endDate)
+        public decimal PeriodTransactionsSum(DateTime startDate, DateTime endDate, Guid? accountId = null)
         {
             var sum = 0m;
 
-            foreach (var transaction in Transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date))
+            var transactions = Transactions;
+
+            if (accountId is not null)
+            {
+                transactions = transactions.Where(x => x.AccountId == accountId).ToList();
+            }
+
+            foreach (var transaction in transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date))
             {
                 sum += transaction.SignedAmount;
             }
@@ -22,9 +29,16 @@
             return sum;
         }
 
-        public int PeriodTransactionsNumber(DateTime startDate, DateTime endDate)
+        public int PeriodTransactionsNumber(DateTime startDate, DateTime endDate, Guid? accountId = null)
         {
-            return Transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date).Count();
+            var transactions = Transactions;
+
+            if (accountId is not null)
+            {
+                transactions = transactions.Where(x => x.AccountId == accountId).ToList();
+            }
+
+            return transactions.Where(x => x.Date.Date >= startDate.Date && x.Date.Date <= endDate.Date).Count();
         }
     }
 }

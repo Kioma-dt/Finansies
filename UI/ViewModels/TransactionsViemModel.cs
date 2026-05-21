@@ -21,17 +21,25 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class DisplayedTransaction
+    public class DisplayedTransaction(Guid Id,
+        string? Description,
+        string? Amount,
+        string? Type,
+        string? Date,
+        string? AccountName,
+        string? CategoryName,
+        string? FamilyMemberName,
+        string? DebtName)
     {
-        public Guid Id { get; set; }
-        public string? Description { get; set; }
-        public string? Amount { get; set; }
-        public string? Type { get; set; }
-        public string? Date {  get; set; }
-        public string? AccountName { get; set; }
-        public string? CategoryName { get; set; }
-        public string? FamilyMemberName { get; set; }
-        public string? DebtName { get; set; }
+        public Guid Id { get;} = Id;
+        public string? Description { get; } = Description;
+        public string? Amount { get;} = Amount;
+        public string? Type { get; } = Type;
+        public string? Date {  get;} = Date;
+        public string? AccountName { get; } = AccountName;
+        public string? CategoryName { get; } = CategoryName;
+        public string? FamilyMemberName { get; } = FamilyMemberName;
+        public string? DebtName { get; } = DebtName;
     }
     public partial class TransactionsViewModel : ObservableObject, 
         IRecipient<DataBaseChangedMessage>,
@@ -103,18 +111,18 @@ namespace UI.ViewModels
 
             foreach(var t in trans)
             {
-                DisplayedTransactions.Add(new DisplayedTransaction()
-                {
-                    Id = t.Id,
-                    Description = t.Description,
-                    Amount = t.Amount.ToString(),
-                    Type = t.Type.ToString(),
-                    Date = t.Date.ToString("dd.MM.yyyy"),
-                    AccountName = t.Account?.Name,
-                    CategoryName = t.Category?.Name,
-                    FamilyMemberName = t.FamilyMember?.Name,
-                    DebtName = t.Debt?.Name,
-                });
+                DisplayedTransactions.Add(new DisplayedTransaction
+                    (
+                        t.Id,
+                        t.Description,
+                        t.Amount.ToString(),
+                        t.Type.ToString(),
+                        t.Date.ToString("dd.MM.yyyy"),
+                        t.Account?.Name,
+                        t.Category?.Name,
+                        t.FamilyMember?.Name,
+                        t.Debt?.Name
+                    ));
             }
         }
     }

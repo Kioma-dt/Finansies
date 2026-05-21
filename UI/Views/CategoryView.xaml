@@ -1,7 +1,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:UI.ViewModels"
-             xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
+             xmlns:entity="clr-namespace:UI.ViewModels"
              xmlns:converter="clr-namespace:UI.Converters"
              x:Class="UI.Views.CategoryView"
              x:DataType="viewmodel:CategoryViewModel">
@@ -28,45 +28,45 @@
                FontAttributes="Bold"/>
 
                 <Label Grid.Column="1"
-               Text="Description"
-               TextColor="White"
-               FontAttributes="Bold"/>
+                       Text="Description"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
 
                 <Label Grid.Column="2"
-               Text="Count"
-               TextColor="White"
-               FontAttributes="Bold"/>
+                       Text="Transactions Count"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
 
                 <Label Grid.Column="3"
-               Text="Total"
-               TextColor="White"
-               FontAttributes="Bold"/>
+                       Text="Total Amount"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
             </Grid>
 
 
             <CollectionView Grid.Row="1"
-                    ItemsSource="{Binding FlatCategories}">
+                    ItemsSource="{Binding DispalyedCategories}">
 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="viewmodel:CategoryNode">
+                    <DataTemplate x:DataType="viewmodel:DispalyedCategory">
 
                         <Grid ColumnDefinitions="2*, 3*, Auto, Auto">
 
 
                             <Label Grid.Column="0" 
-                                Text="{Binding Category.Name}"
+                                Text="{Binding Name}"
                                TextColor="White"
                                 Padding="{Binding Level, Converter={StaticResource indentConverter}}"/> 
 
 
                             <Label Grid.Column="1"
-                               Text="{Binding Category.Description}"
+                               Text="{Binding Description}"
                                TextColor="Gray"
                                LineBreakMode="TailTruncation"/>
 
 
                             <Label Grid.Column="2"
-                               Text="{Binding Category.Transactions.Count}"
+                               Text="{Binding NumberOfTransactions}"
                                TextColor="LightBlue"
                                HorizontalTextAlignment="End"/>
 
