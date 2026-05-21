@@ -98,19 +98,14 @@ namespace UI.ViewModels
             try
             {
                 var result = await Application.Current.MainPage
-                .ShowPopupAsync<BudgetCreateDTO?>(_popup);
+                .ShowPopupAsync<CreateBudgetCommand?>(_popup);
 
-                var data = result.Result;
+                var command = result.Result;
 
-                if (data is null)
+                if (command is null)
                     return;
 
-                await _mediator.Send(new CreateBudgetCommand(_user.UserId, 
-                    data.Name, 
-                    data.Limit, 
-                    data.StartDate,
-                    data.EndDate, 
-                    data.Filters));
+                await _mediator.Send(command);
 
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Budgets));
             }

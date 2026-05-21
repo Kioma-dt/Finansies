@@ -2,9 +2,12 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:dto="clr-namespace:UI.Popups"
-    x:TypeArguments="dto:BudgetCreateDTO"
-    x:Class="UI.Popups.BudgetCreatePopUp">
+    xmlns:dto="clr-namespace:UI.PopUps.ViewModels"
+    xmlns:entity="clr-namespace:BuisnessLogic.UseCases.BudgetUseCasses.Commands;assembly=BuisnessLogic"
+    x:TypeArguments="entity:CreateBudgetCommand"
+    xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
+    x:Class="UI.Popups.BudgetCreatePopUp"
+    x:DataType="viewmodel:BudgetCreatePopUpModel">
 
     <toolkit:Popup.Resources>
         <ResourceDictionary>
@@ -32,38 +35,69 @@
                 <Entry x:Name="NameEntry"
                        Placeholder="Budget name"
                        TextColor="Black"
-                       PlaceholderColor="Gray"/>
+                       PlaceholderColor="Gray"
+                       Text="{Binding Name}"/>
 
                 <Entry x:Name="LimitEntry"
                    Placeholder="Limit"
                    TextColor="Black"
-                   PlaceholderColor="Gray"/>
+                   PlaceholderColor="Gray"
+                   Text="{Binding Limit}"/>
 
                 <DatePicker x:Name="StartDatePicker"
-                            TextColor="Black"/>
+                            TextColor="Black"
+                            Date="{Binding StartDate}"/>
 
                 <DatePicker x:Name="EndDatePicker"
-                            TextColor="Black"/>
+                            TextColor="Black"
+                            Date="{Binding EndDate}"/>
 
                 <Picker x:Name="TypePicker"
                         Title="Transaction Type"
                         TextColor="Black"
-                        TitleColor="Gray"/>
+                        TitleColor="Gray"
+                        ItemsSource="{Binding TransactionTypes}"
+                        SelectedItem="{Binding SelectedTrasactionType}"/>
 
                 <Grid ColumnDefinitions="*, *, Auto">
                     <Picker Grid.Column="0"
                             x:Name="FilterTypePicker"
-                            SelectedIndexChanged="OnFilterTypeChanged"/>
+                            ItemsSource="{Binding FilterTypes}"
+                            SelectedItem="{Binding SelectedFilterType}">
+
+                        <Picker.Behaviors>
+                            <toolkit:EventToCommandBehavior
+                                EventName="SelectedIndexChanged"
+                                Command="{Binding ChangeSelectedFilterCommand}"
+                                BindingContext="{Binding Source={x:Reference FilterTypePicker}, Path=BindingContext}" />
+                        </Picker.Behaviors>
+                    </Picker>
 
                     <Picker Grid.Column="1"
-                            x:Name="FilterValuePicker"/>
+                            ItemsSource="{Binding Accounts}"
+                            SelectedItem="{Binding SelectedAccount}"
+                            ItemDisplayBinding="{Binding Name}"
+                            IsVisible="{Binding IsAccountFilter}"/>
+
+                    <Picker Grid.Column="1"
+                        ItemsSource="{Binding Categories}"
+                        SelectedItem="{Binding SelectedCategory}"
+                        ItemDisplayBinding="{Binding Name}"
+                        IsVisible="{Binding IsCategoryFilter}"/>
+
+                    <Picker Grid.Column="1"
+                        ItemsSource="{Binding FamilyMembers}"
+                        SelectedItem="{Binding SelectedFamilyMember}"
+                        ItemDisplayBinding="{Binding Name}"
+                        IsVisible="{Binding IsFamilyMemberFilter}"/>
 
                     <Button Grid.Column="2"
                             Text="Add"
-                            Clicked="OnAddFilter"/>
+                            Command="{Binding AddFilterCommand}"/>
                 </Grid>
 
-                <CollectionView x:Name="FiltersView">
+                <CollectionView x:Name="FiltersView"
+                                ItemsSource="{Binding SelectedFilters}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dto:FilterItem">
                             <Grid ColumnDefinitions="*,*,Auto">
@@ -71,12 +105,12 @@
                                 <Label Text="{Binding Type}"
                                        TextColor="Black"/>
 
-                                <Picker Grid.Column="1"
-                                        SelectedItem="{Binding SelectedValue}"/>
+                                <Label Grid.Column="1"
+                                        Text="{Binding Name}"
+                                       TextColor="Black"/>
 
                                 <Button Grid.Column="2"
-                                        Text="X"
-                                        Clicked="OnRemoveFilter"/>
+                                        Text="X"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -87,12 +121,12 @@
                     <Button Text="Cancel"
                             BackgroundColor="#9E9E9E"
                             TextColor="White"
-                            Clicked="OnCancel"/>
+                            Command="{Binding CancelCommand}"/>
 
                     <Button Text="Create"
                             BackgroundColor="#4CAF50"
                             TextColor="White"
-                            Clicked="OnCreate"/>
+                            Command="{Binding CreateCommand}"/>
 
                 </HorizontalStackLayout>
 
