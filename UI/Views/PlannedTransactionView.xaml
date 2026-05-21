@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:UI.ViewModels"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
+             xmlns:entity="clr-namespace:UI.ViewModels"
              xmlns:converter="clr-namespace:UI.Converters"
              x:Class="UI.Views.PlannedTransactionView"
              x:DataType="viewmodel:PlannedTransactionsViewModel">
@@ -20,7 +20,7 @@
 
         <CollectionView Grid.Column="0"
                         Grid.Row="0"
-                        ItemsSource="{Binding PlannedTransactions}">
+                        ItemsSource="{Binding DisplayedPlannedTransactions}">
 
             <CollectionView.Header>
                 <Grid ColumnDefinitions="*,*,*,*,*,*,*,*,*"
@@ -42,7 +42,7 @@
             </CollectionView.Header>
 
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="entity:PlannedTransaction">
+                <DataTemplate x:DataType="entity:DisplayedPlanTransaction">
                     <Grid ColumnDefinitions="*,*,*,*,*,*,*,*,*"
                           Padding="10">
 
@@ -61,10 +61,10 @@
                         <Label Text="{Binding Amount}"  Grid.Column="2" />
                         <Label Text="{Binding Type}" Grid.Column="3"/>
                         <Label Text="{Binding PlannedDate, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="4"/>
-                        <Label Text="{Binding Account.Name, TargetNullValue='-'}" Grid.Column="5"/>
-                        <Label Text="{Binding Category.Name, TargetNullValue='-'}" Grid.Column="6"/>
-                        <Label Text="{Binding FamilyMember.Name, TargetNullValue='-'}" Grid.Column="7"/>
-                        <Label Text="{Binding Debt.Name, TargetNullValue='-'}" Grid.Column="8"/>
+                        <Label Text="{Binding AccountName, TargetNullValue='-'}" Grid.Column="5"/>
+                        <Label Text="{Binding CategoryName, TargetNullValue='-'}" Grid.Column="6"/>
+                        <Label Text="{Binding FamilyMemberName, TargetNullValue='-'}" Grid.Column="7"/>
+                        <Label Text="{Binding DebtName, TargetNullValue='-'}" Grid.Column="8"/>
 
                     </Grid>
                 </DataTemplate>

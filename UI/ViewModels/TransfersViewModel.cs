@@ -28,15 +28,19 @@ namespace UI.ViewModels
     public partial class TransfersViewModel 
         : ObservableObject,
         IRecipient<DataBaseChangedMessage>,
-        IRecipient<DateRangeChangedMessage>
+        IRecipient<DateRangeChangedMessage>,
+        IRecipient<SelectedAccountChangedMessage>
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _userContext;
         private readonly TransferCreatePopUp _popUp;
 
         private List<Transfer> _transfers = new();
+
         private DateTime _startDate = DateTime.Now.AddMonths(-1);
         private DateTime _endDate = DateTime.Now;
+
+        private Guid? _selectedAccountId = null;
 
         public ObservableCollection<DisplayedTransfer> DisplayedTransfers { get; set; } = new();
 
@@ -52,6 +56,7 @@ namespace UI.ViewModels
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
+            WeakReferenceMessenger.Default.Register<SelectedAccountChangedMessage>(this);
         }
         public async void Receive(DataBaseChangedMessage message)
         {
@@ -87,11 +92,23 @@ namespace UI.ViewModels
             this.ShowTransfers();
         }
 
+        public void Receive(SelectedAccountChangedMessage message)
+        {
+            _selectedAccountId = message.SelectedAccountId;
+
+            this.ShowTransfers();
+        }
+
         private void ShowTransfers()
         {
             DisplayedTransfers.Clear();
 
             var transfers = _transfers.Where(x => x.Date.Date >= _startDate.Date && x.Date.Date <= _endDate.Date).ToList();
+
+            if (_selectedAccountId is not null)
+            {
+                transfers = transfers.Where(x => x.FromAccountId == _selectedAccountId || x.ToAccountId == _selectedAccountId).ToList();
+            }
 
             foreach (var transfer in transfers)
             {

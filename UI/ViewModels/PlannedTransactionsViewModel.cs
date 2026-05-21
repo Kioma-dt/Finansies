@@ -13,21 +13,47 @@ using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;
 
 namespace UI.ViewModels
 {
+    public class DisplayedPlanTransaction(Guid Id,
+        string? Description,
+        string? Amount,
+        string? Type,
+        string? Status,
+        string? PlannedDate,
+        string? AccountName,
+        string? CategoryName,
+        string? FamilyMemberName,
+        string? DebtName)
+    {
+        public Guid Id { get; } = Id;
+        public string? Description { get; } = Description;
+        public string? Amount { get; } = Amount;
+        public string? Type { get; } = Type;
+        public string? Status { get;} = Status;
+        public string? PlannedDate { get; } = PlannedDate;
+        public string? AccountName { get; } = AccountName;
+        public string? CategoryName { get; } = CategoryName;
+        public string? FamilyMemberName { get; } = FamilyMemberName;
+        public string? DebtName { get; } = DebtName;
+    }
 
     public partial class PlannedTransactionsViewModel : ObservableObject, 
         IRecipient<DataBaseChangedMessage>,
         IRecipient<CurrentTimeMessage>,
-        IRecipient<DateRangeChangedMessage>
+        IRecipient<DateRangeChangedMessage>,
+        IRecipient<SelectedAccountChangedMessage>
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _user;
         private readonly PlannedTransactionCreatePopUp _popUp;
 
-        private List<PlannedTransaction> _allTransactions = new();
+        private List<PlannedTransaction> _plannedTransactions = new();
+
         private DateTime _startDate = DateTime.Now.AddMonths(-1);
         private DateTime _endDate = DateTime.Now;
 
-        public ObservableCollection<PlannedTransaction> PlannedTransactions { get; set; } = new();
+        private Guid? _selectedAccountId = null;
+
+        public ObservableCollection<DisplayedPlanTransaction> DisplayedPlannedTransactions { get; set; } = new();
 
         [ObservableProperty]
         public partial bool IsLoaded { get; set; } = false;
@@ -44,6 +70,7 @@ namespace UI.ViewModels
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<CurrentTimeMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
+            WeakReferenceMessenger.Default.Register<SelectedAccountChangedMessage>(this);
         }
         public async void Receive(DataBaseChangedMessage message)
         {
@@ -51,11 +78,11 @@ namespace UI.ViewModels
             {
                 var data = await _mediator.Send(new GetAllPlannedTransactionsQuery(_user.UserId));
 
-                _allTransactions.Clear();
+                _plannedTransactions.Clear();
                 foreach (var t in data)
-                    _allTransactions.Add(t);
+                    _plannedTransactions.Add(t);
 
-                this.FilterTransactions();
+                this.ShowPlannedTransactions();
             }
         }
 
@@ -76,18 +103,39 @@ namespace UI.ViewModels
             _startDate = message.StartDate;
             _endDate = message.EndDate;
 
-            this.FilterTransactions();
+            this.ShowPlannedTransactions();
         }
 
-        private void FilterTransactions()
+        public void Receive(SelectedAccountChangedMessage message)
         {
-            PlannedTransactions.Clear();
+            _selectedAccountId = message.SelectedAccountId;
 
-            var trans = _allTransactions.Where(x => x.PlannedDate.Date >= _startDate.Date && x.PlannedDate.Date <= _endDate.Date).ToList();
+            this.ShowPlannedTransactions();
+        }
+
+        private void ShowPlannedTransactions()
+        {
+            DisplayedPlannedTransactions.Clear();
+
+            var trans = _plannedTransactions.Where(x => x.PlannedDate.Date >= _startDate.Date && x.PlannedDate.Date <= _endDate.Date).ToList();
+
+            if (_selectedAccountId is not null)
+            {
+                trans = trans.Where(x => x.AccountId == _selectedAccountId).ToList();
+            }
 
             foreach (var t in trans)
             {
-                PlannedTransactions.Add(t);
+                DisplayedPlannedTransactions.Add(new DisplayedPlanTransaction(t.Id,
+                    t.Description,
+                    t.Amount.ToString(),
+                    t.Type.ToString(),
+                    t.Status.ToString(),
+                    t.PlannedDate.ToString("dd.MM.yyyy"),
+                    t.Account?.Name,
+                    t.Category?.Name,
+                    t.FamilyMember?.Name,
+                    t.Debt?.Name));
             }
         }
 
