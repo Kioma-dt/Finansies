@@ -10,9 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using UI.Popups;
-using UI.PopUps;
+
+using UI.PopUps.DependencyInjection;
 using UI.ViewModels;
-using UI.Views;
+using UI.Views.DependencyInjection;
+using UI.ViewModels.DependencyInjection;
 
 namespace UI
 {
@@ -66,29 +68,33 @@ namespace UI
             builder.Services.AddUseCassess();
 
 
-            builder.Services.AddSingleton<TransactionsViewModel>();
-            builder.Services.AddSingleton<PlannedTransactionsViewModel>();
-            builder.Services.AddSingleton<AccountViewModel>();
-            builder.Services.AddSingleton<CategoryViewModel>();
-            builder.Services.AddSingleton<FamilyMemberViewModel>();
-            builder.Services.AddSingleton<BudgetViewModel>();
-            builder.Services.AddSingleton<DebtViewModel>();
+            //builder.Services.AddSingleton<TransactionsViewModel>();
+            //builder.Services.AddSingleton<PlannedTransactionsViewModel>();
+            //builder.Services.AddSingleton<AccountViewModel>();
+            //builder.Services.AddSingleton<CategoryViewModel>();
+            //builder.Services.AddSingleton<FamilyMemberViewModel>();
+            //builder.Services.AddSingleton<BudgetViewModel>();
+            //builder.Services.AddSingleton<DebtViewModel>();
 
-            builder.Services.AddSingleton<DateRangeSelectorViewModel>();
+            //builder.Services.AddSingleton<DateRangeSelectorViewModel>();
 
-            builder.Services.AddSingleton<MainPageViewModel>();
+            //builder.Services.AddSingleton<MainPageViewModel>();
 
-            builder.Services.AddSingleton<TransactionView>();
-            builder.Services.AddSingleton<PlannedTransactionView>();
-            builder.Services.AddSingleton<AccountView>();
-            builder.Services.AddSingleton<CategoryView>();
-            builder.Services.AddSingleton<FamilyMemberView>();
-            builder.Services.AddSingleton<BudgetView>();
-            builder.Services.AddSingleton<DebtView>();
+            builder.Services.AddViewModels();
 
-            builder.Services.AddSingleton<DateRangeSelectorView>();
+            builder.Services.AddViews();
 
-            builder.Services.AddSingleton<MainPage>();
+            //builder.Services.AddSingleton<TransactionView>();
+            //builder.Services.AddSingleton<PlannedTransactionView>();
+            //builder.Services.AddSingleton<AccountView>();
+            //builder.Services.AddSingleton<CategoryView>();
+            //builder.Services.AddSingleton<FamilyMemberView>();
+            //builder.Services.AddSingleton<BudgetView>();
+            //builder.Services.AddSingleton<DebtView>();
+
+            //builder.Services.AddSingleton<DateRangeSelectorView>();
+
+            //builder.Services.AddSingleton<MainPage>();
 
             //builder.Services.AddTransient<AccountCreatePopUp>();
             //builder.Services.AddTransient<CategoryCreatePopUp>();

@@ -114,6 +114,9 @@
 	  <Compile Update="Views\AccountView.xaml.cs">
 	    <DependentUpon>AccountView.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\TransferView.xaml.cs">
+	    <DependentUpon>TransferView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\PlannedTransactionView.xaml.cs">
 	    <DependentUpon>PlannedTransactionView.xaml</DependentUpon>
 	  </Compile>
@@ -169,6 +172,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\TransferView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\PlannedTransactionView.xaml">

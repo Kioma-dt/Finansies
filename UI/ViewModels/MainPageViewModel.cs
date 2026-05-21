@@ -47,8 +47,7 @@ namespace UI.ViewModels
         private readonly FamilyMemberView _familyMemberView;
         private readonly BudgetView _budgetView;
         private readonly DebtView _debtView;
-
-        private readonly DateRangeSelectorView _dateRangeSelectorView;
+        private readonly TransferView _transferView;
 
         public MainPageViewModel( IUserContext user,
             IMediator mediator,
@@ -60,6 +59,7 @@ namespace UI.ViewModels
             FamilyMemberView familyMemberView,
             BudgetView budgetView,
             DebtView debtView,
+            TransferView transferView,
             DateRangeSelectorView dateRangeSelectorView)
         {
             _user = user;
@@ -73,8 +73,7 @@ namespace UI.ViewModels
             _familyMemberView = familyMemberView;
             _budgetView = budgetView;
             _debtView = debtView;
-
-            _dateRangeSelectorView = dateRangeSelectorView;
+            _transferView = transferView;
 
             LeftView = _accountView;
             RightView = _transactionView;
@@ -87,6 +86,14 @@ namespace UI.ViewModels
         {
             LeftView = _accountView;
             RightView = _transactionView;
+            CentralView = null;
+        }
+
+        [RelayCommand]
+        public void ShowTransfers()
+        {
+            LeftView = _accountView;
+            RightView = _transferView;
             CentralView = null;
         }
 

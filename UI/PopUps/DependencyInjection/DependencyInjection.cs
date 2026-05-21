@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using UI.Popups;
 using UI.PopUps.ViewModels;
 
-namespace UI.PopUps
+namespace UI.PopUps.DependencyInjection
 {
-    public static class DependencyInjection
+    public static class DependencyInjectionPopUps
     {
         public static IServiceCollection AddPopUps(this
             IServiceCollection services)

@@ -19,6 +19,9 @@
             <Button Text="Transactions"
                 Command="{Binding ShowTransactionsCommand}" />
 
+            <Button Text="Transfers"
+                Command="{Binding ShowTransfersCommand}" />
+
             <Button Text="Categories"
                 Command="{Binding ShowCategoriesCommand}" />
 
