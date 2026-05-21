@@ -75,6 +75,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="PopUps\TransferCreatePopUp.xaml.cs">
+	    <DependentUpon>TransferCreatePopUp.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="PopUps\DateRangePopUp.xaml.cs">
 	    <DependentUpon>DateRangePopUp.xaml</DependentUpon>
 	  </Compile>
@@ -120,6 +123,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="PopUps\TransferCreatePopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="PopUps\DateRangePopUp.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

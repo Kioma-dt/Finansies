@@ -20,11 +20,14 @@ namespace UI.PopUps
             services.AddTransient<PlannedTransactionCreatePopUp>();
             services.AddTransient<BudgetCreatePopUp>();
             services.AddTransient<DebtCreatePopUp>();
+            services.AddTransient<TransferCreatePopUp>();
+
             services.AddTransient<DateRangePopUp>();
 
             services.AddTransient<AccountCreatePopUpModel>();
             services.AddTransient<BudgetCreatePopUpModel>();
             services.AddTransient<CategoryCreatePopUpModel>();
+            services.AddTransient<TransferCreatePopUpModel>();
 
             return services;
         }

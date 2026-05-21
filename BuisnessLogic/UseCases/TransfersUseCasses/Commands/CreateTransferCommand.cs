@@ -10,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BuisnessLogic.UseCases.TransfersUseCasses.Commands
 {
-    public sealed record TransferMoneyCommand(Guid UserId,
+    public sealed record CreateTransferCommand(Guid UserId,
         decimal Amount,
         string Description,
         DateTime Date,
@@ -18,11 +18,11 @@ namespace BuisnessLogic.UseCases.TransfersUseCasses.Commands
         Guid ToAccountId)
         : IRequest;
 
-    public class TransferMoneyCommandHandler(ITransferRepository transferRepository,
+    public class CreateTransferCommandHandler(ITransferRepository transferRepository,
         IAccountRepository accountRepository)
-        : IRequestHandler<TransferMoneyCommand>
+        : IRequestHandler<CreateTransferCommand>
     {
-        public async Task Handle(TransferMoneyCommand request, CancellationToken cancellationToken)
+        public async Task Handle(CreateTransferCommand request, CancellationToken cancellationToken)
         {
             var fromAccount = await accountRepository.GetById(request.UserId, request.FromAccountId);
             var toAccount = await accountRepository.GetById(request.UserId, request.ToAccountId);
