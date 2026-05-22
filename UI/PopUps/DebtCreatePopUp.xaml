@@ -3,10 +3,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:entity="clr-namespace:BuisnessLogic.Entities;assembly=BuisnessLogic"
-    xmlns:dto="clr-namespace:BuisnessLogic.DTO;assembly=BuisnessLogic"
-    x:TypeArguments="dto:DebtCreateDTO"
-    x:Class="UI.Popups.DebtCreatePopUp">
+    xmlns:entity="clr-namespace:BuisnessLogic.UseCases.DebtsUseCasses.Commands;assembly=BuisnessLogic"
+    x:TypeArguments="entity:CreateDebtCommand"
+    xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
+    x:Class="UI.Popups.DebtCreatePopUp"
+    x:DataType="viewmodel:DebtCreatePopUpModel">
 
     <toolkit:Popup.Resources>
         <ResourceDictionary>
@@ -33,43 +34,69 @@
 
                 <Entry x:Name="NameEntry"
                        Placeholder="Debt name"
-                       TextColor="Black"/>
+                       TextColor="Black"
+                       Text="{Binding Name}"/>
 
                 <Picker x:Name="DebtTypePicker"
-                        Title="Debt Type"/>
+                        Title="Debt Type"
+                        ItemsSource="{Binding DebtTypes}"
+                        SelectedItem="{Binding SelectedDebtType}"/>
 
                 <Entry x:Name="AmountEntry"
                        Placeholder="Start Amount"
                        Keyboard="Numeric"
-                       TextColor="Black"/>
+                       TextColor="Black"
+                       Text="{Binding Amount}"/>
 
                 <DatePicker x:Name="StartDatePicker"
-                            TextColor="Black"/>
+                            TextColor="Black"
+                            Date="{Binding StartDate}"/>
                 <DatePicker x:Name="EndDatePicker"
-                            TextColor="Black"/>
+                            TextColor="Black"
+                            Date="{Binding EndDate}"/>
 
                 <Picker x:Name="CategoryPicker"
-                        Title="Select category"/>
+                        Title="Select category"
+                        ItemsSource="{Binding Categories}"
+                        ItemDisplayBinding="{Binding Name}"
+                        SelectedItem="{Binding SelectedCategory}"/>
 
                 <Picker x:Name="FamilyPicker"
-                        Title="Select family member"/>
+                        Title="Select family member"
+                        ItemsSource="{Binding FamilyMembers}"
+                        ItemDisplayBinding="{Binding Name}"
+                        SelectedItem="{Binding SelectedFamilyMember}"/>
 
                 <Picker x:Name="CapitalisationPicker"
-                        Title="Capitalisation"/>
+                        Title="Capitalisation"
+                        ItemsSource="{Binding CapitalisationsPerYear}"
+                        SelectedItem="{Binding SelectedCapitalisationsPerYear}"/>
 
                 <Picker x:Name="InterestTypePicker"
                         Title="Interest Type"
-                        SelectedIndexChanged="OnInterestTypeChanged"/>
-                
+                        ItemsSource="{Binding InterestTypes}"
+                        SelectedItem="{Binding SelectedInterestType}">
+
+                    <Picker.Behaviors>
+                        <toolkit:EventToCommandBehavior
+                            EventName="SelectedIndexChanged"
+                            Command="{Binding UpdateInterestFieldCommand}"
+                            BindingContext="{Binding Source={x:Reference InterestTypePicker}, Path=BindingContext}" />
+                    </Picker.Behaviors>
+
+                </Picker>
+
                 <Entry x:Name="InterestValueEntry"
-                       Placeholder="Value"
+                       Placeholder="{Binding InterestValuePlaceholder}"
                        Keyboard="Numeric"
-                       TextColor="Black"/>
+                       TextColor="Black"
+                       Text="{Binding InterestRate}"
+                       IsEnabled="{Binding IsInterestValueEnabled}"/>
 
 
                 <HorizontalStackLayout Spacing="10">
                     <CheckBox x:Name="AutoCalculateCheckBox"
-                        CheckedChanged="OnAutoCalculateChanged"/>
+                        IsChecked="{Binding IsAutoPlanned}"/>
 
                     <Label Text="Auto calculate payments"
                        VerticalOptions="Center"
@@ -79,19 +106,21 @@
                 <Picker x:Name="PaymentPeriodicityPicker"
                     Title="Payment frequency"
                     TextColor="Black"
-                    TitleColor="Gray"/>
+                    TitleColor="Gray"
+                    ItemsSource="{Binding TransactionPeriodicities}"
+                    SelectedItem="{Binding SelectedTransactionPeriodicity}"/>
 
                 <HorizontalStackLayout Spacing="10">
 
                     <Button Text="Cancel"
                             BackgroundColor="#9E9E9E"
                             TextColor="White"
-                            Clicked="OnCancel"/>
+                            Command="{Binding CancelCommand}"/>
 
                     <Button Text="Create"
                             BackgroundColor="#4CAF50"
                             TextColor="White"
-                            Clicked="OnCreate"/>
+                            Command="{Binding CreateCommand}"/>
 
                 </HorizontalStackLayout>
 

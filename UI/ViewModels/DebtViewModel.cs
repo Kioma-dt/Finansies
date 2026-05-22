@@ -10,6 +10,7 @@ using UI.Popups;
 
 using BuisnessLogic.UseCases.DebtsUseCasses.Queries;
 using BuisnessLogic.UseCases.DebtsUseCasses.Commands;
+using UI.PopUps.Service;
 
 namespace UI.ViewModels
 {
@@ -20,7 +21,7 @@ namespace UI.ViewModels
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _user;
-        private readonly DebtCreatePopUp _popup;
+        private readonly IPopUpService _popupService;
 
 
         public ObservableCollection<Debt> Debts { get; set; } = new();
@@ -36,11 +37,11 @@ namespace UI.ViewModels
         public DebtViewModel(
             IMediator mediator,
             IUserContext user,
-            DebtCreatePopUp popup)
+            IPopUpService popup)
         {
             _mediator = mediator;
             _user = user;
-            _popup = popup;
+            _popupService = popup;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<CurrentTimeMessage>(this);
@@ -100,30 +101,14 @@ namespace UI.ViewModels
         {
             try
             {
-                var result = await Application.Current.MainPage
-                .ShowPopupAsync<DebtCreateDTO?>(_popup);
+                var command = await _popupService.ShowPopUp<CreateDebtCommand,DebtCreatePopUp>();
 
-                var data = result.Result;
-
-                if (data is null)
+                if (command is null)
                     return;
 
-                await _mediator.Send(new CreateDebtCommand(_user.UserId, 
-                    data.Name,
-                    data.Amount,
-                    data.Type,
-                    data.StartDate,
-                    data.EndDate,
-                    data.CategoryId,
-                    data.FamilyMemberId,
-                    data.CapitalisatonsPerYear,
-                    data.InterestType,
-                    data.InterestRate,
-                    data.FixedAddition,
-                    data.IsAutoPlanned,
-                    data.TransactionPeriodicity));
+                await _mediator.Send(command);
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
-                if (data.IsAutoPlanned)
+                if (command.IsAutoPlanned)
                 {
                     WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
                 }
