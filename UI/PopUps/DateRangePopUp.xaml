@@ -4,7 +4,9 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:dto="clr-namespace:UI.Popups"
     x:TypeArguments="dto:DateRangeDTO"
-    x:Class="UI.Popups.DateRangePopUp">
+    x:Class="UI.Popups.DateRangePopUp"
+    xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
+    x:DataType="viewmodel:DateRangePopUpModel">
 
     <Border Padding="20"
             BackgroundColor="White"
@@ -20,11 +22,13 @@
                 <DatePicker Grid.Row="0"
                             Grid.Column="0"
                             x:Name="StartDatePicker"
-                            TextColor="Black"/>
+                            TextColor="Black"
+                            Date="{Binding StartDate}"/>
 
                 <DatePicker Grid.Row="0"
                             Grid.Column="1" 
                             x:Name="EndDatePicker"
+                            Date="{Binding EndDate}"
                             TextColor="Black"/>
 
                 <HorizontalStackLayout Grid.Row="1"
@@ -34,12 +38,12 @@
                     <Button Text="Cancel"
                             BackgroundColor="#9E9E9E"
                             TextColor="White"
-                            Clicked="OnCancel"/>
+                            Command="{Binding CancelCommand}"/>
 
                     <Button Text="Select"
                             BackgroundColor="#4CAF50"
                             TextColor="White"
-                            Clicked="OnCreate"/>
+                            Command="{Binding CreateCommand}"/>
 
                 </HorizontalStackLayout>
 

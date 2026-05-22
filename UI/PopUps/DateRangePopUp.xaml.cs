@@ -5,6 +5,7 @@ using CommunityToolkit.Maui.Views;
 using DataAccess.RepositoriesImplementation;
 using System.Collections.Generic;
 using UI.PopUps.Abstraction;
+using UI.PopUps.ViewModels;
 
 namespace UI.Popups;
 
@@ -21,55 +22,20 @@ public partial class DateRangePopUp
     IPopUp<DateRangeDTO>
 {
 
-    public DateRangePopUp()
+    public DateRangePopUp(DateRangePopUpModel viewModel)
     {
         InitializeComponent();
 
-        Loaded += OnLoad;
-    }
+        BindingContext = viewModel;
 
-    private void OnLoad(object sender, EventArgs e)
-    {
-        Clear();
-
-        StartDatePicker.Date = DateTime.Now.AddMonths(-1);
-        EndDatePicker.Date = DateTime.Now;
-    }    
-
-    private async void OnCancel(object sender, EventArgs e)
-    {
-        await CloseAsync(null);
-    }
-
-    private async void OnCreate(object sender, EventArgs e)
-    {
-        try
+        viewModel.CloseAction = async result =>
         {
-            var startDate = StartDatePicker.Date;
-            var endDate = EndDatePicker.Date;   
+            await CloseAsync(result);
+        };
 
-            if (startDate > endDate)
-            {
-                throw new ArgumentException($"Start Date is Later Then End Date");
-            }
-
-
-            await CloseAsync(new DateRangeDTO(startDate, endDate));
-        }
-        catch (FormatException ex)
+        Loaded += async (_, _) =>
         {
-            await Application.Current.MainPage.DisplayAlert("Can't Select Date Range", $"{ex.Message}", "OK");
-        }
-        catch (ArgumentException ex)
-        {
-            await Application.Current.MainPage.DisplayAlert("Can't Select Date Range", $"{ex.Message}", "OK");
-        }
-
-    }
-
-    private void Clear()
-    {
-        StartDatePicker.Date = DateTime.Now.AddMonths(-1);
-        EndDatePicker.Date = DateTime.Now;
+            await viewModel.Initialize();
+        };
     }
 }

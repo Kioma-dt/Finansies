@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using UI.Popups;
 using UI.Messages;
+using UI.PopUps.Service;
 
 namespace UI.ViewModels
 {
@@ -33,12 +34,12 @@ namespace UI.ViewModels
 
         public bool CanNavigate => Mode != DateRangeMode.Custom;
 
-        private readonly DateRangePopUp _popup;
+        private readonly IPopUpService _popupService;
 
-        public DateRangeSelectorViewModel(DateRangePopUp popup)
+        public DateRangeSelectorViewModel(IPopUpService popup)
         {
             ResetByMode();
-            _popup = popup;
+            _popupService = popup;
         }
 
         private void ResetByMode()
@@ -140,10 +141,7 @@ namespace UI.ViewModels
 
             if (action == "Custom")
             {
-                var result = await Application.Current.MainPage
-                .ShowPopupAsync<DateRangeDTO?>(_popup);
-
-                var data = result.Result;
+                var data = await _popupService.ShowPopUp<DateRangeDTO?, DateRangePopUp>();
 
                 if (data is null)
                     return;
