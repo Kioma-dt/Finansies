@@ -15,6 +15,7 @@ using UI.Popups;
 using UI.Messages;
 using BuisnessLogic.UseCases.CategoryUseCasses.Queries;
 using BuisnessLogic.UseCases.CategoryUseCasses.Commands;
+using UI.PopUps.Service;
 
 namespace UI.ViewModels
 {
@@ -40,7 +41,7 @@ namespace UI.ViewModels
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _userContext;
-        private readonly CategoryCreatePopUp _categoryCreatePopUp;
+        private readonly IPopUpService _popUpService;
 
         private List<Category> _categories = new();
 
@@ -55,11 +56,11 @@ namespace UI.ViewModels
         public CategoryViewModel(
             IMediator mediator,
             IUserContext user,
-            CategoryCreatePopUp categoryCreatePopUp)
+            IPopUpService popUpService)
         {
             _mediator = mediator;
             _userContext = user;
-            _categoryCreatePopUp = categoryCreatePopUp;
+            _popUpService = popUpService;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
@@ -102,10 +103,8 @@ namespace UI.ViewModels
         [RelayCommand]
         public async Task AddCategory()
         {
-            var result = await Application.Current.MainPage
-                .ShowPopupAsync<CreateCategoryCommand?>(_categoryCreatePopUp);
 
-            var command = result.Result;
+            var command = await _popUpService.ShowPopUp<CreateCategoryCommand?, CategoryCreatePopUp>();
 
             if (command is null)
                 return;

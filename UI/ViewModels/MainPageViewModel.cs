@@ -18,6 +18,7 @@ using UI.Popups;
 using UI.Views;
 
 using BuisnessLogic.UseCases.TransactionsUseCasses.Commands;
+using UI.PopUps.Service;
 
 namespace UI.ViewModels
 {
@@ -25,7 +26,7 @@ namespace UI.ViewModels
     {
         private readonly IUserContext _user;
         private readonly IMediator _mediator;
-        private readonly TransactionCreatePopUp _transctionCreatePopUp;
+        private readonly IPopUpService _popUpService;
 
         [ObservableProperty]
         public partial View? LeftView { get; set; }
@@ -51,7 +52,7 @@ namespace UI.ViewModels
 
         public MainPageViewModel( IUserContext user,
             IMediator mediator,
-            TransactionCreatePopUp transactionCreatePopUp,
+            IPopUpService popUpService,
             AccountView accountView, 
             TransactionView transactionView,
             PlannedTransactionView plannedTransactionView,
@@ -64,7 +65,7 @@ namespace UI.ViewModels
         {
             _user = user;
             _mediator = mediator;
-            _transctionCreatePopUp = transactionCreatePopUp;
+            _popUpService = popUpService;
 
             _accountView = accountView;
             _transactionView = transactionView;
@@ -146,10 +147,7 @@ namespace UI.ViewModels
         {
             try
             {
-                var result = await Application.Current.MainPage
-                .ShowPopupAsync<Transaction?>(_transctionCreatePopUp);
-
-                var transaction = result.Result;
+                var transaction = await _popUpService.ShowPopUp<Transaction?, TransactionCreatePopUp>();
 
                 if (transaction is null)
                     return;

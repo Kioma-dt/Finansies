@@ -10,6 +10,7 @@ using UI.Popups;
 
 using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Queries;
 using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;
+using UI.PopUps.Service;
 
 namespace UI.ViewModels
 {
@@ -44,7 +45,7 @@ namespace UI.ViewModels
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _user;
-        private readonly PlannedTransactionCreatePopUp _popUp;
+        private readonly IPopUpService _popUpService;
 
         private List<PlannedTransaction> _plannedTransactions = new();
 
@@ -61,11 +62,11 @@ namespace UI.ViewModels
         public PlannedTransactionsViewModel(
             IMediator mediator,
             IUserContext user,
-            PlannedTransactionCreatePopUp popUp)
+            IPopUpService popUp)
         {
             _mediator = mediator;
             _user = user;
-            _popUp = popUp;
+            _popUpService = popUp;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<CurrentTimeMessage>(this);
@@ -144,11 +145,7 @@ namespace UI.ViewModels
         {
             try
             {
-                var result = await Application.Current.MainPage
-                .ShowPopupAsync<PlannedTransactionCreateDTO?>(_popUp);
-
-                var data = result.Result;
-
+                var data = await _popUpService.ShowPopUp<PlannedTransactionCreateDTO?, PlannedTransactionCreatePopUp>();
                 if (data is null)
                     return;
 

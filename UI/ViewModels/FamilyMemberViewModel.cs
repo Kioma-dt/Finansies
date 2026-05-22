@@ -16,6 +16,7 @@ using UI.Popups;
 using UI.Messages;
 using BuisnessLogic.UseCases.FamilyMembersUseCasses.Queries;
 using BuisnessLogic.UseCases.FamilyMembersUseCasses.Commands;
+using UI.PopUps.Service;
 
 namespace UI.ViewModels
 {
@@ -39,7 +40,7 @@ namespace UI.ViewModels
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _userContext;
-        private readonly FamilyMemberCreatePopUp _popup;
+        private readonly IPopUpService _popupService;
 
         private List<FamilyMember> _familyMembers = new();
 
@@ -54,11 +55,11 @@ namespace UI.ViewModels
         public FamilyMemberViewModel(
             IMediator mediator,
             IUserContext user,
-            FamilyMemberCreatePopUp popup)
+            IPopUpService popup)
         {
             _mediator = mediator;
             _userContext = user;
-            _popup = popup;
+            _popupService = popup;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
@@ -101,10 +102,7 @@ namespace UI.ViewModels
         [RelayCommand]
         public async Task AddFamilyMember()
         {
-            var result = await Application.Current.MainPage
-                .ShowPopupAsync<FamilyMemberCreateDTO?>(_popup);
-
-            var familyMember = result.Result;
+            var familyMember = await _popupService.ShowPopUp<FamilyMemberCreateDTO?, FamilyMemberCreatePopUp>();
 
             if (familyMember is null)
                 return;

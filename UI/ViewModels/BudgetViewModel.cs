@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 using UI.Messages;
 using UI.Popups;
+using UI.PopUps.Service;
 
 namespace UI.ViewModels
 {
@@ -29,7 +30,7 @@ namespace UI.ViewModels
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _user;
-        private readonly BudgetCreatePopUp _popup;
+        private readonly IPopUpService _popupService;
 
         public ObservableCollection<BudgetItem> Budgets { get; set; } = new();
         public ObservableCollection<Transaction> Transactions { get; set; } = new();
@@ -43,11 +44,11 @@ namespace UI.ViewModels
         public BudgetViewModel(
             IMediator mediator,
             IUserContext user,
-            BudgetCreatePopUp popup)
+            IPopUpService popup)
         {
             _mediator = mediator;
             _user = user;
-            _popup = popup;
+            _popupService = popup;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
@@ -97,10 +98,7 @@ namespace UI.ViewModels
         {
             try
             {
-                var result = await Application.Current.MainPage
-                .ShowPopupAsync<CreateBudgetCommand?>(_popup);
-
-                var command = result.Result;
+                var command = await _popupService.ShowPopUp<CreateBudgetCommand?, BudgetCreatePopUp>();
 
                 if (command is null)
                     return;

@@ -12,6 +12,7 @@ using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Queries;
 using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;
 using BuisnessLogic.UseCases.TransfersUseCasses.Queries;
 using BuisnessLogic.UseCases.TransfersUseCasses.Commands;
+using UI.PopUps.Service;
 
 namespace UI.ViewModels
 {
@@ -38,7 +39,7 @@ namespace UI.ViewModels
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _userContext;
-        private readonly TransferCreatePopUp _popUp;
+        private readonly IPopUpService _popUpService;
 
         private List<Transfer> _transfers = new();
 
@@ -53,11 +54,11 @@ namespace UI.ViewModels
         public TransfersViewModel(
             IMediator mediator,
             IUserContext user,
-            TransferCreatePopUp popUp)
+            IPopUpService popUpService)
         {
             _mediator = mediator;
             _userContext = user;
-            _popUp = popUp;
+            _popUpService = popUpService;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
@@ -134,10 +135,7 @@ namespace UI.ViewModels
         {
             try
             {
-                var result = await Application.Current.MainPage
-                    .ShowPopupAsync<CreateTransferCommand?>(_popUp);
-
-                var command = result.Result;
+                var command = await _popUpService.ShowPopUp<CreateTransferCommand?, TransferCreatePopUp>();
 
                 if (command is null)
                     return;
