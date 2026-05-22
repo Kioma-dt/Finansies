@@ -19,6 +19,7 @@ using UI.Views;
 
 using BuisnessLogic.UseCases.TransactionsUseCasses.Commands;
 using UI.PopUps.Service;
+using UI.Views.Service;
 
 namespace UI.ViewModels
 {
@@ -27,6 +28,7 @@ namespace UI.ViewModels
         private readonly IUserContext _user;
         private readonly IMediator _mediator;
         private readonly IPopUpService _popUpService;
+        private readonly IViewService _viewService;
 
         [ObservableProperty]
         public partial View? LeftView { get; set; }
@@ -40,77 +42,51 @@ namespace UI.ViewModels
         [ObservableProperty]
         public partial View? DateRangeSelectorView { get; set; }
 
-
-        private readonly TransactionView _transactionView;
-        private readonly PlannedTransactionView _plannedTransactionView;
-        private readonly AccountView _accountView;
-        private readonly CategoryView _categoryView;
-        private readonly FamilyMemberView _familyMemberView;
-        private readonly BudgetView _budgetView;
-        private readonly DebtView _debtView;
-        private readonly TransferView _transferView;
-
         public MainPageViewModel( IUserContext user,
             IMediator mediator,
             IPopUpService popUpService,
-            AccountView accountView, 
-            TransactionView transactionView,
-            PlannedTransactionView plannedTransactionView,
-            CategoryView categoryView,
-            FamilyMemberView familyMemberView,
-            BudgetView budgetView,
-            DebtView debtView,
-            TransferView transferView,
-            DateRangeSelectorView dateRangeSelectorView)
+            IViewService viewService)
         {
             _user = user;
             _mediator = mediator;
             _popUpService = popUpService;
+            _viewService = viewService;
 
-            _accountView = accountView;
-            _transactionView = transactionView;
-            _plannedTransactionView = plannedTransactionView;
-            _categoryView = categoryView;
-            _familyMemberView = familyMemberView;
-            _budgetView = budgetView;
-            _debtView = debtView;
-            _transferView = transferView;
-
-            LeftView = _accountView;
-            RightView = _transactionView;
+            LeftView = _viewService.GetView<AccountView>();
+            RightView = _viewService.GetView<TransactionView>();
             CentralView = null;
-            DateRangeSelectorView = dateRangeSelectorView;
+            DateRangeSelectorView = _viewService.GetView<DateRangeSelectorView>();
         }
 
         [RelayCommand]
         public void ShowTransactions()
         {
-            LeftView = _accountView;
-            RightView = _transactionView;
+            LeftView = _viewService.GetView<AccountView>();
+            RightView = _viewService.GetView<TransactionView>();
             CentralView = null;
         }
 
         [RelayCommand]
         public void ShowTransfers()
         {
-            LeftView = _accountView;
-            RightView = _transferView;
+            LeftView = _viewService.GetView<AccountView>();
+            RightView = _viewService.GetView<TransferView>();
             CentralView = null;
         }
 
         [RelayCommand]
         public void ShowCategories()
         {
-            LeftView = _accountView;
-            RightView = _categoryView;
+            LeftView = _viewService.GetView<AccountView>();
+            RightView = _viewService.GetView<CategoryView>();
             CentralView = null;
         }
 
         [RelayCommand]
         public void ShowFamilyMembers()
         {
-            LeftView = _accountView;
-            RightView = _familyMemberView;
+            LeftView = _viewService.GetView<AccountView>();
+            RightView = _viewService.GetView<FamilyMemberView>();
 
             CentralView = null;
         }
@@ -119,8 +95,8 @@ namespace UI.ViewModels
         [RelayCommand]
         public void ShowPlannedTransactions()
         {
-            LeftView = _accountView;
-            RightView = _plannedTransactionView;
+            LeftView = _viewService.GetView<AccountView>();
+            RightView = _viewService.GetView<PlannedTransactionView>();
             CentralView = null;
         }
 
@@ -130,7 +106,7 @@ namespace UI.ViewModels
             LeftView = null;
             RightView = null;
 
-            CentralView = _budgetView;
+            CentralView = _viewService.GetView<BudgetView>();
         }
 
         [RelayCommand]
@@ -139,7 +115,7 @@ namespace UI.ViewModels
             LeftView = null;
             RightView = null;
 
-            CentralView = _debtView;
+            CentralView = _viewService.GetView<DebtView>();
         }
 
         [RelayCommand]

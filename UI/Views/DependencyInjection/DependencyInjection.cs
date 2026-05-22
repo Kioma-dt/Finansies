@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UI.Popups;
 using UI.PopUps.ViewModels;
+using UI.Views.Service;
 
 namespace UI.Views.DependencyInjection
 {
@@ -25,6 +26,8 @@ namespace UI.Views.DependencyInjection
             services.AddSingleton<DateRangeSelectorView>();
 
             services.AddSingleton<MainPage>();
+
+            services.AddSingleton<IViewService, ViewService>();
 
             return services;
         }
