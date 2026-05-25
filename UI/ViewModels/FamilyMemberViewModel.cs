@@ -102,7 +102,7 @@ namespace UI.ViewModels
         [RelayCommand]
         public async Task AddFamilyMember()
         {
-            var familyMember = await _popupService.ShowPopUp<FamilyMemberCreateDTO?, FamilyMemberCreatePopUp>();
+            var familyMember = await _popupService.ShowPopUp<CreateFamilyMemberCommand?, FamilyMemberCreatePopUp>();
 
             if (familyMember is null)
                 return;

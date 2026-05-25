@@ -2,54 +2,67 @@ using BuisnessLogic.DTO;
 using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
 using BuisnessLogic.Repositories;
+using BuisnessLogic.UseCases.FamilyMembersUseCasses.Commands;
 using CommunityToolkit.Maui.Views;
 using UI.PopUps.Abstraction;
+using UI.PopUps.ViewModels;
 
 namespace UI.Popups;
 
 public partial class FamilyMemberCreatePopUp
-    : Popup<FamilyMemberCreateDTO?>,
-    IPopUp<FamilyMemberCreateDTO>
+    : Popup<CreateFamilyMemberCommand?>,
+    IPopUp<CreateFamilyMemberCommand>
 {
-    public FamilyMemberCreatePopUp()
+    public FamilyMemberCreatePopUp(FamilyMemberCreatePopUpModel viewModel)
     {
         InitializeComponent();
-        Loaded += OnLoad;
-    }
 
-    private void OnLoad(object sender, EventArgs e)
-    {
-        Clear();
-    }
+        BindingContext = viewModel;
 
-    private async void OnCancel(object sender, EventArgs e)
-    {
-        await CloseAsync(null);
-    }
-
-    private async void OnCreate(object sender, EventArgs e)
-    {
-        try
+        viewModel.CloseAction = async result =>
         {
-            var name = NameEntry.Text ?? "";
+            await CloseAsync(result);
+        };
 
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Name cannot be empty");
-
-            await CloseAsync(new FamilyMemberCreateDTO
-            {
-                Name = name
-            });
-        }
-        catch (ArgumentException ex)
+        Loaded += async (_, _) =>
         {
-            await Application.Current.MainPage
-                .DisplayAlert("Can't create Family Member", ex.Message, "OK");
-        }
+            await viewModel.Initialize();
+        };
     }
 
-    private void Clear()
-    {
-        NameEntry.Text = string.Empty;
-    }
+    //private void OnLoad(object sender, EventArgs e)
+    //{
+    //    Clear();
+    //}
+
+    //private async void OnCancel(object sender, EventArgs e)
+    //{
+    //    await CloseAsync(null);
+    //}
+
+    //private async void OnCreate(object sender, EventArgs e)
+    //{
+    //    try
+    //    {
+    //        var name = NameEntry.Text ?? "";
+
+    //        if (string.IsNullOrWhiteSpace(name))
+    //            throw new ArgumentException("Name cannot be empty");
+
+    //        await CloseAsync(new FamilyMemberCreateDTO
+    //        {
+    //            Name = name
+    //        });
+    //    }
+    //    catch (ArgumentException ex)
+    //    {
+    //        await Application.Current.MainPage
+    //            .DisplayAlert("Can't create Family Member", ex.Message, "OK");
+    //    }
+    //}
+
+    //private void Clear()
+    //{
+    //    NameEntry.Text = string.Empty;
+    //}
 }
