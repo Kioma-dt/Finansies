@@ -58,7 +58,7 @@ namespace UI.PopUps.ViewModels
         [ObservableProperty]
         public partial FamilyMember? SelectedFamilyMember { get; set; }
 
-        public ObservableCollection<string> CapitalisationsPerYear = new()
+        public ObservableCollection<string> CapitalisationsPerYear { get; } = new()
         {
             "Monthly",
             "Yearly"
@@ -68,7 +68,7 @@ namespace UI.PopUps.ViewModels
         public partial string? SelectedCapitalisationsPerYear { get; set; }
 
 
-        public ObservableCollection<InterestType> InterestTypes = new() {
+        public ObservableCollection<InterestType> InterestTypes { get; } = new() {
             InterestType.None,
             InterestType.Fixed,
             InterestType.Simple,
@@ -87,7 +87,7 @@ namespace UI.PopUps.ViewModels
         [ObservableProperty]
         public partial bool IsAutoPlanned { get; set; }
 
-        public ObservableCollection<TransactionPeriodicity> TransactionPeriodicities = new() {
+        public ObservableCollection<TransactionPeriodicity> TransactionPeriodicities { get; } = new() {
             TransactionPeriodicity.Once,
             TransactionPeriodicity.Daily,
             TransactionPeriodicity.Monthly,

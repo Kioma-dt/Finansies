@@ -73,7 +73,7 @@ namespace UI.PopUps.ViewModels
         public partial bool IsNumberEnabled {  get; set; }
 
 
-        public ObservableCollection<TransactionPeriodicity> TransactionPeriodicities = new() {
+        public ObservableCollection<TransactionPeriodicity> TransactionPeriodicities { get; } = new() {
             TransactionPeriodicity.Once,
             TransactionPeriodicity.Daily,
             TransactionPeriodicity.Monthly,
