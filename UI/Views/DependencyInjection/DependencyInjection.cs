@@ -27,6 +27,9 @@ namespace UI.Views.DependencyInjection
 
             services.AddSingleton<MainPage>();
 
+            services.AddSingleton<AuthentificationPage>();
+
+
             services.AddSingleton<IViewService, ViewService>();
 
             return services;

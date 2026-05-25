@@ -1,10 +1,14 @@
-﻿namespace UI
+﻿using UI.Views;
+
+namespace UI
 {
     public partial class AppShell : Shell
     {
         public AppShell()
         {
             InitializeComponent();
+
+            Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
         }
     }
 }

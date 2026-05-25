@@ -25,6 +25,8 @@ namespace UI.ViewModels.DependencyInjection
 
             services.AddSingleton<MainPageViewModel>();
 
+            services.AddSingleton<AuthentificationPageViewModel>();
+
             return services;
         }
     }

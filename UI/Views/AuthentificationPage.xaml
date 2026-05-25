@@ -1,0 +1,38 @@
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodel="clr-namespace:UI.ViewModels"
+    xmlns:converter="clr-namespace:UI.Converters"
+    x:Class="UI.Views.AuthentificationPage"
+    x:DataType="viewmodel:AuthentificationPageViewModel">
+
+    <VerticalStackLayout
+        Padding="30"
+        Spacing="15"
+        VerticalOptions="Center">
+
+        <Label
+            Text="Авторизация"
+            FontSize="28"
+            HorizontalOptions="Center"/>
+
+        <Entry
+            Placeholder="User Name"
+            Text="{Binding Name}" />
+
+        <Entry
+            Placeholder="Password"
+            IsPassword="True"
+            Text="{Binding Password}" />
+
+        <Button
+            Text="LogIn"
+            Command="{Binding LoginCommand}" />
+
+        <Button
+            Text="Register"
+            Command="{Binding RegisterCommand}" />
+
+    </VerticalStackLayout>
+
+</ContentPage>

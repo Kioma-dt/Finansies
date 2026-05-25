@@ -11,8 +11,8 @@
 
     <FlyoutItem Title="Transactions">
         <ShellContent
-            Title="MainPage"
-            ContentTemplate="{DataTemplate views:MainPage}" />
+            Title="Auth"
+            ContentTemplate="{DataTemplate views:AuthentificationPage}" />
     </FlyoutItem>
 
 
