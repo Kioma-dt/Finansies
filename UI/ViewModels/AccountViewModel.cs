@@ -98,6 +98,13 @@ namespace UI.ViewModels
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
         }
 
+        [RelayCommand]
+        public void Load()
+        {
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
+            //WeakReferenceMessenger.Default.Send(new CurrentTimeMessage(DateTime.Now));
+        }
+
         private void BuildTree()
         {
             DisplayedAccounts.Clear();

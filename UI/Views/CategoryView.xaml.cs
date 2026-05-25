@@ -4,10 +4,11 @@ namespace UI.Views;
 
 public partial class CategoryView : ContentView
 {
-    public CategoryView(CategoryViewModel vm)
+    public CategoryView(CategoryViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = vm;
+        BindingContext = viewModel;
+        viewModel.LoadCommand.Execute(null);
     }
 
     //public async Task LoadContent()

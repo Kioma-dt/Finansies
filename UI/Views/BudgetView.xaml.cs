@@ -9,9 +9,10 @@ public partial class BudgetView : ContentView
 		InitializeComponent();
 
 		BindingContext = viewModel;
+        viewModel.LoadCommand.Execute(null);
 
-		//viewModel.LoadCommand.ExecuteAsync(null);
-	}
+        //viewModel.LoadCommand.ExecuteAsync(null);
+    }
 
     //public async Task LoadContent()
     //{

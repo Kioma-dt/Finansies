@@ -9,6 +9,6 @@ public partial class DebtView : ContentView
 		InitializeComponent();
 
 		BindingContext = viewModel;
-
-	}
+        viewModel.LoadCommand.Execute(null);
+    }
 }

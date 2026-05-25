@@ -4,10 +4,11 @@ namespace UI.Views;
 
 public partial class FamilyMemberView : ContentView
 {
-    public FamilyMemberView(FamilyMemberViewModel vm)
+    public FamilyMemberView(FamilyMemberViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = vm;
+        BindingContext = viewModel;
+        viewModel.LoadCommand.Execute(null);
     }
 
     //public async Task LoadContent()

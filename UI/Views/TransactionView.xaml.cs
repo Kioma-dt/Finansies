@@ -9,6 +9,7 @@ public partial class TransactionView : ContentView
         InitializeComponent();
 
         BindingContext = viewModel;
+        viewModel.LoadCommand.Execute(null);
     }
 
     //public async Task LoadContent()

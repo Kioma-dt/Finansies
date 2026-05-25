@@ -217,5 +217,12 @@ namespace UI.ViewModels
                 await Application.Current.MainPage.DisplayAlert("Can't confirm Transaction", $"{ex.Message}", "OK");
             }
         }
+
+        [RelayCommand]
+        public void Load()
+        {
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
+            WeakReferenceMessenger.Default.Send(new CurrentTimeMessage(DateTime.Now));
+        }
     }
 }

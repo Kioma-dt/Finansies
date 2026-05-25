@@ -155,5 +155,12 @@ namespace UI.ViewModels
             }
 
         }
+
+        [RelayCommand]
+        public void Load()
+        {
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Transfers));
+            //WeakReferenceMessenger.Default.Send(new CurrentTimeMessage(DateTime.Now));
+        }
     }
 }

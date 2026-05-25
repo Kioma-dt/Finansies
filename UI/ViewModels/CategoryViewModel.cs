@@ -115,6 +115,12 @@ namespace UI.ViewModels
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Categories));
         }
 
+        [RelayCommand]
+        public void Load()
+        {
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Categories));
+            //WeakReferenceMessenger.Default.Send(new CurrentTimeMessage(DateTime.Now));
+        }
 
         private void ShowCategories()
         {

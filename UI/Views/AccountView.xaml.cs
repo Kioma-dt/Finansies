@@ -9,7 +9,7 @@ public partial class AccountView : ContentView
 		InitializeComponent();
 
 		BindingContext = viewModel;
-
-	}
+        viewModel.LoadCommand.Execute(null);
+    }
 
 }

@@ -113,6 +113,13 @@ namespace UI.ViewModels
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.FamilyMembers));
         }
 
+        [RelayCommand]
+        public void Load()
+        {
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.FamilyMembers));
+            //WeakReferenceMessenger.Default.Send(new CurrentTimeMessage(DateTime.Now));
+        }
+
         private void ShowFamilyMembers()
         {
             DisplayedFamilyMembers.Clear();
