@@ -4,6 +4,8 @@
     {
         public string Name { get; set; } = String.Empty;
 
+        public string PasswordHash { get; set; } = String.Empty;
+
         public List<Account> Accounts { get; set; } = new();
         public List<Budget> Budgets { get; set; } = new();
         public List<Category> Categories { get; set; } = new();

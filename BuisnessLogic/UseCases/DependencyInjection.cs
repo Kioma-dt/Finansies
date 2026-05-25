@@ -1,4 +1,5 @@
-﻿using BuisnessLogic.BudgetService;
+﻿using BuisnessLogic.AuthentificationService;
+using BuisnessLogic.BudgetService;
 using BuisnessLogic.DebtInterestCalculator;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,8 @@ namespace BuisnessLogic.UseCases
         public static IServiceCollection AddUseCassess(this
             IServiceCollection services)
         {
+            services.AddSingleton<IAuthentificationService, AuthentificationBCryptService>();
+
             services.AddSingleton<IBudgetSpecificationsCreator, BudgetAccountSpecificationsCreator>();
             services.AddSingleton<IBudgetSpecificationsCreator, BudgetCategorySpecificationsCreator>();
             services.AddSingleton<IBudgetSpecificationsCreator, BudgetFamilyMemberSpecificationsCreator>();

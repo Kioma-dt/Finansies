@@ -29,6 +29,14 @@ namespace DataAccess.RepositoriesImplementation
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<User?> GetByName(string name)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+
+            return await db.Users
+                .FirstOrDefaultAsync(x => x.Name == name);
+        }
+
         public async Task Update(User user)
         {
             await using var db = await _factory.CreateDbContextAsync();

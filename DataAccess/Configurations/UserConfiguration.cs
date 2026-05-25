@@ -14,6 +14,10 @@ namespace DataAccess.Configurations
                 .HasMaxLength(128)
                 .IsRequired();
 
+            builder.Property(u => u.PasswordHash)
+                .HasMaxLength(128)
+                .IsRequired();
+
             builder.HasMany(u => u.Accounts)
                 .WithOne(a => a.User)
                 .HasForeignKey(a => a.UserId)
