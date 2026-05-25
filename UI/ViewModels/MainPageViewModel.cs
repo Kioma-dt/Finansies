@@ -123,20 +123,12 @@ namespace UI.ViewModels
         {
             try
             {
-                var transaction = await _popUpService.ShowPopUp<Transaction?, TransactionCreatePopUp>();
+                var command = await _popUpService.ShowPopUp<CreateTransactionCommand?, TransactionCreatePopUp>();
 
-                if (transaction is null)
+                if (command is null)
                     return;
 
-                await _mediator.Send(new CreateTransactionCommand(_user.UserId,
-                    transaction.Amount,
-                    transaction.Description,
-                    transaction.Date,
-                    transaction.Type,
-                    transaction.AccountId,
-                    transaction.CategoryId,
-                    transaction.FamilyMemberId,
-                    transaction.DebtId));
+                await _mediator.Send(command);
 
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Accounts));
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Transactions));

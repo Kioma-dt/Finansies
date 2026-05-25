@@ -115,7 +115,7 @@ namespace UI.ViewModels
                     (
                         acc.Id,
                         acc.Name,
-                        acc.Balance.ToString(),
+                        acc.TotalBalance.ToString(),
                         level
                     ));
 
