@@ -20,12 +20,13 @@ using UI.Views;
 using BuisnessLogic.UseCases.TransactionsUseCasses.Commands;
 using UI.PopUps.Service;
 using UI.Views.Service;
+using System.Runtime.InteropServices;
 
 namespace UI.ViewModels
 {
     public partial class MainPageViewModel : ObservableObject
     {
-        private readonly IUserContext _user;
+        private readonly IUserContext _userContext;
         private readonly IMediator _mediator;
         private readonly IPopUpService _popUpService;
         private readonly IViewService _viewService;
@@ -47,7 +48,7 @@ namespace UI.ViewModels
             IPopUpService popUpService,
             IViewService viewService)
         {
-            _user = user;
+            _userContext = user;
             _mediator = mediator;
             _popUpService = popUpService;
             _viewService = viewService;
@@ -142,7 +143,15 @@ namespace UI.ViewModels
         }
 
         [RelayCommand]
-        public void Load()
+        public async Task LogOut()
+        {
+            _userContext.SetUserId(Guid.Empty);
+
+            await Shell.Current.GoToAsync("..");
+        }
+
+        [RelayCommand]
+        public async Task Load()
         {
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Init));
             WeakReferenceMessenger.Default.Send(new CurrentTimeMessage(DateTime.Now));

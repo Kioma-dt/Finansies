@@ -118,5 +118,11 @@ namespace UI.ViewModels
             }
         }
 
+
+        public void Clear()
+        {
+            Name = String.Empty;
+            Password = String.Empty;
+        }
     }
 }

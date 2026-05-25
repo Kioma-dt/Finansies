@@ -4,6 +4,7 @@ namespace UI.Views;
 
 public partial class MainPage : ContentPage
 {
+
 	public MainPage(MainPageViewModel viewModel)
 	{
 		InitializeComponent();
@@ -12,13 +13,13 @@ public partial class MainPage : ContentPage
         viewModel.LoadCommand.Execute(null);
 	}
 
-    //protected override async void OnAppearing()
-    //{
-    //    base.OnAppearing();
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
 
-    //    if (BindingContext is MainPageViewModel vm)
-    //    {
-    //        await vm.LoadCommand.ExecuteAsync(null);
-    //    }
-    //}
+        if (BindingContext is MainPageViewModel vm)
+        {
+            await vm.LoadCommand.ExecuteAsync(null);
+        }
+    }
 }

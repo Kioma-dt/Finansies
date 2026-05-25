@@ -12,7 +12,7 @@
         VerticalOptions="Center">
 
         <Label
-            Text="Авторизация"
+            Text="Authorization"
             FontSize="28"
             HorizontalOptions="Center"/>
 
