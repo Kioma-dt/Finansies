@@ -54,57 +54,24 @@ namespace UI
 
             builder.Services.AddSingleton<IUserContext, UserContext>();
 
-            builder.Services.AddTransient<IAccountRepository, AccountRepository>();
-            builder.Services.AddTransient<IBudgetRepository, BudgetRepository>();
-            builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddTransient<IDebtRepository, DebtRepository>();
-            builder.Services.AddTransient<IFamilyMemberRepository, FamilyMemberRepository>();
-            builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
-            builder.Services.AddTransient<IPlannedTransactionRepository, PlannedTransactionRepository>();
-            builder.Services.AddTransient<ITransactionTagRepository, TransactionTagRepository>();
-            builder.Services.AddTransient<ITransferRepository, TransferRepository>();
-            builder.Services.AddTransient<IUserRepository, UserRepository>();
+            //builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+            //builder.Services.AddTransient<IBudgetRepository, BudgetRepository>();
+            //builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+            //builder.Services.AddTransient<IDebtRepository, DebtRepository>();
+            //builder.Services.AddTransient<IFamilyMemberRepository, FamilyMemberRepository>();
+            //builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
+            //builder.Services.AddTransient<IPlannedTransactionRepository, PlannedTransactionRepository>();
+            //builder.Services.AddTransient<ITransactionTagRepository, TransactionTagRepository>();
+            //builder.Services.AddTransient<ITransferRepository, TransferRepository>();
+            //builder.Services.AddTransient<IUserRepository, UserRepository>();
+
+            builder.Services.AddRepositories();
 
             builder.Services.AddUseCassess();
-
-
-            //builder.Services.AddSingleton<TransactionsViewModel>();
-            //builder.Services.AddSingleton<PlannedTransactionsViewModel>();
-            //builder.Services.AddSingleton<AccountViewModel>();
-            //builder.Services.AddSingleton<CategoryViewModel>();
-            //builder.Services.AddSingleton<FamilyMemberViewModel>();
-            //builder.Services.AddSingleton<BudgetViewModel>();
-            //builder.Services.AddSingleton<DebtViewModel>();
-
-            //builder.Services.AddSingleton<DateRangeSelectorViewModel>();
-
-            //builder.Services.AddSingleton<MainPageViewModel>();
 
             builder.Services.AddViewModels();
 
             builder.Services.AddViews();
-
-            //builder.Services.AddSingleton<TransactionView>();
-            //builder.Services.AddSingleton<PlannedTransactionView>();
-            //builder.Services.AddSingleton<AccountView>();
-            //builder.Services.AddSingleton<CategoryView>();
-            //builder.Services.AddSingleton<FamilyMemberView>();
-            //builder.Services.AddSingleton<BudgetView>();
-            //builder.Services.AddSingleton<DebtView>();
-
-            //builder.Services.AddSingleton<DateRangeSelectorView>();
-
-            //builder.Services.AddSingleton<MainPage>();
-
-            //builder.Services.AddTransient<AccountCreatePopUp>();
-            //builder.Services.AddTransient<CategoryCreatePopUp>();
-            //builder.Services.AddSingleton<FamilyMemberCreatePopUp>();
-            //builder.Services.AddTransient<TransactionCreatePopUp>();
-            //builder.Services.AddTransient<PlannedTransactionCreatePopUp>();
-            //builder.Services.AddTransient<BudgetCreatePopUp>();
-            //builder.Services.AddTransient<DebtCreatePopUp>();
-
-            //builder.Services.AddTransient<DateRangePopUp>();
 
             builder.Services.AddPopUps();
 

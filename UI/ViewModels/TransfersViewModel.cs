@@ -66,7 +66,7 @@ namespace UI.ViewModels
         }
         public async void Receive(DataBaseChangedMessage message)
         {
-            if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.PlannedTransactions)
+            if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Transfers)
             {
                 var data = await _mediator.Send(new GetAllTransfersQuery(_userContext.UserId));
 
