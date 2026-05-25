@@ -102,13 +102,13 @@ namespace UI.ViewModels
         [RelayCommand]
         public async Task AddFamilyMember()
         {
-            var familyMember = await _popupService.ShowPopUp<CreateFamilyMemberCommand?, FamilyMemberCreatePopUp>();
+            var command = await _popupService.ShowPopUp<CreateFamilyMemberCommand?, FamilyMemberCreatePopUp>();
 
-            if (familyMember is null)
+            if (command is null)
                 return;
 
 
-            await _mediator.Send(new CreateFamilyMemberCommand(_userContext.UserId, familyMember.Name));
+            await _mediator.Send(command);
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.FamilyMembers));
         }

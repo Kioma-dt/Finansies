@@ -145,36 +145,11 @@ namespace UI.ViewModels
         {
             try
             {
-                var data = await _popUpService.ShowPopUp<PlannedTransactionCreateDTO?, PlannedTransactionCreatePopUp>();
-                if (data is null)
+                var command = await _popUpService.ShowPopUp<CreatePlannedTransactionCommand?, PlannedTransactionCreatePopUp>();
+                if (command is null)
                     return;
 
-                if (data.Periodicity == TransactionPeriodicity.Once)
-                {
-                    await _mediator.Send(new CreatePlannedTransactionCommand(_user.UserId,
-                        data.Amount,
-                        data.Description,
-                        data.Type,
-                        data.StartDate,
-                        data.AccountId,
-                        data.CategoryId,
-                        data.FamilyMemberId,
-                        data.DebtId));
-                }
-                else
-                {
-                    await _mediator.Send(new CreatePlannedTransactionCommand(_user.UserId,
-                        data.Amount,
-                        data.Description,
-                        data.Type,
-                        data.StartDate,
-                        data.AccountId,
-                        data.CategoryId,
-                        data.FamilyMemberId,
-                        data.DebtId,
-                        data.Count,
-                        data.Periodicity));
-                }
+                await _mediator.Send(command);
 
                 WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
             }

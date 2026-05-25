@@ -3,9 +3,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:dto="clr-namespace:UI.Popups"
-    x:TypeArguments="dto:PlannedTransactionCreateDTO"
-    x:Class="UI.Popups.PlannedTransactionCreatePopUp">
+    xmlns:entity="clr-namespace:BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;assembly=BuisnessLogic"
+    x:TypeArguments="entity:CreatePlannedTransactionCommand"
+    xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
+    x:Class="UI.Popups.PlannedTransactionCreatePopUp"
+    x:DataType="viewmodel:PlannedTransactionCreatePopUpModel">
 
     <Grid RowDefinitions="*, Auto"
           ColumnDefinitions="*, *">
@@ -27,45 +29,82 @@
                     <Entry x:Name="AmountEntry"
                            Placeholder="Amount"
                            Keyboard="Numeric"
-                           TextColor="Black"/>
+                           TextColor="Black"
+                           Text="{Binding Amount}"/>
 
                     <Entry x:Name="DescriptionEntry"
                            Placeholder="Description"
-                           TextColor="Black"/>
+                           TextColor="Black"
+                           Text="{Binding Description}"/>
 
                     <Picker x:Name="TypePicker"
                             Title="Transaction Type"
-                            TextColor="Black"/>
+                            TextColor="Black"
+                            ItemsSource="{Binding TransactionTypes}"
+                            SelectedItem="{Binding SelectedTransactionType}">
+
+                        <Picker.Behaviors>
+                            <toolkit:EventToCommandBehavior
+                                EventName="SelectedIndexChanged"
+                                Command="{Binding UpdateFilteredDebtsCommand}"
+                                BindingContext="{Binding Source={x:Reference TypePicker}, Path=BindingContext}" />
+                        </Picker.Behaviors>
+                        
+                    </Picker>
 
                     <DatePicker x:Name="StartDatePicker"
-                                TextColor="Black"/>
+                                TextColor="Black"
+                                Date="{Binding StartDate}"/>
 
                     <Picker x:Name="PeriodPicker"
                             Title="Periodicity"
-                            SelectedIndexChanged="OnPeriodChanged"
-                            TextColor="Black"/>
+                            TextColor="Black"
+                            ItemsSource="{Binding TransactionPeriodicities}"
+                            SelectedItem="{Binding SelectedTransactionPeriodicity}">
+
+                        <Picker.Behaviors>
+                            <toolkit:EventToCommandBehavior
+                                EventName="SelectedIndexChanged"
+                                Command="{Binding UpdateNumberOfTransactionsCommand}"
+                                BindingContext="{Binding Source={x:Reference PeriodPicker}, Path=BindingContext}" />
+                        </Picker.Behaviors>
+                    </Picker>
 
                     <Entry x:Name="CountEntry"
                            Placeholder="Count"
                            Keyboard="Numeric"
-                           TextColor="Black"/>
+                           TextColor="Black"
+                           Text="{Binding NumberOfTransactions}"
+                           IsEnabled="{Binding IsNumberEnabled}"/>
 
                     <Picker x:Name="AccountPicker"
                             Title="Account"
-                            TextColor="Black"/>
+                            TextColor="Black"
+                            ItemsSource="{Binding Accounts}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedAccount}"/>
 
                     <Picker x:Name="CategoryPicker"
                             Title="Category"
-                            TextColor="Black"/>
+                            TextColor="Black"
+                            ItemsSource="{Binding Categories}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedCategory}"/>
 
                     <Picker x:Name="FamilyPicker"
                             Title="Family Member"
-                            TextColor="Black"/>
+                            TextColor="Black"
+                            ItemsSource="{Binding FamilyMembers}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedFamilyMember}"/>
 
                     <Picker x:Name="DebtPicker"
                         Title="Select debt"
                         TextColor="Black"
-                        TitleColor="Gray"/>
+                        TitleColor="Gray"
+                        ItemsSource="{Binding FilteredDebts}"
+                        ItemDisplayBinding="{Binding Name}"
+                        SelectedItem="{Binding SelectedDebt}"/>
 
                 </VerticalStackLayout>
             </ScrollView>
@@ -75,13 +114,13 @@
         <Button Grid.Row="1"
                 Text="Cancel"
                 BackgroundColor="#9E9E9E"
-                Clicked="OnCancel"/>
+                Command="{Binding CancelCommand}"/>
 
         <Button Grid.Row="1"
                 Grid.Column="1"
                 Text="Create"
                 BackgroundColor="#4CAF50"
-                Clicked="OnCreate"/>
+                Command="{Binding CreateCommand}"/>
 
     </Grid>
 </toolkit:Popup>
