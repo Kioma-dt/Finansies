@@ -143,6 +143,15 @@ namespace UI.ViewModels
         }
 
         [RelayCommand]
+        public async Task ShowStatistics()
+        {
+            LeftView = null;
+            RightView = null;
+
+            CentralView = _viewService.GetView<StatisticsView>();
+        }
+
+        [RelayCommand]
         public async Task LogOut()
         {
             _userContext.SetUserId(Guid.Empty);

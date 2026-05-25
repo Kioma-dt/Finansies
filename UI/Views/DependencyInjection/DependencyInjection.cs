@@ -25,12 +25,16 @@ namespace UI.Views.DependencyInjection
 
             services.AddSingleton<DateRangeSelectorView>();
 
+            services.AddSingleton<StatisticsView>();
+
             services.AddSingleton<MainPage>();
 
             services.AddSingleton<AuthentificationPage>();
 
 
             services.AddSingleton<IViewService, ViewService>();
+
+
 
             return services;
         }

@@ -23,6 +23,8 @@ namespace UI.ViewModels.DependencyInjection
 
             services.AddSingleton<DateRangeSelectorViewModel>();
 
+            services.AddSingleton<StatisticsViewModel>();
+
             services.AddSingleton<MainPageViewModel>();
 
             services.AddSingleton<AuthentificationPageViewModel>();

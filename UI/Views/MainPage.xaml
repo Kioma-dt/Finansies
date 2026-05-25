@@ -18,6 +18,9 @@
             <Button Text="Log Out"
                     Command="{Binding LogOutCommand}"/>
 
+            <Button Text="Statistics"
+                    Command="{Binding ShowStatisticsCommand}"/>
+
             <Button Text="Transactions"
                 Command="{Binding ShowTransactionsCommand}" />
 

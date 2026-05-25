@@ -11,10 +11,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using UI.Popups;
 
+using SkiaSharp.Views.Maui.Controls.Hosting;
 using UI.PopUps.DependencyInjection;
 using UI.ViewModels;
 using UI.Views.DependencyInjection;
 using UI.ViewModels.DependencyInjection;
+using LiveChartsCore.SkiaSharpView.Maui;
+using UI.Statistics;
 
 namespace UI
 {
@@ -26,6 +29,8 @@ namespace UI
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .UseSkiaSharp()
+                .UseLiveCharts()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -41,6 +46,7 @@ namespace UI
 
             builder.Services.AddRepositories()
                 .AddUseCassess()
+                .AddAnalytics()
                 .AddViewModels()
                 .AddViews()
                 .AddPopUps();
