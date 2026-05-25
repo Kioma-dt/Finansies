@@ -17,7 +17,7 @@
         <lvc:CartesianChart
             HeightRequest="300"
             Series="{Binding Series}"
-            XAxes="{Binding XAxes}" />
+            XAxes="{Binding XAxes}"/>
 
     </VerticalStackLayout>
 </ContentView>

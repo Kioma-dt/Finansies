@@ -66,9 +66,10 @@ namespace UI.ViewModels
         {
             var transactions = await _mediator.Send(new GetAllTransactionsQuery(_userContext.UserId));
 
-            var chart = _analyticsService.BuildTransactionChart(transactions,
+            var chart = _analyticsService.BuildTransactionsColumnChart(transactions,
                 _startDate,
-                _endDate);
+                _endDate,
+                x => x.Account?.Name);
 
             Series = chart.Series;
             XAxes = chart.XAxes;
