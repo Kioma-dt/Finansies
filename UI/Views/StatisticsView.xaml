@@ -7,17 +7,86 @@
              xmlns:converter="clr-namespace:UI.Converters"
              x:Class="UI.Views.StatisticsView"
              x:DataType="viewmodel:StatisticsViewModel">
-    <VerticalStackLayout Padding="20">
 
-        <Button
-            Text="ShowStatistics"
-            FontSize="26"
-            Command="{Binding ShowGrpahCommand}"/>
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Picker">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="TitleColor" Value="Black"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Padding="20"
+          RowDefinitions="Auto, *"
+          ColumnDefinitions="*, *, *, *, *">
+
+        <Picker Grid.Row="0"
+                Grid.Column="0"
+                x:Name="GraphTypePciker"
+                Title="Graph Type"
+                ItemsSource="{Binding GraphTypes}"
+                SelectedItem="{Binding SelectedGraphType}">
+
+            <Picker.Behaviors>
+                <toolkit:EventToCommandBehavior
+                EventName="SelectedIndexChanged"
+                Command="{Binding ChangeGrpahTypeCommand}"
+                BindingContext="{Binding Source={x:Reference GraphTypePciker}, Path=BindingContext}" />  
+            </Picker.Behaviors>
+
+        </Picker>
+
+        <Picker Grid.Row="0"
+                Grid.Column="1"
+                Title="Graph Sum Type"
+                ItemsSource="{Binding GraphSumTypes}"
+                SelectedItem="{Binding SelectedGraphSumType}"
+                IsVisible="{Binding IsReviewGraph}"/>
+
+        <Picker Grid.Row="0"
+                Grid.Column="2"
+                Title="Graph Group Type"
+                ItemsSource="{Binding GraphGroupTypes}"
+                SelectedItem="{Binding SelectedGraphGroupType}"
+                IsVisible="{Binding IsReviewGraph}"/>
+
+        <Button Grid.Row="0"
+                Grid.Column="3"
+                Text="Show Pie Graph"
+                IsVisible="{Binding IsReviewGraph}"
+                Command="{Binding ShowPieGrpahCommand}"/>
+
+        <Button Grid.Row="0"
+                Grid.Column="4"
+                Text="Show Column Graph"
+                IsVisible="{Binding IsReviewGraph}"
+                Command="{Binding ShowColumnGrpahCommand}"/>
+
+        <Button Grid.Row="0"
+                Grid.Column="3"
+                Grid.ColumnSpan="2"
+                Text="Show Dynamic Graph"
+                IsVisible="{Binding IsDynamicGraph}"
+                Command="{Binding ShowDynamicGrpahCommand}"/>
+
+
 
         <lvc:CartesianChart
+            Grid.Row="1"
+            Grid.ColumnSpan="5"
             HeightRequest="300"
+            IsVisible="{Binding IsColumnGrpah}"
             Series="{Binding Series}"
             XAxes="{Binding XAxes}"/>
 
-    </VerticalStackLayout>
+        <lvc:PieChart
+             Grid.Row="1"
+             Grid.ColumnSpan="5"
+             HeightRequest="300"
+             IsVisible="{Binding IsPieGraph}"
+             Series="{Binding Series}"/>
+
+    </Grid>
 </ContentView>

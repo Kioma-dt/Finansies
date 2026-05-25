@@ -15,11 +15,13 @@ using UI.Statistics;
 
 namespace UI.ViewModels
 {
-    public enum GraphType { Dynamic, Review}
+    public enum GraphType { Dynamic, Review }
+
+    public enum GraphGroupsType { Description, Account, Category, FamilyMember }
 
     public partial class StatisticsViewModel 
         : ObservableObject,
-        IRecipient<DataBaseChangedMessage>,
+        //IRecipient<DataBaseChangedMessage>,
         IRecipient<DateRangeChangedMessage>
     {
         private readonly IMediator _mediator;
@@ -36,7 +38,10 @@ namespace UI.ViewModels
         public partial GraphType SelectedGraphType { get; set; } = GraphType.Dynamic;
 
         [ObservableProperty]
-        public partial bool IsGraphSumTypeSelectorVisible { get; set; } = false;
+        [NotifyPropertyChangedFor(nameof(IsDynamicGraph))]
+        public partial bool IsReviewGraph { get; set; } = false;
+
+        public bool IsDynamicGraph => !IsReviewGraph;
 
         public ObservableCollection<GraphSumType> GraphSumTypes { get; } = new()
         {
@@ -48,6 +53,18 @@ namespace UI.ViewModels
 
         [ObservableProperty]
         public partial GraphSumType SelectedGraphSumType { get; set; } = GraphSumType.Income;
+
+        public ObservableCollection<GraphGroupsType> GraphGroupTypes { get; } = new()
+        {
+            GraphGroupsType.Description,
+            GraphGroupsType.Account,
+            GraphGroupsType.Category,
+            GraphGroupsType.FamilyMember,
+        };
+
+        [ObservableProperty]
+        public partial GraphGroupsType SelectedGraphGroupType { get; set; } = GraphGroupsType.Description;
+
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsColumnGrpah))]
@@ -74,16 +91,16 @@ namespace UI.ViewModels
             _userContext = user;
             _analyticsService = analyticsService;
 
-            WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
+            //WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
         }
-        public async void Receive(DataBaseChangedMessage message)
-        {
-            if (message.Type == DataBaseChangedMessageType.Transactions)
-            {
-                //await ShowGrpahCommand.ExecuteAsync(null);
-            }
-        }
+        //public async void Receive(DataBaseChangedMessage message)
+        //{
+        //    if (message.Type == DataBaseChangedMessageType.Transactions)
+        //    {
+        //        //await ShowGrpahCommand.ExecuteAsync(null);
+        //    }
+        //}
         public async void Receive(DateRangeChangedMessage message)
         {
             _startDate = message.StartDate;
@@ -93,16 +110,78 @@ namespace UI.ViewModels
         }
 
         [RelayCommand]
-        public async Task ShowGrpah()
+        public async Task ChangeGrpahType()
+        {
+            if (SelectedGraphType == GraphType.Review)
+            {
+                IsReviewGraph = true;
+            }
+            else
+            {
+                IsReviewGraph = false;
+            }
+        }
+
+        [RelayCommand]
+        public async Task ShowDynamicGrpah()
         {
             var transactions = await _mediator.Send(new GetAllTransactionsQuery(_userContext.UserId));
+
+            var chart = _analyticsService.BuildTransactionsDynamicChart(transactions,
+                _startDate,
+                _endDate);
+
+            IsPieGraph = false;
+            Series = chart.Series;
+            XAxes = chart.XAxes;
+        }
+
+        [RelayCommand]
+        public async Task ShowColumnGrpah()
+        {
+            var transactions = await _mediator.Send(new GetAllTransactionsQuery(_userContext.UserId));
+
+            var groupSelector = SelectedGraphGroupType switch
+            {
+                GraphGroupsType.Description => (Func<Transaction, string>)(x => x.Description),
+                GraphGroupsType.Account => x => x.Account?.Name ?? "No Account",
+                GraphGroupsType.Category => x => x.Category?.Name ?? "No Category",
+                GraphGroupsType.FamilyMember => x => x.FamilyMember?.Name ?? "No Family Member",
+                _ => throw new NotImplementedException()
+            };
 
             var chart = _analyticsService.BuildTransactionsColumnChart(transactions,
                 _startDate,
                 _endDate,
-                x => x.Account?.Name,
-                GraphSumType.TotalSum);
+                groupSelector,
+                SelectedGraphSumType);
 
+            IsPieGraph = false;
+            Series = chart.Series;
+            XAxes = chart.XAxes;
+        }
+
+        [RelayCommand]
+        public async Task ShowPieGrpah()
+        {
+            var transactions = await _mediator.Send(new GetAllTransactionsQuery(_userContext.UserId));
+
+            var groupSelector = SelectedGraphGroupType switch
+            {
+                GraphGroupsType.Description => (Func<Transaction, string>)(x => x.Description),
+                GraphGroupsType.Account => x => x.Account?.Name ?? "No Account",
+                GraphGroupsType.Category => x => x.Category?.Name ?? "No Category",
+                GraphGroupsType.FamilyMember => x => x.FamilyMember?.Name ?? "No Family Member",
+                _ => throw new NotImplementedException()
+            };
+
+            var chart = _analyticsService.BuildTransactionsPieChart(transactions,
+                _startDate,
+                _endDate,
+                groupSelector,
+                SelectedGraphSumType);
+
+            IsPieGraph = true;
             Series = chart.Series;
             XAxes = chart.XAxes;
         }
