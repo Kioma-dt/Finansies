@@ -15,6 +15,8 @@ using UI.Statistics;
 
 namespace UI.ViewModels
 {
+    public enum GraphType { Dynamic, Review}
+
     public partial class StatisticsViewModel 
         : ObservableObject,
         IRecipient<DataBaseChangedMessage>,
@@ -23,6 +25,35 @@ namespace UI.ViewModels
         private readonly IMediator _mediator;
         private readonly IUserContext _userContext;
         private readonly IAnalyticsService _analyticsService;
+
+        public ObservableCollection<GraphType> GraphTypes { get; } = new()
+        {
+            GraphType.Dynamic,
+            GraphType.Review
+        };
+
+        [ObservableProperty]
+        public partial GraphType SelectedGraphType { get; set; } = GraphType.Dynamic;
+
+        [ObservableProperty]
+        public partial bool IsGraphSumTypeSelectorVisible { get; set; } = false;
+
+        public ObservableCollection<GraphSumType> GraphSumTypes { get; } = new()
+        {
+            GraphSumType.Income,
+            GraphSumType.Expense,
+            GraphSumType.TotalSum,
+            GraphSumType.TotalIncrease
+        };
+
+        [ObservableProperty]
+        public partial GraphSumType SelectedGraphSumType { get; set; } = GraphSumType.Income;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsColumnGrpah))]
+        public partial bool IsPieGraph { get; set; } = false;
+
+        public bool IsColumnGrpah => !IsPieGraph;
 
         [ObservableProperty]
         public partial ISeries[] Series { get; set; } = [];
@@ -50,7 +81,7 @@ namespace UI.ViewModels
         {
             if (message.Type == DataBaseChangedMessageType.Transactions)
             {
-                await ShowGrpahCommand.ExecuteAsync(null);
+                //await ShowGrpahCommand.ExecuteAsync(null);
             }
         }
         public async void Receive(DateRangeChangedMessage message)
@@ -58,7 +89,7 @@ namespace UI.ViewModels
             _startDate = message.StartDate;
             _endDate = message.EndDate;
 
-            await ShowGrpahCommand.ExecuteAsync(null);
+            //await ShowGrpahCommand.ExecuteAsync(null);
         }
 
         [RelayCommand]
@@ -69,7 +100,8 @@ namespace UI.ViewModels
             var chart = _analyticsService.BuildTransactionsColumnChart(transactions,
                 _startDate,
                 _endDate,
-                x => x.Account?.Name);
+                x => x.Account?.Name,
+                GraphSumType.TotalSum);
 
             Series = chart.Series;
             XAxes = chart.XAxes;
