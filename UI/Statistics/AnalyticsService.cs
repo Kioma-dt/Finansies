@@ -29,12 +29,14 @@ namespace UI.Statistics
         ChartData BuildTransactionsColumnChart(IEnumerable<Transaction> transactions,
             DateTime from, 
             DateTime to, 
-            Func<Transaction, string> groupSelector);
+            Func<Transaction, string> groupSelector,
+            GraphSumType graphSumType);
 
         ChartData BuildTransactionsPieChart(IEnumerable<Transaction> transactions,
             DateTime from,
             DateTime to,
-            Func<Transaction, string> groupSelector);
+            Func<Transaction, string> groupSelector,
+            GraphSumType graphSumType);
     }
 
     public class AnalyticsService
@@ -43,18 +45,52 @@ namespace UI.Statistics
         public ChartData BuildTransactionsPieChart(IEnumerable<Transaction> transactions,
             DateTime from, 
             DateTime to, 
-            Func<Transaction, string> groupSelector)
+            Func<Transaction, string> groupSelector,
+            GraphSumType graphSumType)
         {
             transactions = transactions.Where(x => x.Date.Date >= from && x.Date.Date <= to);
 
-            var groups = transactions
+            var groups = graphSumType switch 
+            {
+                GraphSumType.Income => transactions
+                .Where(x => x.Type == TransactionType.Income)
                 .GroupBy(groupSelector)
                 .Select(g => new
                 {
                     Name = g.Key,
                     Total = g.Sum(x => x.Amount)
                 })
-                .OrderByDescending(x => x.Total);
+                .OrderByDescending(x => x.Total),
+
+                GraphSumType.Expense => transactions
+                .Where(x => x.Type == TransactionType.Expense)
+                .GroupBy(groupSelector)
+                .Select(g => new
+                {
+                    Name = g.Key,
+                    Total = g.Sum(x => x.Amount)
+                })
+                .OrderByDescending(x => x.Total),
+
+                GraphSumType.TotalSum => transactions
+                .GroupBy(groupSelector)
+                .Select(g => new
+                {
+                    Name = g.Key,
+                    Total = g.Sum(x => x.Amount)
+                })
+                .OrderByDescending(x => x.Total),
+
+
+                _ => transactions
+                .GroupBy(groupSelector)
+                .Select(g => new
+                {
+                    Name = g.Key,
+                    Total = g.Sum(x => x.SignedAmount)
+                })
+                .OrderByDescending(x => x.Total),
+            };
 
             var series = groups
                 .Select(x => new PieSeries<decimal>
@@ -66,18 +102,55 @@ namespace UI.Statistics
 
             return new ChartData(series, []);
         }
-        public ChartData BuildTransactionsColumnChart(IEnumerable<Transaction> transactions, DateTime from, DateTime to, Func<Transaction, string> groupSelector)
+        public ChartData BuildTransactionsColumnChart(IEnumerable<Transaction> transactions,
+            DateTime from, 
+            DateTime to, 
+            Func<Transaction, string> groupSelector,
+            GraphSumType graphSumType)
         {
             transactions = transactions.Where(x => x.Date.Date >= from && x.Date.Date <= to);
 
-            var groups = transactions
+            var groups = graphSumType switch
+            {
+                GraphSumType.Income => transactions
+                .Where(x => x.Type == TransactionType.Income)
                 .GroupBy(groupSelector)
                 .Select(g => new
                 {
                     Name = g.Key,
                     Total = g.Sum(x => x.Amount)
                 })
-                .OrderByDescending(x => x.Total);
+                .OrderByDescending(x => x.Total),
+
+                GraphSumType.Expense => transactions
+                .Where(x => x.Type == TransactionType.Expense)
+                .GroupBy(groupSelector)
+                .Select(g => new
+                {
+                    Name = g.Key,
+                    Total = g.Sum(x => x.Amount)
+                })
+                .OrderByDescending(x => x.Total),
+
+                GraphSumType.TotalSum => transactions
+                .GroupBy(groupSelector)
+                .Select(g => new
+                {
+                    Name = g.Key,
+                    Total = g.Sum(x => x.Amount)
+                })
+                .OrderByDescending(x => x.Total),
+
+
+                _ => transactions
+                .GroupBy(groupSelector)
+                .Select(g => new
+                {
+                    Name = g.Key,
+                    Total = g.Sum(x => x.SignedAmount)
+                })
+                .OrderByDescending(x => x.Total),
+            };
 
             var values = groups.Select(x => x.Total).ToList();
             var labels = groups.Select(x => x.Name).ToList();
