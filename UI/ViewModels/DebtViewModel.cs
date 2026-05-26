@@ -1,16 +1,18 @@
 ﻿using BuisnessLogic.DTO;
 using BuisnessLogic.Entities;
+using BuisnessLogic.UseCases.DebtsUseCasses.Commands;
+using BuisnessLogic.UseCases.DebtsUseCasses.Queries;
+using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using UI.Messages;
 using UI.Popups;
-
-using BuisnessLogic.UseCases.DebtsUseCasses.Queries;
-using BuisnessLogic.UseCases.DebtsUseCasses.Commands;
 using UI.PopUps.Service;
+using UI.PopUps.ViewModels;
 
 namespace UI.ViewModels
 {
@@ -122,6 +124,29 @@ namespace UI.ViewModels
                 await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
             }
 
+        }
+
+        [RelayCommand]
+        public async Task UpdateDebt(Debt debt) 
+        {
+            var command = await _popupService.ShowPopUp<UpdateDebtCommand,
+                DebtUpdatePopUp,
+                DebtUpdatePopUpModel,
+                DebtUpdatePopUpModelParameters>(new DebtUpdatePopUpModelParameters(
+                    debt.Id,
+                    debt.Name,
+                    debt.CategoryId,
+                    debt.FamilyMemberId
+                ));
+
+            if (command is null)
+            {
+                return;
+            }
+
+            await _mediator.Send(command);
+
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
         }
 
         [RelayCommand]

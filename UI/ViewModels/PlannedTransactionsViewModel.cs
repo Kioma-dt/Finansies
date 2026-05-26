@@ -120,7 +120,7 @@ namespace UI.ViewModels
                 await _mediator.Send(new UpdatePlannedTransactionStatusCommand(_userContext.UserId, pt.Id, message.CurrentTime));
             }
 
-            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
         }
 
         public void Receive(DateRangeChangedMessage message)

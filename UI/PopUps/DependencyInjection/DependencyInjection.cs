@@ -33,6 +33,7 @@ namespace UI.PopUps.DependencyInjection
 
             services.AddSingleton<TransactionUpdatePopUp>();
             services.AddSingleton<PlannedTransactionUpdatePopUp>();
+            services.AddSingleton<DebtUpdatePopUp>();
 
             services.AddTransient<DateRangePopUp>();
 
@@ -48,6 +49,7 @@ namespace UI.PopUps.DependencyInjection
 
             services.AddSingleton<TransactionUpdatePopUpModel>();
             services.AddSingleton<PlannedTransactionUpdatePopUpModel>();
+            services.AddSingleton<DebtUpdatePopUpModel>();
 
             services.AddSingleton<IPopUpService, PopUpService>();
 

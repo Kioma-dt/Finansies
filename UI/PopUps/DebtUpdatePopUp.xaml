@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:entity="clr-namespace:BuisnessLogic.UseCases.DebtsUseCasses.Commands;assembly=BuisnessLogic"
+    x:TypeArguments="entity:UpdateDebtCommand"
+    xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
+    x:Class="UI.Popups.DebtUpdatePopUp"
+    x:DataType="viewmodel:DebtUpdatePopUpModel">
+
+    <toolkit:Popup.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Picker">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="TitleColor" Value="Black"/>
+            </Style>
+        </ResourceDictionary>
+    </toolkit:Popup.Resources>
+
+    <Border Padding="20"
+            BackgroundColor="White"
+            WidthRequest="350"
+            Stroke="LightGray"
+            StrokeThickness="1">
+
+        <ScrollView>
+            <VerticalStackLayout Spacing="12">
+
+                <Label Text="Update Debt"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="Black"/>
+
+                <Entry x:Name="NameEntry"
+                       Placeholder="Debt name"
+                       TextColor="Black"
+                       Text="{Binding Name}"/>
+
+                <Picker x:Name="CategoryPicker"
+                        Title="Select category"
+                        ItemsSource="{Binding Categories}"
+                        ItemDisplayBinding="{Binding Name}"
+                        SelectedItem="{Binding SelectedCategory}"/>
+
+                <Picker x:Name="FamilyPicker"
+                        Title="Select family member"
+                        ItemsSource="{Binding FamilyMembers}"
+                        ItemDisplayBinding="{Binding Name}"
+                        SelectedItem="{Binding SelectedFamilyMember}"/>
+
+
+                <HorizontalStackLayout Spacing="10">
+
+                    <Button Text="Cancel"
+                            BackgroundColor="#9E9E9E"
+                            TextColor="White"
+                            Command="{Binding CancelCommand}"/>
+
+                    <Button Text="Update"
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            Command="{Binding CreateCommand}"/>
+
+                </HorizontalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Border>
+</toolkit:Popup>
