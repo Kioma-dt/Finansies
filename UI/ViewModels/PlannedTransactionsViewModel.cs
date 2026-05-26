@@ -11,9 +11,22 @@ using UI.Popups;
 using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Queries;
 using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;
 using UI.PopUps.Service;
+using UI.OrderingServices;
 
 namespace UI.ViewModels
 {
+    public enum PlannedTransactionsOrderBy
+    {
+        Description,
+        PlannedDate,
+        Status,
+        Amount,
+        Type,
+        AccountName,
+        CategoryName,
+        FamilyMemberName,
+        DebtName
+    }
     public class DisplayedPlanTransaction(Guid Id,
         string? Description,
         string? Amount,
@@ -46,6 +59,7 @@ namespace UI.ViewModels
         private readonly IMediator _mediator;
         private readonly IUserContext _user;
         private readonly IPopUpService _popUpService;
+        private readonly IPlannedTransactionsOrderingServiceFactory _plannedTransactionsOrderingServiceFactory;
 
         private List<PlannedTransaction> _plannedTransactions = new();
 
@@ -53,6 +67,9 @@ namespace UI.ViewModels
         private DateTime _endDate = DateTime.Now;
 
         private Guid? _selectedAccountId = null;
+
+        private PlannedTransactionsOrderBy _orderBy;
+        private bool _ascending;
 
         public ObservableCollection<DisplayedPlanTransaction> DisplayedPlannedTransactions { get; set; } = new();
 
@@ -62,11 +79,13 @@ namespace UI.ViewModels
         public PlannedTransactionsViewModel(
             IMediator mediator,
             IUserContext user,
-            IPopUpService popUp)
+            IPopUpService popUp,
+            IPlannedTransactionsOrderingServiceFactory plannedTransactionsOrderingServiceFactory)
         {
             _mediator = mediator;
             _user = user;
             _popUpService = popUp;
+            _plannedTransactionsOrderingServiceFactory = plannedTransactionsOrderingServiceFactory;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<CurrentTimeMessage>(this);
@@ -82,6 +101,9 @@ namespace UI.ViewModels
                 _plannedTransactions.Clear();
                 foreach (var t in data)
                     _plannedTransactions.Add(t);
+
+                _orderBy = PlannedTransactionsOrderBy.Status;
+                _ascending = true;
 
                 this.ShowPlannedTransactions();
             }
@@ -125,9 +147,8 @@ namespace UI.ViewModels
                 trans = trans.Where(x => x.AccountId == _selectedAccountId).ToList();
             }
 
-            foreach (var t in trans)
-            {
-                DisplayedPlannedTransactions.Add(new DisplayedPlanTransaction(t.Id,
+            var displayedPlannedTransactions = trans
+                .Select(t => new DisplayedPlanTransaction(t.Id,
                     t.Description,
                     t.Amount.ToString(),
                     t.Type.ToString(),
@@ -137,7 +158,33 @@ namespace UI.ViewModels
                     t.Category?.Name,
                     t.FamilyMember?.Name,
                     t.Debt?.Name));
+
+            var orderingService = _plannedTransactionsOrderingServiceFactory.Create(_orderBy);
+
+            displayedPlannedTransactions = orderingService.Order(displayedPlannedTransactions, _ascending);
+
+            foreach (var transaction in displayedPlannedTransactions)
+            {
+                DisplayedPlannedTransactions.Add(transaction);
             }
+        }
+
+        [RelayCommand]
+        public async Task ChangeSorting(string field)
+        {
+            var orderBy = Enum.Parse<PlannedTransactionsOrderBy>(field);
+
+            if (orderBy == _orderBy)
+            {
+                _ascending = !_ascending;
+            }
+            else
+            {
+                _orderBy = orderBy;
+                _ascending = true;
+            }
+
+            this.ShowPlannedTransactions();
         }
 
         [RelayCommand]

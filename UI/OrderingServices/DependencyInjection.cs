@@ -24,6 +24,17 @@ namespace UI.OrderingServices
             services.AddTransient<ITransactionsOrderingService, TransactionsOrderingServiceByFamilyMemberName>();
             services.AddTransient<ITransactionsOrderingService, TransactionsOrderingServiceByDebtName>();
 
+            services.AddSingleton<IPlannedTransactionsOrderingServiceFactory, PlannedTransactionsOrderingServiceFactory>();
+            services.AddTransient<IPlannedTransactionsOrderingService, PlannedTransactionsOrderingServiceByDescription>();
+            services.AddTransient<IPlannedTransactionsOrderingService, PlannedTransactionsOrderingServiceByStatus>();
+            services.AddTransient<IPlannedTransactionsOrderingService, PlannedTransactionsOrderingServiceByDate>();
+            services.AddTransient<IPlannedTransactionsOrderingService, PlannedTransactionsOrderingServiceByAmount>();
+            services.AddTransient<IPlannedTransactionsOrderingService, PlannedTransactionsOrderingServiceByType>();
+            services.AddTransient<IPlannedTransactionsOrderingService, PlannedTransactionsOrderingServiceByAccountName>();
+            services.AddTransient<IPlannedTransactionsOrderingService, PlannedTransactionsOrderingServiceByCategoryName>();
+            services.AddTransient<IPlannedTransactionsOrderingService, PlannedTransactionsOrderingServiceByFamilyMemberName>();
+            services.AddTransient<IPlannedTransactionsOrderingService, PlannedTransactionsOrderingServiceByDebtName>();
+
             return services;
         }
     }
