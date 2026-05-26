@@ -32,6 +32,7 @@ namespace UI.PopUps.DependencyInjection
             services.AddTransient<TransferCreatePopUp>();
 
             services.AddSingleton<TransactionUpdatePopUp>();
+            services.AddSingleton<PlannedTransactionUpdatePopUp>();
 
             services.AddTransient<DateRangePopUp>();
 
@@ -46,6 +47,7 @@ namespace UI.PopUps.DependencyInjection
             services.AddTransient<TransferCreatePopUpModel>();
 
             services.AddSingleton<TransactionUpdatePopUpModel>();
+            services.AddSingleton<PlannedTransactionUpdatePopUpModel>();
 
             services.AddSingleton<IPopUpService, PopUpService>();
 

@@ -10,6 +10,9 @@ namespace UI.Converters
             if (value is PlannedTransactionStatus status)
                 return status != PlannedTransactionStatus.Confirmed;
 
+            if (value is string statsStr)
+                return statsStr != PlannedTransactionStatus.Confirmed.ToString();
+
             return false;
         }
 

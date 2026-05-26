@@ -111,10 +111,14 @@
                         <FlyoutBase.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem 
-                                Text="Confirm"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PlannedTransactionsViewModel}}, Path=ConfirmTransactionCommand}"
-                                CommandParameter="{Binding .}"
-                                IsEnabled="{Binding Status, Converter={StaticResource notConfirmedConverter}}"/>   
+                                    Text="Confirm"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PlannedTransactionsViewModel}}, Path=ConfirmTransactionCommand}"
+                                    CommandParameter="{Binding .}"
+                                    IsEnabled="{Binding Status, Converter={StaticResource notConfirmedConverter}}"/>
+                                <MenuFlyoutItem 
+                                     Text="Update"
+                                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PlannedTransactionsViewModel}}, Path=UpdatePlannedTransactionCommand}"
+                                     CommandParameter="{Binding .}"/>
                             </MenuFlyout>
                         </FlyoutBase.ContextFlyout>
 

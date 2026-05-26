@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+ <toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:entity="clr-namespace:BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;assembly=BuisnessLogic"
+    x:TypeArguments="entity:UpdatePlannedTransactionCommand"
+    xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
+    x:Class="UI.Popups.PlannedTransactionUpdatePopUp"
+    x:DataType="viewmodel:PlannedTransactionUpdatePopUpModel">
+
+    <Grid RowDefinitions="*, Auto"
+          ColumnDefinitions="*, *">
+
+        <Border Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Padding="20"
+                BackgroundColor="White"
+                WidthRequest="340">
+
+            <ScrollView>
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Create Planned Transaction"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="Black"/>
+
+                    <Entry x:Name="AmountEntry"
+                           Placeholder="Amount"
+                           Keyboard="Numeric"
+                           TextColor="Black"
+                           Text="{Binding Amount}"/>
+
+                    <Entry x:Name="DescriptionEntry"
+                           Placeholder="Description"
+                           TextColor="Black"
+                           Text="{Binding Description}"/>
+
+                    <Picker x:Name="TypePicker"
+                            Title="Transaction Type"
+                            TextColor="Black"
+                            ItemsSource="{Binding TransactionTypes}"
+                            SelectedItem="{Binding SelectedTransactionType}">
+
+                        <Picker.Behaviors>
+                            <toolkit:EventToCommandBehavior
+                                EventName="SelectedIndexChanged"
+                                Command="{Binding UpdateFilteredDebtsCommand}"
+                                BindingContext="{Binding Source={x:Reference TypePicker}, Path=BindingContext}" />
+                        </Picker.Behaviors>
+                        
+                    </Picker>
+
+                    <DatePicker x:Name="StartDatePicker"
+                                TextColor="Black"
+                                Date="{Binding StartDate}"/>
+
+
+                    <Picker x:Name="AccountPicker"
+                            Title="Account"
+                            TextColor="Black"
+                            ItemsSource="{Binding Accounts}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedAccount}"/>
+
+                    <Picker x:Name="CategoryPicker"
+                            Title="Category"
+                            TextColor="Black"
+                            ItemsSource="{Binding Categories}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedCategory}"/>
+
+                    <Picker x:Name="FamilyPicker"
+                            Title="Family Member"
+                            TextColor="Black"
+                            ItemsSource="{Binding FamilyMembers}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedFamilyMember}"/>
+
+                    <Picker x:Name="DebtPicker"
+                        Title="Select debt"
+                        TextColor="Black"
+                        TitleColor="Gray"
+                        ItemsSource="{Binding FilteredDebts}"
+                        ItemDisplayBinding="{Binding Name}"
+                        SelectedItem="{Binding SelectedDebt}"/>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+        </Border>
+
+        <Button Grid.Row="1"
+                Text="Cancel"
+                BackgroundColor="#9E9E9E"
+                Command="{Binding CancelCommand}"/>
+
+        <Button Grid.Row="1"
+                Grid.Column="1"
+                Text="Update"
+                BackgroundColor="#4CAF50"
+                Command="{Binding CreateCommand}"/>
+
+    </Grid>
+</toolkit:Popup>

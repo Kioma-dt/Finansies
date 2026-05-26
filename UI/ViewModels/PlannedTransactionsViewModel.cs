@@ -1,17 +1,19 @@
 ﻿using BuisnessLogic.Entities;
 using BuisnessLogic.Enums;
+using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;
+using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Queries;
+using BuisnessLogic.UseCases.TransactionsUseCasses.Commands;
+using BuisnessLogic.UseCases.TransactionsUseCasses.Queries;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 using UI.Messages;
-using UI.Popups;
-
-using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Queries;
-using BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands;
-using UI.PopUps.Service;
 using UI.OrderingServices;
+using UI.Popups;
+using UI.PopUps.Service;
+using UI.PopUps.ViewModels;
 
 namespace UI.ViewModels
 {
@@ -57,7 +59,7 @@ namespace UI.ViewModels
         IRecipient<SelectedAccountChangedMessage>
     {
         private readonly IMediator _mediator;
-        private readonly IUserContext _user;
+        private readonly IUserContext _userContext;
         private readonly IPopUpService _popUpService;
         private readonly IPlannedTransactionsOrderingServiceFactory _plannedTransactionsOrderingServiceFactory;
 
@@ -83,7 +85,7 @@ namespace UI.ViewModels
             IPlannedTransactionsOrderingServiceFactory plannedTransactionsOrderingServiceFactory)
         {
             _mediator = mediator;
-            _user = user;
+            _userContext = user;
             _popUpService = popUp;
             _plannedTransactionsOrderingServiceFactory = plannedTransactionsOrderingServiceFactory;
 
@@ -96,7 +98,7 @@ namespace UI.ViewModels
         {
             if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.PlannedTransactions)
             {
-                var data = await _mediator.Send(new GetAllPlannedTransactionsQuery(_user.UserId));
+                var data = await _mediator.Send(new GetAllPlannedTransactionsQuery(_userContext.UserId));
 
                 _plannedTransactions.Clear();
                 foreach (var t in data)
@@ -111,11 +113,11 @@ namespace UI.ViewModels
 
         public async void Receive(CurrentTimeMessage message)
         {
-            var data = await _mediator.Send(new GetAllPlannedTransactionsQuery(_user.UserId));
+            var data = await _mediator.Send(new GetAllPlannedTransactionsQuery(_userContext.UserId));
 
             foreach (var pt in data)
             {
-                await _mediator.Send(new UpdatePlannedTransactionStatusCommand(_user.UserId, pt.Id, message.CurrentTime));
+                await _mediator.Send(new UpdatePlannedTransactionStatusCommand(_userContext.UserId, pt.Id, message.CurrentTime));
             }
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
@@ -212,14 +214,14 @@ namespace UI.ViewModels
         }
 
         [RelayCommand]
-        public async Task ConfirmTransaction(PlannedTransaction planned)
+        public async Task ConfirmTransaction(DisplayedPlanTransaction planned)
         {
             try
             {
                 if (planned is null)
                     return;
 
-                await _mediator.Send(new ConfirmPlannedTransactionCommand(_user.UserId, planned.Id));
+                await _mediator.Send(new ConfirmPlannedTransactionCommand(_userContext.UserId, planned.Id));
 
                 WeakReferenceMessenger.Default.Send(
                     new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
@@ -238,6 +240,37 @@ namespace UI.ViewModels
             {
                 await Application.Current.MainPage.DisplayAlert("Can't confirm Transaction", $"{ex.Message}", "OK");
             }
+        }
+
+        [RelayCommand]
+        public async Task UpdatePlannedTransaction(DisplayedPlanTransaction displayedPlanTransaction)
+        {
+            var plannedTransaction = await _mediator.Send(new GetPlannedTransactionIdQuery(_userContext.UserId,
+                displayedPlanTransaction.Id));
+
+            var command = await _popUpService.ShowPopUp<UpdatePlannedTransactionCommand?,
+                PlannedTransactionUpdatePopUp,
+                PlannedTransactionUpdatePopUpModel,
+                PlannedTransactionUpdatePopUpModelParameters>(new PlannedTransactionUpdatePopUpModelParameters(
+                    plannedTransaction.Id,
+                    plannedTransaction.Amount,
+                    plannedTransaction.Description,
+                    plannedTransaction.Type,
+                    plannedTransaction.PlannedDate,
+                    plannedTransaction.AccountId,
+                    plannedTransaction.CategoryId,
+                    plannedTransaction.FamilyMemberId,
+                    plannedTransaction.DebtId
+                ));
+
+            if (command is null)
+            {
+                return;
+            }
+
+            await _mediator.Send(command);
+
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
         }
 
         [RelayCommand]
