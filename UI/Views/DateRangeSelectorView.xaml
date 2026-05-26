@@ -8,8 +8,9 @@
     x:DataType="viewmodel:DateRangeSelectorViewModel">
 
     <Grid ColumnDefinitions="Auto,*,Auto"
-          RowDefinitions="*, Auto"
-          Padding="5">
+          ColumnSpacing="10"
+          RowSpacing="10"
+          RowDefinitions="*, Auto">
 
         <Button Grid.Column="0"
                 Grid.RowSpan="2"
@@ -19,13 +20,16 @@
 
         <Border Grid.Column="1"
                 Grid.Row="0"
-                Padding="8"
                 BackgroundColor="#2d2d2d"
-                Stroke="Gray">
+                Stroke="Gray"
+                Margin="0,4,0,0"
+                Padding="7">
 
             <Label Text="{Binding RangeText}"
                    TextColor="White"
-                   HorizontalOptions="Center">
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Style="{StaticResource SectionLabelStyle}">
 
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ChangeModeCommand}"/>
@@ -35,9 +39,6 @@
 
         </Border>
 
-        <Label Grid.Column="1"
-                Grid.Row="1"
-               Text="{Binding Mode}"/>
 
         <Button Grid.Column="2"
                 Grid.RowSpan="2"

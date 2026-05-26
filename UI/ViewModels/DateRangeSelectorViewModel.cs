@@ -20,6 +20,7 @@ namespace UI.ViewModels
     public partial class DateRangeSelectorViewModel : ObservableObject
     {
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanNavigate))]
         public partial DateRangeMode Mode { get; set; } = DateRangeMode.Month;
 
         [ObservableProperty]

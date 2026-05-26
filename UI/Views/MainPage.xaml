@@ -8,46 +8,62 @@
              x:DataType="viewmodel:MainPageViewModel"
              Title="MainPage">
     <Grid RowDefinitions="Auto,*"
-      ColumnDefinitions="*,*">
+      ColumnDefinitions="*,4*">
 
-        <HorizontalStackLayout Grid.Row="0"
-                           Grid.ColumnSpan="2"
-                           BackgroundColor="#1e1e1e"
-                           Padding="10"
-                           Spacing="10">
-            <Button Text="Log Out"
-                    Command="{Binding LogOutCommand}"/>
+        <Grid Grid.Row="0"
+              Grid.ColumnSpan="2"
+              ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+              Padding="10"
+              ColumnSpacing="10">
+            <Button Grid.Column="0"
+                    Text="Log Out"
+                    Command="{Binding LogOutCommand}"
+                    Style="{StaticResource LogoutButtonStyle}"/>
 
-            <Button Text="Statistics"
+
+            <Button Grid.Column="1"
+                    Text="Transactions"
+                    Command="{Binding ShowTransactionsCommand}" />
+
+            <Button Grid.Column="2"
+                    Text="Transfers"
+                    Command="{Binding ShowTransfersCommand}" />
+
+            <Button Grid.Column="3"
+                    Text="Categories"
+                    Command="{Binding ShowCategoriesCommand}" />
+
+            <Button Grid.Column="4"
+                    Text="FamilyMembers"
+                    Command="{Binding ShowFamilyMembersCommand}" />
+
+            <Button Grid.Column="5"
+                    Text="Plan Transactions"
+                    Command="{Binding ShowPlannedTransactionsCommand}" />
+
+            <Button Grid.Column="6"
+                    Text="Budgets"
+                    Command="{Binding ShowBudgetsCommand}" />
+
+            <Button Grid.Column="7"
+                    Text="Debts"
+                    Command="{Binding ShowDebtsCommand}" />
+
+            <ContentView Grid.Column="8" 
+                        Content="{Binding DateRangeSelectorView}"/>
+
+            <Button Grid.Column="9"
+                    Text="Statistics"
                     Command="{Binding ShowStatisticsCommand}"/>
 
-            <Button Text="Transactions"
-                Command="{Binding ShowTransactionsCommand}" />
+            <Button Grid.Column="10"
+            ImageSource="iconplus.png"
+            WidthRequest="70"
+            HeightRequest="70"
+            CornerRadius="50"
+            Command="{Binding CreateTransactionCommand}" />
 
-            <Button Text="Transfers"
-                Command="{Binding ShowTransfersCommand}" />
-
-            <Button Text="Categories"
-                Command="{Binding ShowCategoriesCommand}" />
-
-            <Button Text="FamilyMembers"
-                Command="{Binding ShowFamilyMembersCommand}" />
-
-            <Button Text="Plan Transactions"
-                Command="{Binding ShowPlannedTransactionsCommand}" />
-
-            <Button Text="Budgets"
-                Command="{Binding ShowBudgetsCommand}" />
-            
-            <Button Text="Debts"
-                Command="{Binding ShowDebtsCommand}" />
-
-            <Button Text="Create Transactiom"
-                Command="{Binding CreateTransactionCommand}" />
-
-            <ContentView Content="{Binding DateRangeSelectorView}"/>
-
-        </HorizontalStackLayout>
+        </Grid>
 
         <ContentView Grid.Row="1"
                      Grid.ColumnSpan="2"
