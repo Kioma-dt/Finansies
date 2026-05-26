@@ -16,11 +16,24 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UI.Messages;
+using UI.OrderingServices;
 using UI.Popups;
 using UI.Views;
 
 namespace UI.ViewModels
 {
+    public enum TransactionsOrderBy
+    {
+        Description,
+        Date,
+        Amount,
+        Type,
+        AccountName,
+        CategoryName,
+        FamilyMemberName,
+        DebtName
+    }
+
     public class DisplayedTransaction(Guid Id,
         string? Description,
         string? Amount,
@@ -47,7 +60,8 @@ namespace UI.ViewModels
         IRecipient<SelectedAccountChangedMessage>
     {
         private readonly IMediator _mediator;
-        private readonly IUserContext _user;
+        private readonly IUserContext _userContext;
+        private readonly ITransactionsOrderingServiceFactory _transactionsOrderingServiceFactory;
 
 
         private List<Transaction> _transactions = new();
@@ -57,14 +71,22 @@ namespace UI.ViewModels
 
         private Guid? _selectedAccountId = null;
 
+        private TransactionsOrderBy _orderBy;
+        private bool _ascending;
+
         public ObservableCollection<DisplayedTransaction> DisplayedTransactions { get; set; } = new();
 
         public TransactionsViewModel(
             IMediator mediator,
-            IUserContext user)
+            IUserContext user,
+            ITransactionsOrderingServiceFactory transactionsOrderingServiceFactory)
         {
             _mediator = mediator;
-            _user = user;
+            _userContext = user;
+            _transactionsOrderingServiceFactory = transactionsOrderingServiceFactory;
+
+            _orderBy = TransactionsOrderBy.Date;
+            _ascending = true;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
@@ -74,7 +96,7 @@ namespace UI.ViewModels
         {
             if (message.Type == DataBaseChangedMessageType.Init || message.Type == DataBaseChangedMessageType.Transactions)
             {
-                var data = await _mediator.Send(new GetAllTransactionsQuery(_user.UserId));
+                var data = await _mediator.Send(new GetAllTransactionsQuery(_userContext.UserId));
 
                 _transactions.Clear();
                 foreach (var t in data)
@@ -109,9 +131,7 @@ namespace UI.ViewModels
                 trans = trans.Where(x => x.AccountId ==  _selectedAccountId).ToList();
             }
 
-            foreach(var t in trans)
-            {
-                DisplayedTransactions.Add(new DisplayedTransaction
+            var displayedTransactions = trans.Select(t => new DisplayedTransaction
                     (
                         t.Id,
                         t.Description,
@@ -123,7 +143,33 @@ namespace UI.ViewModels
                         t.FamilyMember?.Name,
                         t.Debt?.Name
                     ));
+
+            displayedTransactions = _transactionsOrderingServiceFactory
+                .Create(_orderBy)
+                .Order(displayedTransactions, _ascending);
+
+            foreach(var transaction in displayedTransactions)
+            {
+                DisplayedTransactions.Add(transaction);
             }
+        }
+
+        [RelayCommand]
+        public async Task ChangeSorting(string field)
+        {
+            var orderBy = Enum.Parse<TransactionsOrderBy>(field);
+
+            if (orderBy == _orderBy)
+            {
+                _ascending = !_ascending;
+            }
+            else
+            {
+                _orderBy = orderBy;
+                _ascending = true;
+            }
+
+            this.ShowTransactions();
         }
 
         [RelayCommand]

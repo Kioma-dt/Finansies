@@ -20,14 +20,68 @@
                       Padding="10"
                       BackgroundColor="#2d2d2d">
 
-                    <Label Text="Description" Grid.Column="0" TextColor="White"/>
-                    <Label Text="Amount" Grid.Column="1" TextColor="White"/>
-                    <Label Text="Type" Grid.Column="2" TextColor="White"/>
-                    <Label Text="Date" Grid.Column="3" TextColor="White"/>
-                    <Label Text="Account" Grid.Column="4" TextColor="White"/>
-                    <Label Text="Category" Grid.Column="5" TextColor="White"/>
-                    <Label Text="FamilyMember" Grid.Column="6" TextColor="White"/>
-                    <Label Text="Debt" Grid.Column="7" TextColor="White"/>
+                    <Label Text="Description" Grid.Column="0" TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
+                                CommandParameter="Description" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label Text="Amount" Grid.Column="1" TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
+                                CommandParameter="Amount" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label Text="Type" Grid.Column="2" TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
+                                CommandParameter="Type" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label Text="Date" Grid.Column="3" TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
+                                CommandParameter="Date" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label Text="Account" Grid.Column="4" TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
+                                CommandParameter="AccountName" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label Text="Category" Grid.Column="5" TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
+                                CommandParameter="CategoryName" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Text="FamilyMember" Grid.Column="6" TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
+                                CommandParameter="FamilyMemberName" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label Text="Debt" Grid.Column="7" TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
+                                CommandParameter="DebtName" />
+                        </Label.GestureRecognizers>
+                    </Label>
 
                 </Grid>
             </CollectionView.Header>

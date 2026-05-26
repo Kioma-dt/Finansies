@@ -18,6 +18,7 @@ using UI.Views.DependencyInjection;
 using UI.ViewModels.DependencyInjection;
 using LiveChartsCore.SkiaSharpView.Maui;
 using UI.Statistics;
+using UI.OrderingServices;
 
 namespace UI
 {
@@ -47,6 +48,7 @@ namespace UI
             builder.Services.AddRepositories()
                 .AddUseCassess()
                 .AddAnalytics()
+                .AddOrderingServices()
                 .AddViewModels()
                 .AddViews()
                 .AddPopUps();
