@@ -1,18 +1,19 @@
-﻿using BuisnessLogic.Entities;
-using BuisnessLogic.Repositories;
+﻿using BuisnessLogic.Enums;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using BuisnessLogic.Repositories;
 
 namespace BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands
 {
     public sealed record UpdatePlannedTransactionCommand(Guid UserId,
-        Guid PlannedTransactionId,
-        DateTime Date)
+            Guid Id,
+            decimal Amount,
+            string Description,
+            TransactionType Type,
+            DateTime PlannedDate,
+            Guid? AccountId,
+            Guid? CategoryId,
+            Guid? FamilyMemberId,
+            Guid? DebtId)
         : IRequest;
 
     public class UpdatePlannedTransactionCommandHandler(IPlannedTransactionRepository plannedTransactionRepository)
@@ -20,16 +21,19 @@ namespace BuisnessLogic.UseCases.PlannedTransactionsUsesCasses.Commands
     {
         public async Task Handle(UpdatePlannedTransactionCommand request, CancellationToken cancellationToken)
         {
-            var plannedTransaction = await plannedTransactionRepository.GetById(request.UserId, request.PlannedTransactionId);
-
+            var plannedTransaction = await plannedTransactionRepository.GetById(request.UserId, request.Id);
             if (plannedTransaction is null)
             {
-                throw new ArgumentException($"No Planned Transaction with Id: {request.PlannedTransactionId}");
+                throw new ArgumentException($"No Planned Transaction with Id: {request.Id}");
             }
-
-
-            plannedTransaction.Update(request.Date);
-
+            plannedTransaction.Amount = request.Amount;
+            plannedTransaction.Description = request.Description;
+            plannedTransaction.Type = request.Type;
+            plannedTransaction.PlannedDate = request.PlannedDate;
+            plannedTransaction.AccountId = request.AccountId;
+            plannedTransaction.CategoryId = request.CategoryId;
+            plannedTransaction.FamilyMemberId = request.FamilyMemberId;
+            plannedTransaction.DebtId = request.DebtId;
             await plannedTransactionRepository.Update(plannedTransaction);
         }
     }

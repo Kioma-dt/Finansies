@@ -91,6 +91,15 @@
                     <Grid ColumnDefinitions="*,*,*,*,*,*,*,*"
                           Padding="10">
 
+                        <FlyoutBase.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem 
+                                    Text="Update"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=UpdateTransactionCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </MenuFlyout>
+                        </FlyoutBase.ContextFlyout>
+
                         <Label Text="{Binding Description}" Grid.Column="0"/>
                         <Label Text="{Binding Amount}"  Grid.Column="1" />
                         <Label Text="{Binding Type}" Grid.Column="2"/>

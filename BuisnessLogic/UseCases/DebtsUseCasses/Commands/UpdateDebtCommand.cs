@@ -1,54 +1,29 @@
-﻿using BuisnessLogic.DebtInterestCalculator;
-using BuisnessLogic.Entities;
+﻿using MediatR;
 using BuisnessLogic.Repositories;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BuisnessLogic.UseCases.DebtsUseCasses.Commands
 {
     public sealed record UpdateDebtCommand(Guid UserId,
-        Guid DebtId,
-        DateTime Date)
+        Guid Id,
+        string Name,
+        Guid? CategoryId,
+        Guid? FamilyMemberId
+        )
         : IRequest;
 
-    public class UpdateDebtCommandHandler(IDebtRepository debtRepository,
-        IDebtInterestCalculatorProvider debtInterestCalculatorProvider)
+    public class UpdateDebtCommandHandler(IDebtRepository debtRepository)
         : IRequestHandler<UpdateDebtCommand>
     {
         public async Task Handle(UpdateDebtCommand request, CancellationToken cancellationToken)
         {
-            var debt = await debtRepository.GetById(request.UserId, request.DebtId);
-
+            var debt = await debtRepository.GetById(request.UserId, request.Id);
             if (debt is null)
             {
-                throw new ArgumentException($"No Debt with Id: {request.DebtId}");
+                throw new ArgumentException($"No Debt with Id: {request.Id}");
             }
-
-            //if (date > debt.EndDate)
-            //{
-            //    throw new Exception("The Debt Is Overdue!");
-            //}
-
-            var calculator = debtInterestCalculatorProvider.GetCalculator(debt.InterestType);
-
-            var new_amount = calculator.Calculate(debt.StartAmount,
-                                                  debt.InterestRate,
-                                                  debt.CapitalisationsPerYear,
-                                                  debt.FixedAddition,
-                                                  debt.StartDate,
-                                                  request.Date);
-
-            var interests = new_amount - debt.TotalAmount;
-
-            //interests = interests >= 0 ? interests : -interests;
-
-            debt.ChargeInterest(interests);
-
+            debt.Name = request.Name;
+            debt.CategoryId = request.CategoryId;
+            debt.FamilyMemberId = request.FamilyMemberId;
             await debtRepository.Update(debt);
         }
     }

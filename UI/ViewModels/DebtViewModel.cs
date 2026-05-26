@@ -65,7 +65,7 @@ namespace UI.ViewModels
 
             foreach (var debt in data)
             {
-                await _mediator.Send(new UpdateDebtCommand(_user.UserId, debt.Id, message.CurrentTime));
+                await _mediator.Send(new UpdateDebtAmountCommand(_user.UserId, debt.Id, message.CurrentTime));
             }
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));

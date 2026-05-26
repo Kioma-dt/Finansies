@@ -34,7 +34,6 @@ namespace UI.ViewModels
     public partial class TransfersViewModel 
         : ObservableObject,
         IRecipient<DataBaseChangedMessage>,
-        IRecipient<DateRangeChangedMessage>,
         IRecipient<SelectedAccountChangedMessage>
     {
         private readonly IMediator _mediator;
@@ -61,7 +60,6 @@ namespace UI.ViewModels
             _popUpService = popUpService;
 
             WeakReferenceMessenger.Default.Register<DataBaseChangedMessage>(this);
-            WeakReferenceMessenger.Default.Register<DateRangeChangedMessage>(this);
             WeakReferenceMessenger.Default.Register<SelectedAccountChangedMessage>(this);
         }
         public async void Receive(DataBaseChangedMessage message)
@@ -76,18 +74,6 @@ namespace UI.ViewModels
 
                 this.ShowTransfers();
             }
-        }
-
-        public async void Receive(CurrentTimeMessage message)
-        {
-            var data = await _mediator.Send(new GetAllPlannedTransactionsQuery(_userContext.UserId));
-
-            foreach (var pt in data)
-            {
-                await _mediator.Send(new UpdatePlannedTransactionCommand(_userContext.UserId, pt.Id, message.CurrentTime));
-            }
-
-            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));
         }
 
         public void Receive(DateRangeChangedMessage message)

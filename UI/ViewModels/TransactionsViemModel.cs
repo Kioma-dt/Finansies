@@ -18,7 +18,11 @@ using System.Threading.Tasks;
 using UI.Messages;
 using UI.OrderingServices;
 using UI.Popups;
+using UI.PopUps.Service;
 using UI.Views;
+using UI.PopUps.ViewModels;
+using BuisnessLogic.UseCases.TransactionsUseCasses.Commands;
+using BuisnessLogic.UseCases.TransactionsUseCasses.Queries;
 
 namespace UI.ViewModels
 {
@@ -61,6 +65,7 @@ namespace UI.ViewModels
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _userContext;
+        private readonly IPopUpService _popupService;
         private readonly ITransactionsOrderingServiceFactory _transactionsOrderingServiceFactory;
 
 
@@ -79,10 +84,12 @@ namespace UI.ViewModels
         public TransactionsViewModel(
             IMediator mediator,
             IUserContext user,
+            IPopUpService popUpService,
             ITransactionsOrderingServiceFactory transactionsOrderingServiceFactory)
         {
             _mediator = mediator;
             _userContext = user;
+            _popupService = popUpService;
             _transactionsOrderingServiceFactory = transactionsOrderingServiceFactory;
 
             _orderBy = TransactionsOrderBy.Date;
@@ -170,6 +177,33 @@ namespace UI.ViewModels
             }
 
             this.ShowTransactions();
+        }
+
+        [RelayCommand]
+        public async Task UpdateTransaction(DisplayedTransaction displayedTransaction)
+        {
+            var transaction  = await _mediator.Send(new GetTransactionsByIdQuery(_userContext.UserId, 
+                displayedTransaction.Id));
+
+            var command = await _popupService.ShowPopUp<UpdateTransactionCommand?, 
+                TransactionUpdatePopUp,
+                TransactionUpdatePopUpModel,
+                TransactionUpdatePopUpModelParameters>(new TransactionUpdatePopUpModelParameters(
+                    transaction.Id,
+                    transaction.Description,
+                    transaction.Date,
+                    transaction.CategoryId,
+                    transaction.FamilyMemberId
+                ));
+
+            if (command is null)
+            {
+                return;
+            }
+
+            await _mediator.Send(command);
+
+            WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Transactions));
         }
 
         [RelayCommand]

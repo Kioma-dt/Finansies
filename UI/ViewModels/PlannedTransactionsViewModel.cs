@@ -115,7 +115,7 @@ namespace UI.ViewModels
 
             foreach (var pt in data)
             {
-                await _mediator.Send(new UpdatePlannedTransactionCommand(_user.UserId, pt.Id, message.CurrentTime));
+                await _mediator.Send(new UpdatePlannedTransactionStatusCommand(_user.UserId, pt.Id, message.CurrentTime));
             }
 
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Debts));

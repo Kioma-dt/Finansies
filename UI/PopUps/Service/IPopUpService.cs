@@ -14,5 +14,10 @@ namespace UI.PopUps.Service
     {
         Task<TResult?> ShowPopUp<TResult, TPopUp>()
             where TPopUp : Popup<TResult>;
+
+        Task<TResult?> ShowPopUp<TResult, TPopUp, TViewModel, TArgs>(
+            TArgs args)
+            where TPopUp : Popup<TResult>
+            where TViewModel : class, IPopUpInitializable<TArgs>;
     }
 }
