@@ -27,6 +27,8 @@ namespace BuisnessLogic.Entities
         public Guid? FamilyMemberId { get; set; } = null;
         public FamilyMember? FamilyMember { get; set; } = null;
 
+        public decimal SignedAmount => Type == TransactionType.Income ? Amount : -Amount;
+
         public void Conirm()
         {
             Status = PlannedTransactionStatus.Confirmed;

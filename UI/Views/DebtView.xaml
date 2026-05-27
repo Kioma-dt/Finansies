@@ -10,62 +10,65 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <converter:DebtProgressConverter x:Key="debtProgressConverter"/>
+            <converter:MoneyColorConverter
+                x:Key="moneyColorConverter"
+                PositiveColor="{StaticResource MoneyPositive}"
+                NegativeColor="{StaticResource MoneyNegative}" />
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid RowDefinitions="Auto,*, *, Auto">
+    <Grid RowDefinitions="*, *, Auto"
+          Padding="10"
+          RowSpacing="30">
 
-        <Grid Grid.Row="0" 
-            ColumnDefinitions="2*,*,*,*,*,*,3*"
-              Padding="10"
-              BackgroundColor="#2d2d2d">
-
-            <Label Text="Name"
-                   TextColor="White"
-                   FontAttributes="Bold"/>
-
-            <Label Text="Type"
-                   Grid.Column="1"
-                   TextColor="White"
-                   FontAttributes="Bold"/>
-
-            <Label Text="Category"
-                   Grid.Column="2"
-                   TextColor="White"
-                   FontAttributes="Bold"/>
-
-            <Label Text="Family"
-                   Grid.Column="3"
-                   TextColor="White"
-                   FontAttributes="Bold"/>
-
-            <Label Text="Total"
-                   Grid.Column="4"
-                   TextColor="White"
-                   FontAttributes="Bold"/>
-
-            <Label Text="Paid"
-                   Grid.Column="5"
-                   TextColor="White"
-                   FontAttributes="Bold"/>
-
-            <Label Text="Progress"
-                   Grid.Column="6"
-                   TextColor="White"
-                   FontAttributes="Bold"/>
-
-        </Grid>
-
-        <CollectionView Grid.Row="1"
+        <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Debts}"
                         SelectionMode="Single"
                         SelectedItem="{Binding SelectedDebt}"
                         SelectionChangedCommand="{Binding SelectDebtCommand}">
 
+            <CollectionView.Header>
+                <Grid Grid.Row="0" 
+                    ColumnDefinitions="*,*,*,*,*,*,*"
+                    ColumnSpacing="10"
+                    Padding="10"
+                    BackgroundColor="#2d2d2d">
+
+                    <Label Text="Name"
+                         Style="{StaticResource TableHeaderLabelStyle}"/>
+
+                    <Label Text="Type"
+                         Grid.Column="1"
+                         Style="{StaticResource TableHeaderLabelStyle}"/>
+
+                    <Label Text="Total"
+                         Grid.Column="2"
+                         Style="{StaticResource TableHeaderLabelStyle}"/>
+
+                    <Label Text="Paid"
+                         Grid.Column="3"
+                         Style="{StaticResource TableHeaderLabelStyle}"/>
+
+                    <Label Text="Progress"
+                         Grid.Column="4"
+                         Style="{StaticResource TableHeaderLabelStyle}"/>
+
+                    <Label Text="Category"
+                         Grid.Column="5"
+                        Style="{StaticResource TableHeaderLabelStyle}"/>
+
+                    <Label Text="Family Member"
+                           Grid.Column="6"
+                           Style="{StaticResource TableHeaderLabelStyle}"/>
+
+                </Grid>
+            </CollectionView.Header>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="entity:Debt">
 
-                    <Grid ColumnDefinitions="2*,*,*,*,*,*,3*"
+                    <Grid ColumnDefinitions="*,*,*,*,*,*,*"
+                          ColumnSpacing="10"
                           Padding="10">
 
                         <FlyoutBase.ContextFlyout>
@@ -84,26 +87,24 @@
                                Grid.Column="1"
                                TextColor="LightGray"/>
 
-                        <Label Text="{Binding Category.Name, TargetNullValue='-'}"
-                               Grid.Column="2"
-                               TextColor="LightBlue"/>
-
-                        <Label Text="{Binding FamilyMember.Name, TargetNullValue='-'}"
-                               Grid.Column="3"
-                               TextColor="LightBlue"/>
                         
                         <Label Text="{Binding TotalAmount}"
-                               Grid.Column="4"
-                               TextColor="White"/>
+                               Grid.Column="2"
+                               TextColor="{Binding TotalAmount, Converter={StaticResource moneyColorConverter}}"/>
 
                         <Label Text="{Binding PaidAmount}"
-                               Grid.Column="5"
-                               TextColor="LightGreen"/>
+                               Grid.Column="3"
+                               TextColor="{Binding PaidAmount, Converter={StaticResource moneyColorConverter}}"/>
 
-                        <ProgressBar Grid.Column="6"
+                        <ProgressBar Grid.Column="4"
                                      Progress="{Binding ., Converter={StaticResource debtProgressConverter}}"
-                                     HeightRequest="8"
-                                     VerticalOptions="Center"/>
+                                     Style="{StaticResource PrimaryProgressBarStyle}"/>
+
+                        <Label Text="{Binding Category.Name, TargetNullValue='-'}"
+                               Grid.Column="5"/>
+
+                        <Label Text="{Binding FamilyMember.Name, TargetNullValue='-'}"
+                               Grid.Column="6"/>
 
                     </Grid>
 
@@ -112,18 +113,18 @@
 
         </CollectionView>
 
-        <CollectionView Grid.Row="2"
+        <CollectionView Grid.Row="1"
                 ItemsSource="{Binding Transactions}">
 
             <CollectionView.Header>
                 <Grid ColumnDefinitions="*,*,*,*"
-              Padding="10"
-              BackgroundColor="#2d2d2d">
+                      Padding="10"
+                      BackgroundColor="#2d2d2d">
 
-                    <Label Text="Amount" TextColor="White"/>
-                    <Label Text="Type" Grid.Column="1" TextColor="White"/>
-                    <Label Text="Date" Grid.Column="2" TextColor="White"/>
-                    <Label Text="Description" Grid.Column="3" TextColor="White"/>
+                    <Label Text="Transaction Description" Grid.Column="0" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="Transaction Amount" Grid.Column="1" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="Transaction Type" Grid.Column="2" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="Transaction Date" Grid.Column="3" Style="{StaticResource TableHeaderLabelStyle}"/>
 
                 </Grid>
             </CollectionView.Header>
@@ -132,12 +133,12 @@
                 <DataTemplate x:DataType="entity:Transaction">
 
                     <Grid ColumnDefinitions="*,*,*,*"
-                  Padding="10">
-
-                        <Label Text="{Binding Amount}" />
-                        <Label Text="{Binding Type}" Grid.Column="1"/>
-                        <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="2"/>
-                        <Label Text="{Binding Description}" Grid.Column="3"/>
+                         Padding="10">
+                        
+                        <Label Text="{Binding Description}" Grid.Column="0"/>
+                        <Label Text="{Binding Amount}"  TextColor="{Binding Amount, Converter={StaticResource moneyColorConverter}}" Grid.Column="1" />
+                        <Label Text="{Binding Type}" Grid.Column="2"/>
+                        <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="3"/>
 
                     </Grid>
 
@@ -146,13 +147,12 @@
 
         </CollectionView>
 
-        <Button Grid.Row="3"
+        <Button Grid.Row="2"
             Text="Add Debt"
             Command="{Binding CreateDebtCommand}" 
-            BackgroundColor="#2196F3"
-            TextColor="White"
-            CornerRadius="10"
-            HeightRequest="45"/>
+            Style="{StaticResource PurpleButtonStyle}"
+            HorizontalOptions="End"
+            WidthRequest="220"/>
 
     </Grid>
 </ContentView>

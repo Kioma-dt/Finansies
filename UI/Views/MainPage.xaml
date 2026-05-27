@@ -38,7 +38,7 @@
                     Command="{Binding ShowFamilyMembersCommand}" />
 
             <Button Grid.Column="5"
-                    Text="Plan Transactions"
+                    Text="Planned Transactions"
                     Command="{Binding ShowPlannedTransactionsCommand}" />
 
             <Button Grid.Column="6"

@@ -28,6 +28,9 @@
     <Color x:Key="SuccessGreen">#4CAF50</Color>
     <Color x:Key="DangerRed">#FF5252</Color>
 
+    <Color x:Key="MoneyPositive">#4CAF50</Color>
+    <Color x:Key="MoneyNegative">#FF5252</Color>
+
     <!-- ========================= -->
     <!-- PAGE / LAYOUT             -->
     <!-- ========================= -->
@@ -190,10 +193,10 @@
            TargetType="Button">
 
         <Setter Property="BackgroundColor"
-                Value="{StaticResource PrimaryPurple}" />
+                Value="#60187a" />
 
         <Setter Property="TextColor"
-                Value="Black" />
+                Value="White" />
     </Style>
 
     <Style x:Key="DangerButtonStyle"
@@ -409,16 +412,22 @@
 
     <Style x:Key="LogoutButtonStyle"
        TargetType="Button">
-
+        <!-- Фон -->
         <Setter Property="BackgroundColor"
-            Value="#FF5252"/>
+            Value="#1E1E1E"/>
 
+        <!-- Обводка -->
         <Setter Property="BorderColor"
-                Value="#FF5252"/>
+            Value="#FFB74D"/>
 
+        <Setter Property="BorderWidth"
+            Value="2"/>
+
+        <!-- Текст -->
         <Setter Property="TextColor"
-            Value="White"/>
+            Value="#FFCC80"/>
 
+        <!-- Размеры -->
         <Setter Property="CornerRadius"
             Value="14"/>
 
@@ -431,20 +440,18 @@
         <Setter Property="FontAttributes"
             Value="Bold"/>
 
-
-        <Setter Property="BorderWidth"
-            Value="2"/>
-
+        <!-- Тень -->
         <Setter Property="Shadow">
             <Setter.Value>
                 <Shadow
                 Brush="#66000000"
                 Offset="0,4"
-                Radius="10"
-                Opacity="0.7"/>
+                Radius="12"
+                Opacity="0.75"/>
             </Setter.Value>
         </Setter>
 
+        <!-- States -->
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
 
@@ -453,8 +460,10 @@
                     <!-- NORMAL -->
                     <VisualState Name="Normal">
                         <VisualState.Setters>
+
                             <Setter Property="Scale"
                                 Value="1"/>
+
                         </VisualState.Setters>
                     </VisualState>
 
@@ -465,8 +474,6 @@
                             <Setter Property="Scale"
                                 Value="0.96"/>
 
-                            <Setter Property="BackgroundColor"
-                                Value="#E53935"/>
 
                         </VisualState.Setters>
                     </VisualState>
@@ -476,7 +483,7 @@
                         <VisualState.Setters>
 
                             <Setter Property="Opacity"
-                                Value="0.5"/>
+                                Value="0.45"/>
 
                         </VisualState.Setters>
                     </VisualState>
@@ -650,15 +657,22 @@
     <Style x:Key="PopupCancelButtonStyle"
        TargetType="Button">
 
+        <!-- Фон -->
         <Setter Property="BackgroundColor"
-    Value="#FF5252"/>
+    Value="#1E1E1E"/>
 
+        <!-- Обводка -->
         <Setter Property="BorderColor"
-        Value="#FF5252"/>
+    Value="#FFB74D"/>
 
+        <Setter Property="BorderWidth"
+    Value="2"/>
+
+        <!-- Текст -->
         <Setter Property="TextColor"
-    Value="White"/>
+    Value="#FFCC80"/>
 
+        <!-- Размеры -->
         <Setter Property="CornerRadius"
     Value="14"/>
 
@@ -671,20 +685,18 @@
         <Setter Property="FontAttributes"
     Value="Bold"/>
 
-
-        <Setter Property="BorderWidth"
-    Value="2"/>
-
+        <!-- Тень -->
         <Setter Property="Shadow">
             <Setter.Value>
                 <Shadow
         Brush="#66000000"
         Offset="0,4"
-        Radius="10"
-        Opacity="0.7"/>
+        Radius="12"
+        Opacity="0.75"/>
             </Setter.Value>
         </Setter>
 
+        <!-- States -->
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
 
@@ -693,8 +705,10 @@
                     <!-- NORMAL -->
                     <VisualState Name="Normal">
                         <VisualState.Setters>
+
                             <Setter Property="Scale"
                         Value="1"/>
+
                         </VisualState.Setters>
                     </VisualState>
 
@@ -705,8 +719,6 @@
                             <Setter Property="Scale"
                         Value="0.96"/>
 
-                            <Setter Property="BackgroundColor"
-                        Value="#E53935"/>
 
                         </VisualState.Setters>
                     </VisualState>
@@ -716,7 +728,7 @@
                         <VisualState.Setters>
 
                             <Setter Property="Opacity"
-                        Value="0.5"/>
+                        Value="0.45"/>
 
                         </VisualState.Setters>
                     </VisualState>
@@ -725,6 +737,35 @@
 
             </VisualStateGroupList>
         </Setter>
+
+    </Style>
+
+    <Style x:Key="PrimaryProgressBarStyle"
+       TargetType="ProgressBar">
+
+        <!-- Высота -->
+        <Setter Property="HeightRequest"
+            Value="10"/>
+
+        <!-- Цвет заполнения -->
+        <Setter Property="ProgressColor"
+            Value="{StaticResource PrimaryYellow}"/>
+
+        <!-- Фон полосы -->
+        <Setter Property="BackgroundColor"
+            Value="#60187a"/>
+
+        <!-- Отступы -->
+        <Setter Property="Margin"
+            Value="0,6"/>
+
+        <!-- Прозрачность -->
+        <Setter Property="Opacity"
+            Value="0.95"/>
+
+        <!-- Скругление через ScaleY -->
+        <Setter Property="ScaleY"
+            Value="1.4"/>
 
     </Style>
 

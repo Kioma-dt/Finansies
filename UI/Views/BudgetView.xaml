@@ -7,9 +7,19 @@
              x:Class="UI.Views.BudgetView"
              x:DataType="viewmodel:BudgetViewModel">
 
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converter:MoneyColorConverter
+                    x:Key="moneyColorConverter"
+                    PositiveColor="{StaticResource MoneyPositive}"
+                    NegativeColor="{StaticResource MoneyNegative}" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+
     <Grid RowDefinitions="*,*, Auto"
           Padding="10"
-          RowSpacing="10">
+          RowSpacing="30">
 
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Budgets}"
@@ -18,14 +28,16 @@
                         SelectionChangedCommand="{Binding SelectBudgetCommand}">
 
             <CollectionView.Header>
-                <Grid ColumnDefinitions="2*,*,*,*"
+                <Grid ColumnDefinitions="*,*,*,*,*"
                       Padding="10"
-                      BackgroundColor="#2d2d2d">
+                      BackgroundColor="#2d2d2d"
+                      ColumnSpacing="10">
 
-                    <Label Text="Name" TextColor="White"/>
-                    <Label Text="Limit" Grid.Column="1" TextColor="White"/>
-                    <Label Text="From Date" Grid.Column="2" TextColor="White"/>
-                    <Label Text="To Date" Grid.Column="3" TextColor="White"/>
+                    <Label Text="Name" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="Limit" Grid.Column="1" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="Progress" Grid.Column="2" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="From Date" Grid.Column="3" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="To Date" Grid.Column="4" Style="{StaticResource TableHeaderLabelStyle}"/>
 
                 </Grid>
             </CollectionView.Header>
@@ -33,34 +45,28 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="viewmodel:BudgetItem">
 
-                    <Grid ColumnDefinitions="2*, 2*, *, *"
-                        Padding="10">
+                    <Grid ColumnDefinitions="*, *, *, *, *"
+                        Padding="10"
+                          ColumnSpacing="10">
 
-                        <Label Text="{Binding Budget.Name}" />
+                        <Label Grid.Column="0"
+                            Text="{Binding Budget.Name}" />
 
-                        <Grid Grid.Column="1"
-                              ColumnDefinitions="Auto, *"
-                              ColumnSpacing="10">
-                            
-                            <Label Text="{Binding UsedAmount, StringFormat='{0:F0}'}"
-                                VerticalOptions="Center"/>
 
-                            <Label Grid.Column="0"
-                               Text="/"
-                               Margin="40,0,0,0"
-                               Opacity="0"/>
+                        <Label Grid.Column="1"
+                            Text="{Binding LimitText}"
+                            TextColor="{Binding UsedAmount, Converter={StaticResource moneyColorConverter}}"/>
 
-                            <Label Text="{Binding LimitText}" />
 
-                            <ProgressBar Grid.Column="1"
-                                 Progress="{Binding UsedPercent}"
-                                 VerticalOptions="Center"/>
-                        </Grid>
-
-                        <Label Grid.Column="2"
-                            Text="{Binding Budget.StartDate, StringFormat='{0:dd.MM.yyyy}'}" />
+                        <ProgressBar Grid.Column="2"
+                              Progress="{Binding UsedPercent}"
+                              VerticalOptions="Center"
+                              Style="{StaticResource PrimaryProgressBarStyle}"/>
 
                         <Label Grid.Column="3"
+                            Text="{Binding Budget.StartDate, StringFormat='{0:dd.MM.yyyy}'}" />
+
+                        <Label Grid.Column="4"
                             Text="{Binding Budget.StartDate, StringFormat='{0:dd.MM.yyyy}'}" />
 
                     </Grid>
@@ -78,12 +84,12 @@
                       Padding="10"
                       BackgroundColor="#2d2d2d">
 
-                    <Label Text="Amount" TextColor="White"/>
-                    <Label Text="Type" Grid.Column="1" TextColor="White"/>
-                    <Label Text="Date" Grid.Column="2" TextColor="White"/>
-                    <Label Text="Description" Grid.Column="3" TextColor="White"/>
-                    <Label Text="Category" Grid.Column="4" TextColor="White"/>
-                    <Label Text="Account" Grid.Column="5" TextColor="White"/>
+                    <Label Text="Transaction Description" Grid.Column="0" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="Transaction Amount" Grid.Column="1" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="Transaction Type" Grid.Column="2" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="Transaction Date" Grid.Column="3" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="Transaction Category" Grid.Column="4" Style="{StaticResource TableHeaderLabelStyle}"/>
+                    <Label Text="Transaction Account" Grid.Column="5" Style="{StaticResource TableHeaderLabelStyle}"/>
 
                 </Grid>
             </CollectionView.Header>
@@ -94,10 +100,10 @@
                     <Grid ColumnDefinitions="*,*,*,*,*,*"
                           Padding="10">
 
-                        <Label Text="{Binding Amount}" />
-                        <Label Text="{Binding Type}" Grid.Column="1"/>
-                        <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="2"/>
-                        <Label Text="{Binding Description}" Grid.Column="3"/>
+                        <Label Text="{Binding Description}" Grid.Column="0"/>
+                        <Label Text="{Binding Amount}" Grid.Column="1" TextColor="{Binding Amount, Converter={StaticResource moneyColorConverter}}"/>
+                        <Label Text="{Binding Type}" Grid.Column="2"/>
+                        <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" Grid.Column="3"/>
                         <Label Text="{Binding Category.Name}" Grid.Column="4"/>
                         <Label Text="{Binding Account.Name}" Grid.Column="5"/>
 
@@ -108,13 +114,14 @@
 
         </CollectionView>
 
-        <Button Grid.Row="2"
-            Text="Add Budget"
-            Command="{Binding CreateBudgetCommand}" 
-            BackgroundColor="#2196F3"
-            TextColor="White"
-            CornerRadius="10"
-            HeightRequest="45"/>
+        <Grid Grid.Row="2">
+
+            <Button Text="Add Budget"
+            Command="{Binding CreateBudgetCommand}"
+            Style="{StaticResource PurpleButtonStyle}"
+            HorizontalOptions="End"
+            WidthRequest="220"/>
+        </Grid>
 
     </Grid>
 

@@ -142,7 +142,7 @@ namespace UI.ViewModels
                     (
                         t.Id,
                         t.Description,
-                        t.Amount.ToString(),
+                        t.SignedAmount.ToString(),
                         t.Type.ToString(),
                         t.Date.ToString("dd.MM.yyyy"),
                         t.Account?.Name,

@@ -8,7 +8,18 @@
              x:Class="UI.Views.TransactionView"
              x:DataType="viewmodel:TransactionsViewModel">
 
-    <Grid ColumnDefinitions="*">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converter:MoneyColorConverter
+                x:Key="moneyColorConverter"
+                PositiveColor="{StaticResource MoneyPositive}"
+                NegativeColor="{StaticResource MoneyNegative}" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+
+    <Grid ColumnDefinitions="*"
+          Padding="10">
 
 
         <CollectionView Grid.Column="0"
@@ -18,9 +29,10 @@
             <CollectionView.Header>
                 <Grid ColumnDefinitions="*,*,*,*,*,*,*,*"
                       Padding="10"
+                      ColumnSpacing="10"
                       BackgroundColor="#2d2d2d">
 
-                    <Label Text="Description" Grid.Column="0" TextColor="White">
+                    <Label Text="Description" Grid.Column="0" Style="{StaticResource TableHeaderLabelStyle}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -28,7 +40,7 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Amount" Grid.Column="1" TextColor="White">
+                    <Label Text="Amount" Grid.Column="1" Style="{StaticResource TableHeaderLabelStyle}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -36,7 +48,7 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Type" Grid.Column="2" TextColor="White">
+                    <Label Text="Type" Grid.Column="2" Style="{StaticResource TableHeaderLabelStyle}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -44,7 +56,7 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Date" Grid.Column="3" TextColor="White">
+                    <Label Text="Date" Grid.Column="3" Style="{StaticResource TableHeaderLabelStyle}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -52,7 +64,7 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Account" Grid.Column="4" TextColor="White">
+                    <Label Text="Account" Grid.Column="4" Style="{StaticResource TableHeaderLabelStyle}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -60,14 +72,14 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Category" Grid.Column="5" TextColor="White">
+                    <Label Text="Category" Grid.Column="5" Style="{StaticResource TableHeaderLabelStyle}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
                                 CommandParameter="CategoryName" />
                         </Label.GestureRecognizers>
                     </Label>
-                    <Label Text="FamilyMember" Grid.Column="6" TextColor="White">
+                    <Label Text="FamilyMember" Grid.Column="6" Style="{StaticResource TableHeaderLabelStyle}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -75,7 +87,7 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Debt" Grid.Column="7" TextColor="White">
+                    <Label Text="Debt" Grid.Column="7" Style="{StaticResource TableHeaderLabelStyle}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -89,6 +101,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="entity:DisplayedTransaction">
                     <Grid ColumnDefinitions="*,*,*,*,*,*,*,*"
+                          ColumnSpacing="10"
                           Padding="10">
 
                         <FlyoutBase.ContextFlyout>
@@ -101,7 +114,7 @@
                         </FlyoutBase.ContextFlyout>
 
                         <Label Text="{Binding Description}" Grid.Column="0"/>
-                        <Label Text="{Binding Amount}"  Grid.Column="1" />
+                        <Label Text="{Binding Amount}"  Grid.Column="1" TextColor="{Binding Amount, Converter={StaticResource moneyColorConverter}}"/>
                         <Label Text="{Binding Type}" Grid.Column="2"/>
                         <Label Text="{Binding Date}" Grid.Column="3"/>
                         

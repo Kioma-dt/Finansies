@@ -14,7 +14,7 @@ namespace UI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var level = (int)value;
-            return new Thickness(level * 15, 0, 0, 0);
+            return new Thickness(10 + level * 15, 10, 0, 10);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -128,7 +128,8 @@
                                 Grid.ColumnSpan="2"
                                 Margin="30, 0"
                                 Text="Add"
-                                Command="{Binding AddFilterCommand}"/>
+                                Command="{Binding AddFilterCommand}"
+                                Style="{StaticResource PurpleButtonStyle}"/>
                         </Grid>
 
                     </VerticalStackLayout>

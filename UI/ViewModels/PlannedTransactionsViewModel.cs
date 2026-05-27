@@ -152,7 +152,7 @@ namespace UI.ViewModels
             var displayedPlannedTransactions = trans
                 .Select(t => new DisplayedPlanTransaction(t.Id,
                     t.Description,
-                    t.Amount.ToString(),
+                    t.SignedAmount.ToString(),
                     t.Type.ToString(),
                     t.Status.ToString(),
                     t.PlannedDate.ToString("dd.MM.yyyy"),

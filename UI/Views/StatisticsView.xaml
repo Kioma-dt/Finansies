@@ -8,19 +8,10 @@
              x:Class="UI.Views.StatisticsView"
              x:DataType="viewmodel:StatisticsViewModel">
 
-
-    <ContentView.Resources>
-        <ResourceDictionary>
-            <Style TargetType="Picker">
-                <Setter Property="TextColor" Value="Black"/>
-                <Setter Property="TitleColor" Value="Black"/>
-            </Style>
-        </ResourceDictionary>
-    </ContentView.Resources>
-
-    <Grid Padding="20"
+    <Grid Padding="10"
           RowDefinitions="Auto, *"
-          ColumnDefinitions="*, *, *, *, *">
+          ColumnDefinitions="*, *, *, *, *"
+          ColumnSpacing="20">
 
         <Picker Grid.Row="0"
                 Grid.Column="0"
