@@ -7,60 +7,81 @@
     x:TypeArguments="entity:CreateAccountCommand"
     xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
     x:Class="UI.Popups.AccountCreatePopUp"
-    x:DataType="viewmodel:AccountCreatePopUpModel">
+    x:DataType="viewmodel:AccountCreatePopUpModel"
+    
+    BackgroundColor="#99000000"
+    >
 
-    <Border Padding="20"
-            BackgroundColor="White"
-            WidthRequest="320"
-            Stroke="LightGray"
-            StrokeThickness="1">
+    <Grid RowDefinitions="*, Auto"
+          ColumnDefinitions="*, *"
+          RowSpacing="20"
+          ColumnSpacing="10">
 
-        <VerticalStackLayout Spacing="12">
+        <Border Grid.Row="0"
+                Grid.ColumnSpan="2"
+                WidthRequest="320"
+                StrokeThickness="1"
+                Style="{StaticResource PrimaryPopupBorderStyle}">
 
-            <Label Text="Create Account"
-                   FontSize="20"
-                   FontAttributes="Bold"
-                   TextColor="Black"/>
+            <ScrollView
+                VerticalScrollBarVisibility="Never"
+                HorizontalScrollBarVisibility="Never">
+                <VerticalStackLayout Spacing="20">
 
-            <Entry x:Name="NameEntry"
-                   Placeholder="Account name"
-                   TextColor="Black"
-                   PlaceholderColor="Gray"
-                   Text="{Binding Name}"/>
+                    <Label Text="Create Account"
+                        Style="{StaticResource PopupTitleLabelStyle}"/>
 
-            <Entry x:Name="BalanceEntry"
-                   Placeholder="Balance"
-                   Keyboard="Numeric"
-                   TextColor="Black"
-                   PlaceholderColor="Gray"
-                   Text="{Binding Balance}"/>
+                    <VerticalStackLayout Spacing="5">
 
-            <Picker x:Name="ParentPicker"
-                    Title="Select parent account"
-                    TextColor="Black"
-                    TitleColor="Gray"
-                    ItemsSource="{Binding Parents}"
-                    SelectedItem="{Binding SelectedParent}"
-                    ItemDisplayBinding="{Binding Name}"/>
+                        <Label 
+                            Text="Enter Name"
+                           Style="{StaticResource SectionLabelStyle}"/>
 
-            <HorizontalStackLayout Spacing="10">
+                        <Entry 
+                            x:Name="NameEntry"
+                            Placeholder="Account name"
+                            Text="{Binding Name}"/>
 
-                <Button Text="Cancel"
-                        BackgroundColor="#9E9E9E"
-                        TextColor="White"
-                        CornerRadius="8"
-                        Command="{Binding CancelCommand}"/>
+                    </VerticalStackLayout>
 
-                <Button Text="Create"
-                        BackgroundColor="#4CAF50"
-                        TextColor="White"
-                        CornerRadius="8"
-                        Command="{Binding CreateCommand}"/>
+                    <VerticalStackLayout Spacing="5">
 
-            </HorizontalStackLayout>
+                        <Label 
+                            Text="Enter Start Balnce"
+                           Style="{StaticResource SectionLabelStyle}"/>
 
-        </VerticalStackLayout>
+                        <Entry 
+                            x:Name="BalanceEntry"
+                            Placeholder="Balance"
+                            Keyboard="Numeric"
+                            Text="{Binding Balance}"/>
 
-    </Border>
+                    </VerticalStackLayout>
+
+                    <Picker x:Name="ParentPicker"
+                         Title="Select Parent Account"
+                         ItemsSource="{Binding Parents}"
+                         SelectedItem="{Binding SelectedParent}"
+                         ItemDisplayBinding="{Binding Name}"/>  
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+        </Border>
+
+        <Button Grid.Row="1"
+                Grid.Column="1"
+            Text="Cancel"
+            Command="{Binding CancelCommand}"
+            Style="{StaticResource PopupCancelButtonStyle}"
+            Margin="5,10"/>
+
+        <Button Grid.Row="1"
+                Grid.Column="0"
+            Text="Create"
+            Margin="5,10"
+            Command="{Binding CreateCommand}"
+            Style="{StaticResource PopupConfirmButtonStyle}"/>
+    </Grid>
 
 </toolkit:Popup>

@@ -66,23 +66,37 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var name = Name;
-
-            if (name is null)
+            try
             {
-                throw new ArgumentException($"Enter Name!");
+                var name = Name;
+
+                if (String.IsNullOrWhiteSpace(name))
+                {
+                    throw new ArgumentException($"Enter Name!");
+                }
+
+                if (!decimal.TryParse(Balance, out var balance))
+                {
+                    throw new ArgumentException("Wrong Balnce Format! (Decimal >= 0)");
+                }
+
+                var parent = SelectedParent;
+
+
+                CloseAction?.Invoke(new CreateAccountCommand(
+                    _userContext.UserId,
+                    name,
+                    balance,
+                    parent == null || parent.Id == Guid.Empty ? null : parent.Id));
             }
-
-            var balance = decimal.TryParse(Balance, out var b) ? b : 0;
-
-            var parent = SelectedParent;
-
-
-            CloseAction?.Invoke(new CreateAccountCommand(
-                _userContext.UserId,
-                name, 
-                balance,
-                parent == null || parent.Id == Guid.Empty ? null : parent.Id));
+            catch (ArgumentException ex)
+            {
+                await Shell.Current.DisplayAlert(
+                       "Can't Create Account",
+                       ex.Message,
+                       "OK");
+            }
+            
         }
     }
 }
