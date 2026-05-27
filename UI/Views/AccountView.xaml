@@ -10,6 +10,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <converter:IndentConverter x:Key="indentConverter"/>
+            <converter:AccountSelectedConverter x:Key="accountSelectedConverter"/>
             <converter:MoneyColorConverter
                         x:Key="moneyColorConverter"
                         PositiveColor="{StaticResource MoneyPositive}"
@@ -43,36 +44,59 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="viewmodel:DisplayedAccount">
+                    <Border Padding="4"
+                        StrokeThickness="0"
+                        BackgroundColor="Transparent">
 
-                    <Grid ColumnDefinitions="*, Auto">
+                        <Border.Triggers>
 
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AccountViewModel}}, Path=ChangeSelectedAccountCommand}"
-                                CommandParameter="{Binding .}" />
-                        </Grid.GestureRecognizers>
+                            <DataTrigger TargetType="Border"
+                     Binding="{Binding IsSelected}"
+                     Value="True">
 
-                        <FlyoutBase.ContextFlyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem 
-                                    Text="UnSelect Account"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AccountViewModel}}, Path=UnSelectAccountCommand}"
-                                    IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AccountViewModel}}, Path=IsSelectedAccount}"/>
-                            </MenuFlyout>
-                        </FlyoutBase.ContextFlyout>
+                                <Setter Property="BackgroundColor"
+                    Value="#2A1F3D"/>
 
-                        <Grid Padding="{Binding Level, Converter={StaticResource indentConverter}}">
+                                <Setter Property="Stroke"
+                    Value="{StaticResource PrimaryPurple}"/>
 
-                            <Label Text="{Binding Name}"/>
+                                <Setter Property="StrokeThickness"
+                    Value="2"/>
+                            </DataTrigger>
 
+                        </Border.Triggers>
+
+
+                        <Grid ColumnDefinitions="*, Auto">
+
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AccountViewModel}}, Path=ChangeSelectedAccountCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+
+                            <FlyoutBase.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem 
+                                        Text="UnSelect Account"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AccountViewModel}}, Path=UnSelectAccountCommand}"
+                                        IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AccountViewModel}}, Path=IsSelectedAccount}"/>
+                                </MenuFlyout>
+                            </FlyoutBase.ContextFlyout>
+
+                            <Grid Padding="{Binding Level, Converter={StaticResource indentConverter}}">
+
+                                <Label Text="{Binding Name}"/>
+
+                            </Grid>
+
+                            <Label Grid.Column="1"
+                                   Padding="10, 10, 10, 10"
+                                   Text="{Binding Balance}"
+                                   TextColor="{Binding Balance, Converter={StaticResource moneyColorConverter}}"
+                                   HorizontalOptions="End"/>
                         </Grid>
-
-                        <Label Grid.Column="1"
-                               Padding="10, 10, 10, 10"
-                               Text="{Binding Balance}"
-                               TextColor="{Binding Balance, Converter={StaticResource moneyColorConverter}}"
-                               HorizontalOptions="End"/>
-                    </Grid>
+                    </Border>
 
                 </DataTemplate>
             </CollectionView.ItemTemplate>

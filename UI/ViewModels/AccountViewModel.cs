@@ -21,15 +21,19 @@ using UI.PopUps.Service;
 
 namespace UI.ViewModels
 {
-    public class DisplayedAccount(Guid Id,
+    public partial class DisplayedAccount(Guid Id,
         string? Name,
         string? Balance,
         int Level)
+        : ObservableObject
     {
         public Guid Id { get; } = Id;
         public string? Name { get; } = Name;
         public string? Balance { get; } = Balance;
         public int Level { get; } = Level;
+
+        [ObservableProperty]
+        public partial bool IsSelected { get; set; }
     }
 
     public partial class AccountViewModel : ObservableObject, IRecipient<DataBaseChangedMessage>
@@ -47,6 +51,9 @@ namespace UI.ViewModels
         public partial bool IsSelectedAccount { get; set; } = false;
 
         public ObservableCollection<DisplayedAccount> DisplayedAccounts { get; } = new();
+
+        [ObservableProperty]
+        public partial Guid? SelectedAccountId { get; set; }
 
         public AccountViewModel(
             IMediator mediator,
@@ -75,6 +82,12 @@ namespace UI.ViewModels
         public async Task ChangeSelectedAccount(DisplayedAccount account)
         {
             IsSelectedAccount = true;
+
+            foreach (var acc in DisplayedAccounts)
+                acc.IsSelected = false;
+
+            account.IsSelected = true;
+
             WeakReferenceMessenger.Default.Send(new SelectedAccountChangedMessage(account.Id));
         }
 
@@ -82,6 +95,10 @@ namespace UI.ViewModels
         public async Task UnSelectAccount()
         {
             IsSelectedAccount = false;
+
+            foreach (var acc in DisplayedAccounts)
+                acc.IsSelected = false;
+
             WeakReferenceMessenger.Default.Send(new SelectedAccountChangedMessage(null));
         }
 
