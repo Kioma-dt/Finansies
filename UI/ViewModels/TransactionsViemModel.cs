@@ -81,6 +81,30 @@ namespace UI.ViewModels
 
         public ObservableCollection<DisplayedTransaction> DisplayedTransactions { get; set; } = new();
 
+        public string DescriptionSortArrow =>
+            GetSortArrow(TransactionsOrderBy.Description);
+
+        public string AmountSortArrow =>
+            GetSortArrow(TransactionsOrderBy.Amount);
+
+        public string DateSortArrow =>
+            GetSortArrow(TransactionsOrderBy.Date);
+
+        public string TypeSortArrow =>
+            GetSortArrow(TransactionsOrderBy.Type);
+
+        public string AccountNameSortArrow =>
+            GetSortArrow(TransactionsOrderBy.AccountName);
+
+        public string CategoryNameSortArrow =>
+            GetSortArrow(TransactionsOrderBy.CategoryName);
+
+        public string FamilyMemberNameSortArrow =>
+            GetSortArrow(TransactionsOrderBy.FamilyMemberName);
+
+        public string DebtNameSortArrow =>
+            GetSortArrow(TransactionsOrderBy.DebtName);
+
         public TransactionsViewModel(
             IMediator mediator,
             IUserContext user,
@@ -159,6 +183,15 @@ namespace UI.ViewModels
             {
                 DisplayedTransactions.Add(transaction);
             }
+
+            OnPropertyChanged(nameof(DescriptionSortArrow));
+            OnPropertyChanged(nameof(AmountSortArrow));
+            OnPropertyChanged(nameof(DateSortArrow));
+            OnPropertyChanged(nameof(TypeSortArrow));
+            OnPropertyChanged(nameof(AccountNameSortArrow));
+            OnPropertyChanged(nameof(CategoryNameSortArrow));
+            OnPropertyChanged(nameof(FamilyMemberNameSortArrow));
+            OnPropertyChanged(nameof(DebtNameSortArrow));
         }
 
         [RelayCommand]
@@ -211,6 +244,14 @@ namespace UI.ViewModels
         {
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.Transactions));
             //WeakReferenceMessenger.Default.Send(new CurrentTimeMessage(DateTime.Now));
+        }
+
+        public string GetSortArrow(TransactionsOrderBy orderBy)
+        {
+            if (_orderBy != orderBy)
+                return string.Empty;
+
+            return _ascending ? " ▲" : " ▼";
         }
     }
 }

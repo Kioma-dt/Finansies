@@ -78,6 +78,33 @@ namespace UI.ViewModels
         [ObservableProperty]
         public partial bool IsLoaded { get; set; } = false;
 
+        public string DescriptionSortArrow =>
+           GetSortArrow(PlannedTransactionsOrderBy.Description);
+
+        public string StatusSortArrow =>
+           GetSortArrow(PlannedTransactionsOrderBy.Status);
+
+        public string AmountSortArrow =>
+            GetSortArrow(PlannedTransactionsOrderBy.Amount);
+
+        public string PlannedDateSortArrow =>
+            GetSortArrow(PlannedTransactionsOrderBy.PlannedDate);
+
+        public string TypeSortArrow =>
+            GetSortArrow(PlannedTransactionsOrderBy.Type);
+
+        public string AccountNameSortArrow =>
+            GetSortArrow(PlannedTransactionsOrderBy.AccountName);
+
+        public string CategoryNameSortArrow =>
+            GetSortArrow(PlannedTransactionsOrderBy.CategoryName);
+
+        public string FamilyMemberNameSortArrow =>
+            GetSortArrow(PlannedTransactionsOrderBy.FamilyMemberName);
+
+        public string DebtNameSortArrow =>
+            GetSortArrow(PlannedTransactionsOrderBy.DebtName);
+
         public PlannedTransactionsViewModel(
             IMediator mediator,
             IUserContext user,
@@ -169,6 +196,16 @@ namespace UI.ViewModels
             {
                 DisplayedPlannedTransactions.Add(transaction);
             }
+
+            OnPropertyChanged(nameof(DescriptionSortArrow));
+            OnPropertyChanged(nameof(StatusSortArrow));
+            OnPropertyChanged(nameof(AmountSortArrow));
+            OnPropertyChanged(nameof(PlannedDateSortArrow));
+            OnPropertyChanged(nameof(TypeSortArrow));
+            OnPropertyChanged(nameof(AccountNameSortArrow));
+            OnPropertyChanged(nameof(CategoryNameSortArrow));
+            OnPropertyChanged(nameof(FamilyMemberNameSortArrow));
+            OnPropertyChanged(nameof(DebtNameSortArrow));
         }
 
         [RelayCommand]
@@ -278,6 +315,14 @@ namespace UI.ViewModels
         {
             WeakReferenceMessenger.Default.Send(new DataBaseChangedMessage(DataBaseChangedMessageType.PlannedTransactions));
             WeakReferenceMessenger.Default.Send(new CurrentTimeMessage(DateTime.Now));
+        }
+
+        public string GetSortArrow(PlannedTransactionsOrderBy orderBy)
+        {
+            if (_orderBy != orderBy)
+                return string.Empty;
+
+            return _ascending ? " ▲" : " ▼";
         }
     }
 }

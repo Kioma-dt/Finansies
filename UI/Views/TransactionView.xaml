@@ -32,7 +32,19 @@
                       ColumnSpacing="10"
                       BackgroundColor="#2d2d2d">
 
-                    <Label Text="Description" Grid.Column="0" Style="{StaticResource TableHeaderLabelStyle}">
+                    <Label Grid.Column="0" Style="{StaticResource TableHeaderLabelStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+
+                                <Span Text="Description"/>
+
+                                <Span Text="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}},
+                                 Path=DescriptionSortArrow}"/>
+
+                            </FormattedString>
+                        </Label.FormattedText>
+
+
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -40,7 +52,19 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Amount" Grid.Column="1" Style="{StaticResource TableHeaderLabelStyle}">
+                    <Label Grid.Column="1" Style="{StaticResource TableHeaderLabelStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+
+                                <Span Text="Amount"/>
+
+                                <Span Text="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}},
+                                    Path=AmountSortArrow}"/>
+
+                            </FormattedString>
+                        </Label.FormattedText>
+
+
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -48,7 +72,19 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Type" Grid.Column="2" Style="{StaticResource TableHeaderLabelStyle}">
+                    <Label Grid.Column="2" Style="{StaticResource TableHeaderLabelStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+
+                                <Span Text="Type"/>
+
+                                <Span Text="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}},
+                                    Path=TypeSortArrow}"/>
+
+                            </FormattedString>
+                        </Label.FormattedText>
+
+
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -56,7 +92,19 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Date" Grid.Column="3" Style="{StaticResource TableHeaderLabelStyle}">
+                    <Label Grid.Column="3" Style="{StaticResource TableHeaderLabelStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+
+                                <Span Text="Date"/>
+
+                                <Span Text="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}},
+                                    Path=DateSortArrow}"/>
+
+                            </FormattedString>
+                        </Label.FormattedText>
+
+
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -64,7 +112,18 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Account" Grid.Column="4" Style="{StaticResource TableHeaderLabelStyle}">
+                    <Label Grid.Column="4" Style="{StaticResource TableHeaderLabelStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+
+                                <Span Text="Account"/>
+
+                                <Span Text="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}},
+                                    Path=AccountNameSortArrow}"/>
+
+                            </FormattedString>
+                        </Label.FormattedText>
+
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -72,14 +131,38 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Category" Grid.Column="5" Style="{StaticResource TableHeaderLabelStyle}">
+                    <Label Grid.Column="5" Style="{StaticResource TableHeaderLabelStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+
+                                <Span Text="Category"/>
+
+                                <Span Text="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}},
+                                    Path=CategoryNameSortArrow}"/>
+
+                            </FormattedString>
+                        </Label.FormattedText>
+
+
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
                                 CommandParameter="CategoryName" />
                         </Label.GestureRecognizers>
                     </Label>
-                    <Label Text="FamilyMember" Grid.Column="6" Style="{StaticResource TableHeaderLabelStyle}">
+                    
+                    <Label Grid.Column="6" Style="{StaticResource TableHeaderLabelStyle}">
+                        <Label.FormattedText>
+                            <FormattedString>
+
+                                <Span Text="Family Member"/>
+
+                                <Span Text="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}},
+                                    Path=FamilyMemberNameSortArrow}"/>
+
+                            </FormattedString>
+                        </Label.FormattedText>
+
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
@@ -87,7 +170,19 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                    <Label Text="Debt" Grid.Column="7" Style="{StaticResource TableHeaderLabelStyle}">
+                    <Label Grid.Column="7" Style="{StaticResource TableHeaderLabelStyle}">
+
+                        <Label.FormattedText>
+                            <FormattedString>
+
+                                <Span Text="Debt"/>
+
+                                <Span Text="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}},
+                                    Path=DebtNameSortArrow}"/>
+
+                            </FormattedString>
+                        </Label.FormattedText>
+
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TransactionsViewModel}}, Path=ChangeSortingCommand}"
