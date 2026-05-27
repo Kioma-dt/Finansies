@@ -6,50 +6,73 @@
     x:TypeArguments="dto:DateRangeDTO"
     x:Class="UI.Popups.DateRangePopUp"
     xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
-    x:DataType="viewmodel:DateRangePopUpModel">
+    x:DataType="viewmodel:DateRangePopUpModel"
+    
+    BackgroundColor="#99000000"
+    >
 
-    <Border Padding="20"
-            BackgroundColor="White"
-            WidthRequest="350"
-            Stroke="LightGray"
-            StrokeThickness="1">
+    <Grid RowDefinitions="*, Auto"
+       ColumnDefinitions="*, *"
+       RowSpacing="20"
+       ColumnSpacing="10">
 
-        <ScrollView>
-            <Grid RowDefinitions="*, *"
-                  ColumnDefinitions="*, Auto">
+        <Border Grid.Row="0"
+             Grid.ColumnSpan="2"
+             WidthRequest="320"
+             StrokeThickness="1"
+             Style="{StaticResource PrimaryPopupBorderStyle}">
 
-                
-                <DatePicker Grid.Row="0"
-                            Grid.Column="0"
-                            x:Name="StartDatePicker"
-                            TextColor="Black"
-                            Date="{Binding StartDate}"/>
+            <ScrollView
+             VerticalScrollBarVisibility="Never"
+             HorizontalScrollBarVisibility="Never">
 
-                <DatePicker Grid.Row="0"
-                            Grid.Column="1" 
-                            x:Name="EndDatePicker"
-                            Date="{Binding EndDate}"
-                            TextColor="Black"/>
+                <VerticalStackLayout
+                    Spacing="20">
 
-                <HorizontalStackLayout Grid.Row="1"
-                                       Grid.ColumnSpan="2"
-                                       Spacing="10">
+                    <VerticalStackLayout Spacing="5">
 
-                    <Button Text="Cancel"
-                            BackgroundColor="#9E9E9E"
-                            TextColor="White"
-                            Command="{Binding CancelCommand}"/>
+                        <Label 
+                          Text="Select Start Date"
+                         Style="{StaticResource SectionLabelStyle}"/>
 
-                    <Button Text="Select"
-                            BackgroundColor="#4CAF50"
-                            TextColor="White"
-                            Command="{Binding CreateCommand}"/>
+                        <DatePicker 
+                                x:Name="StartDatePicker"
+                                Date="{Binding StartDate}"/>
 
-                </HorizontalStackLayout>
+                    </VerticalStackLayout>
 
-            </Grid>
-        </ScrollView>
+                    <VerticalStackLayout Spacing="5">
 
-    </Border>
+                        <Label 
+                              Text="Select End Date"
+                             Style="{StaticResource SectionLabelStyle}"/>
+
+
+                        <DatePicker
+                                x:Name="EndDatePicker"
+                                Date="{Binding EndDate}"/>
+
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+
+            </ScrollView>
+
+        </Border>
+
+        <Button Grid.Row="1"
+             Grid.Column="1"
+         Text="Cancel"
+         Command="{Binding CancelCommand}"
+         Style="{StaticResource PopupCancelButtonStyle}"
+         Margin="5,10"/>
+
+        <Button Grid.Row="1"
+             Grid.Column="0"
+         Text="Select"
+         Margin="5,10"
+         Command="{Binding CreateCommand}"
+         Style="{StaticResource PopupConfirmButtonStyle}"/>
+    </Grid>
 
 </toolkit:Popup>

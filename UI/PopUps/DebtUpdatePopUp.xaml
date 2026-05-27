@@ -7,65 +7,72 @@
     x:TypeArguments="entity:UpdateDebtCommand"
     xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
     x:Class="UI.Popups.DebtUpdatePopUp"
-    x:DataType="viewmodel:DebtUpdatePopUpModel">
+    x:DataType="viewmodel:DebtUpdatePopUpModel"
+    
+    BackgroundColor="#99000000"
+    >
 
-    <toolkit:Popup.Resources>
-        <ResourceDictionary>
-            <Style TargetType="Picker">
-                <Setter Property="TextColor" Value="Black"/>
-                <Setter Property="TitleColor" Value="Black"/>
-            </Style>
-        </ResourceDictionary>
-    </toolkit:Popup.Resources>
+    <Grid RowDefinitions="*, Auto"
+          ColumnDefinitions="*, *"
+          RowSpacing="20"
+          ColumnSpacing="10">
 
-    <Border Padding="20"
-            BackgroundColor="White"
-            WidthRequest="350"
-            Stroke="LightGray"
-            StrokeThickness="1">
+        <Border Grid.Row="0"
+                Grid.ColumnSpan="2"
+                WidthRequest="320"
+                StrokeThickness="1"
+                Style="{StaticResource PrimaryPopupBorderStyle}">
 
-        <ScrollView>
-            <VerticalStackLayout Spacing="12">
+            <ScrollView
+                VerticalScrollBarVisibility="Never"
+                HorizontalScrollBarVisibility="Never">
+                <VerticalStackLayout Spacing="20">
 
-                <Label Text="Update Debt"
-                       FontSize="20"
-                       FontAttributes="Bold"
-                       TextColor="Black"/>
+                    <Label Text="Update Debt"
+                            Style="{StaticResource PopupTitleLabelStyle}"/>
 
-                <Entry x:Name="NameEntry"
-                       Placeholder="Debt name"
-                       TextColor="Black"
-                       Text="{Binding Name}"/>
+                    <VerticalStackLayout Spacing="5">
 
-                <Picker x:Name="CategoryPicker"
-                        Title="Select category"
+                        <Label 
+                            Text="Enter Name"
+                           Style="{StaticResource SectionLabelStyle}"/>
+
+
+                        <Entry x:Name="NameEntry"
+                           Placeholder="Debt Name"
+                           Text="{Binding Name}"/>
+
+                    </VerticalStackLayout>
+
+
+                    <Picker x:Name="CategoryPicker"
+                        Title="Select Category"
                         ItemsSource="{Binding Categories}"
                         ItemDisplayBinding="{Binding Name}"
                         SelectedItem="{Binding SelectedCategory}"/>
 
-                <Picker x:Name="FamilyPicker"
-                        Title="Select family member"
+                    <Picker x:Name="FamilyPicker"
+                        Title="Select Family Member"
                         ItemsSource="{Binding FamilyMembers}"
                         ItemDisplayBinding="{Binding Name}"
                         SelectedItem="{Binding SelectedFamilyMember}"/>
+                </VerticalStackLayout>
+            </ScrollView>
 
+        </Border>
 
-                <HorizontalStackLayout Spacing="10">
+        <Button Grid.Row="1"
+                Grid.Column="1"
+            Text="Cancel"
+            Command="{Binding CancelCommand}"
+            Style="{StaticResource PopupCancelButtonStyle}"
+            Margin="5,10"/>
 
-                    <Button Text="Cancel"
-                            BackgroundColor="#9E9E9E"
-                            TextColor="White"
-                            Command="{Binding CancelCommand}"/>
-
-                    <Button Text="Update"
-                            BackgroundColor="#4CAF50"
-                            TextColor="White"
-                            Command="{Binding CreateCommand}"/>
-
-                </HorizontalStackLayout>
-
-            </VerticalStackLayout>
-        </ScrollView>
-
-    </Border>
+        <Button Grid.Row="1"
+                Grid.Column="0"
+            Text="Update"
+            Margin="5,10"
+            Command="{Binding CreateCommand}"
+            Style="{StaticResource PopupConfirmButtonStyle}"/>
+    </Grid>
 </toolkit:Popup>

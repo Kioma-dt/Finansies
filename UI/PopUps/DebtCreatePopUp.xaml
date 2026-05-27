@@ -7,125 +7,167 @@
     x:TypeArguments="entity:CreateDebtCommand"
     xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
     x:Class="UI.Popups.DebtCreatePopUp"
-    x:DataType="viewmodel:DebtCreatePopUpModel">
+    x:DataType="viewmodel:DebtCreatePopUpModel"
+    
+     BackgroundColor="#99000000"
+    >
 
-    <toolkit:Popup.Resources>
-        <ResourceDictionary>
-            <Style TargetType="Picker">
-                <Setter Property="TextColor" Value="Black"/>
-                <Setter Property="TitleColor" Value="Black"/>
-            </Style>
-        </ResourceDictionary>
-    </toolkit:Popup.Resources>
+    <Grid RowDefinitions="*, Auto"
+      ColumnDefinitions="*, *"
+      RowSpacing="20"
+      ColumnSpacing="10">
 
-    <Border Padding="20"
-            BackgroundColor="White"
-            WidthRequest="350"
-            Stroke="LightGray"
-            StrokeThickness="1">
+        <Border Grid.Row="0"
+            Grid.ColumnSpan="2"
+            WidthRequest="320"
+            StrokeThickness="1"
+            Style="{StaticResource PrimaryPopupBorderStyle}">
 
-        <ScrollView>
-            <VerticalStackLayout Spacing="12">
+            <ScrollView
+            VerticalScrollBarVisibility="Never"
+            HorizontalScrollBarVisibility="Never">
+                <VerticalStackLayout Spacing="20">
 
-                <Label Text="Create Debt"
-                       FontSize="20"
-                       FontAttributes="Bold"
-                       TextColor="Black"/>
+                    <Label Text="Create Debt"
+                           Style="{StaticResource PopupTitleLabelStyle}"/>
 
-                <Entry x:Name="NameEntry"
-                       Placeholder="Debt name"
-                       TextColor="Black"
-                       Text="{Binding Name}"/>
+                    <VerticalStackLayout Spacing="5">
 
-                <Picker x:Name="DebtTypePicker"
-                        Title="Debt Type"
+                        <Label 
+                          Text="Enter Name"
+                         Style="{StaticResource SectionLabelStyle}"/>
+
+
+                        <Entry x:Name="NameEntry"
+                           Placeholder="Debt Name"
+                           Text="{Binding Name}"/>
+
+                    </VerticalStackLayout>
+
+                    <Picker x:Name="DebtTypePicker"
+                        Title="Select Debt Type"
                         ItemsSource="{Binding DebtTypes}"
                         SelectedItem="{Binding SelectedDebtType}"/>
 
-                <Entry x:Name="AmountEntry"
-                       Placeholder="Start Amount"
-                       Keyboard="Numeric"
-                       TextColor="Black"
-                       Text="{Binding Amount}"/>
+                    <VerticalStackLayout Spacing="5">
 
-                <DatePicker x:Name="StartDatePicker"
-                            TextColor="Black"
-                            Date="{Binding StartDate}"/>
-                <DatePicker x:Name="EndDatePicker"
-                            TextColor="Black"
-                            Date="{Binding EndDate}"/>
+                        <Label 
+                              Text="Enter Amount"
+                             Style="{StaticResource SectionLabelStyle}"/>
 
-                <Picker x:Name="CategoryPicker"
-                        Title="Select category"
-                        ItemsSource="{Binding Categories}"
-                        ItemDisplayBinding="{Binding Name}"
-                        SelectedItem="{Binding SelectedCategory}"/>
 
-                <Picker x:Name="FamilyPicker"
-                        Title="Select family member"
+                        <Entry x:Name="AmountEntry"
+                           Placeholder="Start Amount"
+                           Keyboard="Numeric"
+                           Text="{Binding Amount}"/>
+
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+
+                        <Label 
+                              Text="Select Start Date"
+                             Style="{StaticResource SectionLabelStyle}"/>
+
+
+                        <DatePicker x:Name="StartDatePicker"
+                                    Date="{Binding StartDate}"/>
+
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+
+                        <Label 
+                              Text="Select End Date"
+                             Style="{StaticResource SectionLabelStyle}"/>
+
+                        <DatePicker x:Name="EndDatePicker"
+                                Date="{Binding EndDate}"/>
+
+                    </VerticalStackLayout>
+
+                    <Picker x:Name="CategoryPicker"
+                            Title="Select Category"
+                            ItemsSource="{Binding Categories}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedCategory}"/>
+
+                    <Picker x:Name="FamilyPicker"
+                        Title="Select Family Member"
                         ItemsSource="{Binding FamilyMembers}"
                         ItemDisplayBinding="{Binding Name}"
                         SelectedItem="{Binding SelectedFamilyMember}"/>
 
-                <Picker x:Name="CapitalisationPicker"
-                        Title="Capitalisation"
-                        ItemsSource="{Binding CapitalisationsPerYear}"
-                        SelectedItem="{Binding SelectedCapitalisationsPerYear}"/>
+                    <Picker x:Name="CapitalisationPicker"
+                            Title="Select Capitalisation Per Year"
+                            ItemsSource="{Binding CapitalisationsPerYear}"
+                            SelectedItem="{Binding SelectedCapitalisationsPerYear}"/>
 
-                <Picker x:Name="InterestTypePicker"
-                        Title="Interest Type"
-                        ItemsSource="{Binding InterestTypes}"
-                        SelectedItem="{Binding SelectedInterestType}">
+                    <Picker x:Name="InterestTypePicker"
+                            Title="Select Interest Type"
+                            ItemsSource="{Binding InterestTypes}"
+                            SelectedItem="{Binding SelectedInterestType}">
 
-                    <Picker.Behaviors>
-                        <toolkit:EventToCommandBehavior
-                            EventName="SelectedIndexChanged"
-                            Command="{Binding UpdateInterestFieldCommand}"
-                            BindingContext="{Binding Source={x:Reference InterestTypePicker}, Path=BindingContext}" />
-                    </Picker.Behaviors>
+                        <Picker.Behaviors>
+                            <toolkit:EventToCommandBehavior
+                                EventName="SelectedIndexChanged"
+                                Command="{Binding UpdateInterestFieldCommand}"
+                                BindingContext="{Binding Source={x:Reference InterestTypePicker}, Path=BindingContext}" />  
+                        </Picker.Behaviors>
 
-                </Picker>
+                    </Picker>
 
-                <Entry x:Name="InterestValueEntry"
-                       Placeholder="{Binding InterestValuePlaceholder}"
-                       Keyboard="Numeric"
-                       TextColor="Black"
-                       Text="{Binding InterestRate}"
-                       IsEnabled="{Binding IsInterestValueEnabled}"/>
+                    <VerticalStackLayout Spacing="5">
+
+                        <Label 
+                              Text="Enter Interests Value"
+                             Style="{StaticResource SectionLabelStyle}"/>
+
+                        <Entry x:Name="InterestValueEntry"
+                           Placeholder="{Binding InterestValuePlaceholder}"
+                           Keyboard="Numeric"
+                           Text="{Binding InterestRate}"
+                           IsEnabled="{Binding IsInterestValueEnabled}"/>
+
+                    </VerticalStackLayout>
 
 
-                <HorizontalStackLayout Spacing="10">
-                    <CheckBox x:Name="AutoCalculateCheckBox"
-                        IsChecked="{Binding IsAutoPlanned}"/>
+                    <Grid ColumnDefinitions="Auto, Auto">
+                        <CheckBox Grid.Column="0"
+                            x:Name="AutoCalculateCheckBox"
+                            IsChecked="{Binding IsAutoPlanned}"
+                            />
 
-                    <Label Text="Auto calculate payments"
-                       VerticalOptions="Center"
-                       TextColor="Black"/>
-                </HorizontalStackLayout>
+                        <Label Grid.Column="1" 
+                            Text="Auto Calculate"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+                    </Grid>
 
-                <Picker x:Name="PaymentPeriodicityPicker"
-                    Title="Payment frequency"
-                    TextColor="Black"
-                    TitleColor="Gray"
-                    ItemsSource="{Binding TransactionPeriodicities}"
-                    SelectedItem="{Binding SelectedTransactionPeriodicity}"/>
+                    <Picker x:Name="PaymentPeriodicityPicker"
+                            Title="Payment Frequency"
+                            ItemsSource="{Binding TransactionPeriodicities}"
+                            SelectedItem="{Binding SelectedTransactionPeriodicity}"
+                            IsEnabled="{Binding IsAutoPlanned}"/>
 
-                <HorizontalStackLayout Spacing="10">
 
-                    <Button Text="Cancel"
-                            BackgroundColor="#9E9E9E"
-                            TextColor="White"
-                            Command="{Binding CancelCommand}"/>
+                </VerticalStackLayout>
+            </ScrollView>
 
-                    <Button Text="Create"
-                            BackgroundColor="#4CAF50"
-                            TextColor="White"
-                            Command="{Binding CreateCommand}"/>
+        </Border>
 
-                </HorizontalStackLayout>
+        <Button Grid.Row="1"
+            Grid.Column="1"
+        Text="Cancel"
+        Command="{Binding CancelCommand}"
+        Style="{StaticResource PopupCancelButtonStyle}"
+        Margin="5,10"/>
 
-            </VerticalStackLayout>
-        </ScrollView>
-
-    </Border>
+        <Button Grid.Row="1"
+            Grid.Column="0"
+        Text="Create"
+        Margin="5,10"
+        Command="{Binding CreateCommand}"
+        Style="{StaticResource PopupConfirmButtonStyle}"/>
+    </Grid>
 </toolkit:Popup>
