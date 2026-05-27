@@ -242,6 +242,50 @@
 
         <Setter Property="HeightRequest"
                 Value="48" />
+
+        <Setter Property="VisualStateManager.VisualStateGroups">
+
+            <VisualStateGroupList>
+
+                <VisualStateGroup x:Name="CommonStates">
+
+                    <!-- NORMAL -->
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+
+                            <Setter Property="Opacity"
+                                Value="1" />
+
+                            <Setter Property="BackgroundColor"
+                                Value="{StaticResource SecondaryBlack}" />
+
+                            <Setter Property="TextColor"
+                                Value="{StaticResource WhiteText}" />
+
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <!-- DISABLED -->
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+
+                            <Setter Property="BackgroundColor"
+                                Value="#1A1A1A" />
+
+                            <Setter Property="TextColor"
+                                Value="#777777" />
+
+                            <Setter Property="PlaceholderColor"
+                                Value="#555555" />
+
+                        </VisualState.Setters>
+                    </VisualState>
+
+                </VisualStateGroup>
+
+            </VisualStateGroupList>
+
+        </Setter>
     </Style>
 
     <!-- ========================= -->

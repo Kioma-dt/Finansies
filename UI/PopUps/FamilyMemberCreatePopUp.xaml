@@ -7,44 +7,62 @@
     x:TypeArguments="entity:CreateFamilyMemberCommand"
     xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
     x:Class="UI.Popups.FamilyMemberCreatePopUp"
-    x:DataType="viewmodel:FamilyMemberCreatePopUpModel">
+    x:DataType="viewmodel:FamilyMemberCreatePopUpModel"
+    
+    BackgroundColor="#99000000"
+    >
 
-    <Border Padding="20"
-            BackgroundColor="White"
+    <Grid RowDefinitions="*, Auto"
+      ColumnDefinitions="*, *"
+      RowSpacing="20"
+      ColumnSpacing="10">
+
+        <Border Grid.Row="0"
+            Grid.ColumnSpan="2"
             WidthRequest="320"
-            Stroke="LightGray"
-            StrokeThickness="1">
+            StrokeThickness="1"
+            Style="{StaticResource PrimaryPopupBorderStyle}">
 
-        <VerticalStackLayout Spacing="12">
+            <ScrollView
+            VerticalScrollBarVisibility="Never"
+            HorizontalScrollBarVisibility="Never">
+                <VerticalStackLayout Spacing="20">
 
-            <Label Text="Create Family Member"
-                   FontSize="20"
-                   FontAttributes="Bold"
-                   TextColor="Black"/>
+                    <Label Text="Create Family Member"
+                            Style="{StaticResource PopupTitleLabelStyle}"/>
 
-            <Entry x:Name="NameEntry"
-                   Placeholder="Name"
-                   TextColor="Black"
-                   PlaceholderColor="Gray"
-                   Text="{Binding Name}"/>
+                    <VerticalStackLayout Spacing="5">
 
-            <HorizontalStackLayout Spacing="10">
+                        <Label 
+                            Text="Enter Name"
+                           Style="{StaticResource SectionLabelStyle}"/>
 
-                <Button Text="Cancel"
-                        BackgroundColor="#9E9E9E"
-                        TextColor="White"
-                        CornerRadius="8"
-                        Command="{Binding CancelCommand}"/>
 
-                <Button Text="Create"
-                        BackgroundColor="#4CAF50"
-                        TextColor="White"
-                        CornerRadius="8"
-                        Command="{Binding CreateCommand}"/>
+                        <Entry x:Name="NameEntry"
+                           Placeholder="Member Name"
+                           Text="{Binding Name}"/>
 
-            </HorizontalStackLayout>
+                    </VerticalStackLayout>
 
-        </VerticalStackLayout>
 
-    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+
+        </Border>
+
+        <Button Grid.Row="1"
+            Grid.Column="1"
+        Text="Cancel"
+        Command="{Binding CancelCommand}"
+        Style="{StaticResource PopupCancelButtonStyle}"
+        Margin="5,10"/>
+
+        <Button Grid.Row="1"
+            Grid.Column="0"
+        Text="Create"
+        Margin="5,10"
+        Command="{Binding CreateCommand}"
+        Style="{StaticResource PopupConfirmButtonStyle}"/>
+    </Grid>
+
 </toolkit:Popup>
