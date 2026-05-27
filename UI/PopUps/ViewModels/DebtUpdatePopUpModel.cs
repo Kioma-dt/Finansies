@@ -107,29 +107,38 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var name = Name;
-
-            if (name is null)
+            try
             {
-                throw new ArgumentException("Enter Name!");
+                var name = Name;
+
+                if (String.IsNullOrWhiteSpace(name))
+                {
+                    throw new ArgumentException("Enter Name!");
+                }
+
+                var category = SelectedCategory;
+                var family = SelectedFamilyMember;
+
+                var comand = new UpdateDebtCommand
+                    (
+                        _userContext.UserId,
+                        _debtId,
+                        name,
+                        category?.Id == Guid.Empty ? null : category?.Id,
+                        family?.Id == Guid.Empty ? null : family?.Id
+                    );
+
+                CloseAction?.Invoke(comand);
+            }
+            catch (ArgumentException ex)
+            {
+                await Shell.Current.DisplayAlert(
+                       "Can't Update Debt",
+                       ex.Message,
+                       "OK");
             }
 
-
-            var category = SelectedCategory;
-            var family = SelectedFamilyMember;
-
-          
-
-            var comand = new UpdateDebtCommand
-                (
-                    _userContext.UserId,
-                    _debtId,
-                    name,
-                    category?.Id == Guid.Empty ? null : category?.Id,
-                    family?.Id == Guid.Empty ? null : family?.Id
-                );
-
-            CloseAction?.Invoke(comand);
+            
         }
     }
 }

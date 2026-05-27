@@ -75,9 +75,9 @@ namespace UI.PopUps.ViewModels
                     throw new ArgumentException($"Enter Name!");
                 }
 
-                if (!decimal.TryParse(Balance, out var balance))
+                if (!decimal.TryParse(Balance, out var balance) || balance <= 0)
                 {
-                    throw new ArgumentException("Wrong Balnce Format! (Decimal >= 0)");
+                    throw new ArgumentException("Wrong Balnce Format! (Decimal > 0)");
                 }
 
                 var parent = SelectedParent;

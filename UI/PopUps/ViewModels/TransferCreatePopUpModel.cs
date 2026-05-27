@@ -69,36 +69,50 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var description = Description;
-
-            if (description is null)
+            try
             {
-                throw new ArgumentException($"Enter Name!");
+                var description = Description;
+
+                if (String.IsNullOrWhiteSpace(description))
+                {
+                    throw new ArgumentException("Enter Description!");
+                }
+
+                if (!decimal.TryParse(Amount ?? "", out var amount) || amount <= 0)
+                {
+                    throw new ArgumentException("Wrong Amount Format! (Decimal >= 0)");
+                }
+
+                var date = Date;
+
+                if (SelectedFromAccount is null || SelectedToAccount is null)
+                {
+                    throw new ArgumentException($"Select Accounts!");
+                }
+
+                if (SelectedFromAccount.Id == SelectedToAccount.Id)
+                {
+                    throw new ArgumentException($"Select Different Accounts!");
+                }
+
+
+                CloseAction?.Invoke(new CreateTransferCommand(
+                    _userContext.UserId,
+                    amount,
+                    description,
+                    date,
+                    SelectedFromAccount.Id,
+                    SelectedToAccount.Id
+                    ));
             }
-
-            var amount = decimal.TryParse(Amount, out var b) ? b : 0;
-
-            var date = Date;
-
-            if (SelectedFromAccount is null || SelectedToAccount is null)
+            catch (ArgumentException ex)
             {
-                throw new ArgumentException($"Select Accounts!");
+                await Shell.Current.DisplayAlert(
+                       "Can't Create Transfer",
+                       ex.Message,
+                       "OK");
             }
-
-            if (SelectedFromAccount.Id == SelectedToAccount.Id)
-            {
-                throw new ArgumentException($"Select Different Accounts!");
-            }
-
-
-            CloseAction?.Invoke(new CreateTransferCommand(
-                _userContext.UserId,
-                amount,
-                description,
-                date,
-                SelectedFromAccount.Id,
-                SelectedToAccount.Id
-                ));
+           
         }
     }
 }

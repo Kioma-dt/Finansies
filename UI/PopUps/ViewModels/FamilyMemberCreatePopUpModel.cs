@@ -38,18 +38,27 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var name = Name;
-
-            if (name is null)
+            try
             {
-                throw new ArgumentException($"Enter Name!");
+                var name = Name;
+
+                if (String.IsNullOrWhiteSpace(name))
+                { 
+                    throw new ArgumentException($"Enter Name!");
+                }
+
+                CloseAction?.Invoke(new CreateFamilyMemberCommand(
+                    _userContext.UserId,
+                    name
+                   ));
             }
-
-
-            CloseAction?.Invoke(new CreateFamilyMemberCommand(
-                _userContext.UserId,
-                name
-               ));
+            catch (ArgumentException ex)
+            {
+                await Shell.Current.DisplayAlert(
+                       "Can't Create Family Member",
+                       ex.Message,
+                       "OK");
+            }
         }
     }
 }

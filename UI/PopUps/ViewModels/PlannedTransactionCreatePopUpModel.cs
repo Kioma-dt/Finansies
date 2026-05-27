@@ -207,44 +207,61 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var description = Description;
-
-            if (description is null)
+            try
             {
-                throw new ArgumentException("Enter Description!");
+                var description = Description;
+
+                if (String.IsNullOrWhiteSpace(description))
+                {
+                    throw new ArgumentException("Enter Description!");
+                }
+
+                if (!decimal.TryParse(Amount, out var amount) || amount <= 0)
+                {
+                    throw new ArgumentException("Wrong Amount Format! (Decimal > 0)");
+                }
+
+                var transactionType = SelectedTransactionType;
+
+                var startDate = StartDate;
+
+                var account = SelectedAccount;
+                var category = SelectedCategory;
+                var family = SelectedFamilyMember;
+                var debt = SelectedDebt;
+
+                if (!UInt32.TryParse(NumberOfTransactions ?? String.Empty, out var numberOfTransactions) || numberOfTransactions == 0)
+                {
+                    throw new ArgumentException("Wrong Number Of Transactions Format! (Unsigned Integer)");
+                }
+
+                TransactionPeriodicity payments = SelectedTransactionPeriodicity;
+
+                var comand = new CreatePlannedTransactionCommand
+                    (
+                        _userContext.UserId,
+                        amount,
+                        description,
+                        transactionType,
+                        startDate,
+                        account?.Id == Guid.Empty ? null : account?.Id,
+                        category?.Id == Guid.Empty ? null : category?.Id,
+                        family?.Id == Guid.Empty ? null : family?.Id,
+                        debt?.Id == Guid.Empty ? null : debt?.Id,
+                        numberOfTransactions,
+                        payments
+                    );
+
+                CloseAction?.Invoke(comand);
             }
-
-            var amount = decimal.Parse(Amount ?? "");
-
-            var transactionType = SelectedTransactionType;
-
-            var startDate = StartDate;
-
-            var account = SelectedAccount;
-            var category = SelectedCategory;
-            var family = SelectedFamilyMember;
-            var debt = SelectedDebt;
-
-            var numberOfTransactions = UInt32.Parse(NumberOfTransactions ??  String.Empty);
-
-            TransactionPeriodicity payments = SelectedTransactionPeriodicity;
-
-            var comand = new CreatePlannedTransactionCommand
-                (
-                    _userContext.UserId,
-                    amount,
-                    description,
-                    transactionType,
-                    startDate,
-                    account?.Id == Guid.Empty ? null : account?.Id,
-                    category?.Id == Guid.Empty ? null : category?.Id,
-                    family?.Id == Guid.Empty ? null : family?.Id,
-                    debt?.Id == Guid.Empty ? null : debt?.Id,
-                    numberOfTransactions,
-                    payments
-                );
-
-            CloseAction?.Invoke(comand);
+            catch (ArgumentException ex)
+            {
+                await Shell.Current.DisplayAlert(
+                       "Can't Create Planned Transaction",
+                       ex.Message,
+                       "OK");
+            }
+            
         }
     }
 }

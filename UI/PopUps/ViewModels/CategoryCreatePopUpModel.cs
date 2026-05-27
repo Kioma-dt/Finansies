@@ -63,27 +63,38 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var name = Name;
-
-            if (name is null)
+            try
             {
-                throw new ArgumentException($"Enter Name!");
+                var name = Name;
+
+                if (String.IsNullOrWhiteSpace(name))
+                {
+                    throw new ArgumentException($"Enter Name!");
+                }
+
+                var description = Description;
+
+                if (String.IsNullOrWhiteSpace(description))
+                {
+                    throw new ArgumentException($"Enter Description!");
+                }
+
+                var parent = SelectedParent;
+
+
+                CloseAction?.Invoke(new CreateCategoryCommand(_userContext.UserId,
+                    name,
+                    description,
+                    parent == null || parent.Id == Guid.Empty ? null : parent.Id));
             }
-
-            var description = Description;
-
-            if (description is null)
+            catch (ArgumentException ex)
             {
-                throw new ArgumentException($"Enter Description!");
+                await Shell.Current.DisplayAlert(
+                       "Can't Create Category",
+                       ex.Message,
+                       "OK");
             }
-
-            var parent = SelectedParent;
-
-
-            CloseAction?.Invoke(new CreateCategoryCommand(_userContext.UserId, 
-                name, 
-                description,
-                parent == null || parent.Id == Guid.Empty ? null : parent.Id));
+           
         }
     }
 }

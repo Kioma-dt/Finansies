@@ -114,29 +114,40 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var description = Description;
-
-            if (description is null)
+            try
             {
-                throw new ArgumentException("Enter Description!");
+                var description = Description;
+
+                if (String.IsNullOrWhiteSpace(description))
+                {
+                    throw new ArgumentException("Enter Description!");
+                }
+
+                var date = Date;
+
+                var category = SelectedCategory;
+                var family = SelectedFamilyMember;
+
+                var comand = new UpdateTransactionCommand
+                    (
+                        _userContext.UserId,
+                        _transactionId,
+                        description,
+                        date,
+                        category?.Id == Guid.Empty ? null : category?.Id,
+                        family?.Id == Guid.Empty ? null : family?.Id
+                    );
+
+                CloseAction?.Invoke(comand);
             }
-
-            var date = Date;
-
-            var category = SelectedCategory;
-            var family = SelectedFamilyMember;
-
-            var comand = new UpdateTransactionCommand
-                (
-                    _userContext.UserId,
-                    _transactionId,
-                    description,
-                    date,
-                    category?.Id == Guid.Empty ? null : category?.Id,
-                    family?.Id == Guid.Empty ? null : family?.Id
-                );
-
-            CloseAction?.Invoke(comand);
+            catch (ArgumentException ex)
+            {
+                await Shell.Current.DisplayAlert(
+                       "Can't Update Transaction",
+                       ex.Message,
+                       "OK");
+            }
+            
         }
     }
 }

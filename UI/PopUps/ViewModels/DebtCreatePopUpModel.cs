@@ -198,57 +198,75 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var name = Name;
-
-            if (name is null)
+            try
             {
-                throw new ArgumentException("Enter Name!");
+                var name = Name;
+
+                if (String.IsNullOrWhiteSpace(name))
+                {
+                    throw new ArgumentException("Enter Name!");
+                }
+
+                if (!decimal.TryParse(Amount, out var amount) || amount <= 0)
+                {
+                    throw new ArgumentException("Wrong Amount Format! (Decimal > 0)");
+                }
+
+                if (!decimal.TryParse(InterestRate, out var interestValue) || interestValue <= 0)
+                {
+                    throw new ArgumentException("Wrong Interest Value Format! (Decimal > 0)");
+                }
+
+                var interestType = SelectedInterestType;
+
+                var debtType = SelectedDebtType;
+
+                var startDate = StartDate;
+
+                var endDate = EndDate;
+
+                if (startDate > endDate)
+                {
+                    throw new ArgumentException("Start Date Should Be Less Then End Date!");
+                }
+
+                var capitalisations = SelectedCapitalisationsPerYear == CapitalisationsPerYear[1] ? 1 : 12;
+
+                var category = SelectedCategory;
+                var family = SelectedFamilyMember;
+
+                var autoCalculate = IsAutoPlanned;
+
+                TransactionPeriodicity payments = SelectedTransactionPeriodicity;
+
+                var comand = new CreateDebtCommand
+                    (
+                        _userContext.UserId,
+                        name,
+                        amount,
+                        debtType,
+                        startDate,
+                        endDate,
+                        category?.Id == Guid.Empty ? null : category?.Id,
+                        family?.Id == Guid.Empty ? null : family?.Id,
+                        capitalisations,
+                        interestType,
+                        interestValue,
+                        interestValue,
+                        autoCalculate,
+                        payments
+                    );
+
+                CloseAction?.Invoke(comand);
             }
-
-            var amount = decimal.Parse(Amount ?? "");
-            var interestValue = decimal.Parse(InterestRate ?? "");
-
-            var interestType = SelectedInterestType;
-
-            var debtType = SelectedDebtType;
-
-            var startDate = StartDate;
-
-            var endDate = EndDate;
-
-            if (startDate > endDate)
+            catch (ArgumentException ex)
             {
-                throw new ArgumentException("Wring Dates!");
+                await Shell.Current.DisplayAlert(
+                       "Can't Create Debt",
+                       ex.Message,
+                       "OK");
             }
-
-            var capitalisations = SelectedCapitalisationsPerYear == CapitalisationsPerYear[1] ? 1 : 12;
-
-            var category = SelectedCategory;
-            var family = SelectedFamilyMember;
-
-            var autoCalculate = IsAutoPlanned;
-
-            TransactionPeriodicity payments = SelectedTransactionPeriodicity;
-
-            var comand = new CreateDebtCommand
-                (
-                    _userContext.UserId,
-                    name,
-                    amount,
-                    debtType,
-                    startDate,
-                    endDate,
-                    category?.Id == Guid.Empty ? null : category?.Id,
-                    family?.Id == Guid.Empty ? null : family?.Id,
-                    capitalisations,
-                    interestType,
-                    interestValue,
-                    interestValue,
-                    autoCalculate,
-                    payments
-                );
-
-            CloseAction?.Invoke(comand);
+            
         }
     }
 }

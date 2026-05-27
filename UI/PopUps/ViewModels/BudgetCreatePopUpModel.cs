@@ -273,36 +273,54 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var name = Name;
-
-            if (name is null)
+            try
             {
-                throw new ArgumentException($"Enter Name!");
-            }
+                var name = Name;
 
-            var limit = decimal.TryParse(Limit, out var b) ? b : 0;
-
-            var startDate = StartDate;
-            var endDate = EndDate;    
-
-            var filters = new List<(BudgetFilterType Type, string Value)>();
-
-            foreach (var filter in SelectedFilters)
-            {
-                if (filter.SelectedValue is not null)
+                if (String.IsNullOrWhiteSpace(name))
                 {
-                    filters.Add((filter.Type, filter.SelectedValue));
+                    throw new ArgumentException($"Enter Name!");
                 }
+
+                if (!decimal.TryParse(Limit, out var limit) || limit <= 0)
+                {
+                    throw new ArgumentException("Wrong Limit Format! (Decimal > 0)");
+                }
+
+                var startDate = StartDate;
+                var endDate = EndDate;
+
+                if (startDate > endDate)
+                {
+                    throw new ArgumentException("Start Date can't be later than End Date!");
+                }
+
+                var filters = new List<(BudgetFilterType Type, string Value)>();
+
+                foreach (var filter in SelectedFilters)
+                {
+                    if (filter.SelectedValue is not null)
+                    {
+                        filters.Add((filter.Type, filter.SelectedValue));
+                    }
+                }
+
+
+                CloseAction?.Invoke(new CreateBudgetCommand(
+                    _userContext.UserId,
+                    name,
+                    limit,
+                    startDate,
+                    endDate,
+                    filters));
             }
-
-
-            CloseAction?.Invoke(new CreateBudgetCommand(
-                _userContext.UserId,
-                name,
-                limit,
-                startDate,
-                endDate,
-                filters));
+            catch (ArgumentException ex)
+            {
+                await Shell.Current.DisplayAlert(
+                       "Can't Create Budget",
+                       ex.Message,
+                       "OK");
+            }
         }
     }
 }

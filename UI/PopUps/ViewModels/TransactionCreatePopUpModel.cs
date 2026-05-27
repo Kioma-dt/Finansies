@@ -209,7 +209,7 @@ namespace UI.PopUps.ViewModels
 
                 CloseAction?.Invoke(comand);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 await Shell.Current.DisplayAlert(
                        "Can't Create Transaction",

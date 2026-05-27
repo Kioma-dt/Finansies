@@ -39,16 +39,26 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var startDate = StartDate;
-
-            var endDate = EndDate;
-
-            if (startDate > endDate)
+            try
             {
-                throw new ArgumentException("Start Date Should Be Less Then End Date!");
-            }
+                var startDate = StartDate;
 
-            CloseAction?.Invoke(new DateRangeDTO(startDate, endDate));
+                var endDate = EndDate;
+
+                if (startDate > endDate)
+                {
+                    throw new ArgumentException("Start Date Should Be Less Then End Date!");
+                }
+
+                CloseAction?.Invoke(new DateRangeDTO(startDate, endDate));
+            }
+            catch (ArgumentException ex)
+            {
+                await Shell.Current.DisplayAlert(
+                       "Can't Select This Range",
+                       ex.Message,
+                       "OK");
+            }
         }
     }
 }
