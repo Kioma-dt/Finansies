@@ -166,43 +166,56 @@ namespace UI.PopUps.ViewModels
         [RelayCommand]
         public async Task Create()
         {
-            var description = Description;
-
-            if (description is null)
+            try
             {
-                throw new ArgumentException("Enter Description!");
+                var description = Description;
+
+                if (String.IsNullOrWhiteSpace(description))
+                {
+                    throw new ArgumentException("Enter Description!");
+                }
+
+                if (!decimal.TryParse(Amount ?? "", out var amount) || amount <= 0)
+                {
+                    throw new ArgumentException("Wrong Amount Format! (Decimal >= 0)");
+                }
+
+                var transactionType = SelectedTransactionType;
+
+                var date = Date;
+
+                var account = SelectedAccount;
+                var category = SelectedCategory;
+                var family = SelectedFamilyMember;
+                var debt = SelectedDebt;
+
+                if (account is null || account.Id == Guid.Empty)
+                {
+                    throw new ArgumentException("Select Account!");
+                }
+
+                var comand = new CreateTransactionCommand
+                    (
+                        _userContext.UserId,
+                        amount,
+                        description,
+                        date,
+                        transactionType,
+                        account.Id,
+                        category?.Id == Guid.Empty ? null : category?.Id,
+                        family?.Id == Guid.Empty ? null : family?.Id,
+                        debt?.Id == Guid.Empty ? null : debt?.Id
+                    );
+
+                CloseAction?.Invoke(comand);
             }
-
-            var amount = decimal.Parse(Amount ?? "");
-
-            var transactionType = SelectedTransactionType;
-
-            var date = Date;
-
-            var account = SelectedAccount;
-            var category = SelectedCategory;
-            var family = SelectedFamilyMember;
-            var debt = SelectedDebt;
-
-            if (account is null || account.Id == Guid.Empty)
+            catch (Exception ex)
             {
-                throw new ArgumentException("Select Account!");
+                await Shell.Current.DisplayAlert(
+                       "Can't Create Transaction",
+                       ex.Message,
+                       "OK");
             }
-
-            var comand = new CreateTransactionCommand
-                (
-                    _userContext.UserId,
-                    amount,
-                    description,
-                    date,
-                    transactionType,
-                    account.Id,
-                    category?.Id == Guid.Empty ? null : category?.Id,
-                    family?.Id == Guid.Empty ? null : family?.Id,
-                    debt?.Id == Guid.Empty ? null : debt?.Id
-                );
-
-            CloseAction?.Invoke(comand);
         }
     }
 }

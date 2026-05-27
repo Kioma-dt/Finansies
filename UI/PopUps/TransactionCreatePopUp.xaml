@@ -7,46 +7,63 @@
     x:TypeArguments="entity:CreateTransactionCommand"
     xmlns:viewmodel="clr-namespace:UI.PopUps.ViewModels"
     x:Class="UI.Popups.TransactionCreatePopUp"
-    x:DataType="viewmodel:TransactionCreatePopUpModel">
+    x:DataType="viewmodel:TransactionCreatePopUpModel"
+    
+    BackgroundColor="#99000000"
+    >
 
     <Grid RowDefinitions="*, Auto"
-          ColumnDefinitions="*, *">
+          ColumnDefinitions="*, *"
+          RowSpacing="20"
+          ColumnSpacing="10">
 
         <Border Grid.Row="0"
                 Grid.ColumnSpan="2"
-                Padding="20"
-                BackgroundColor="White"
-                WidthRequest="340"
-                Stroke="LightGray"
-                StrokeThickness="1">
+                WidthRequest="320"
+                StrokeThickness="1"
+                Style="{StaticResource PrimaryPopupBorderStyle}">
 
-            <ScrollView>
-                <VerticalStackLayout Spacing="12">
+            <ScrollView
+                VerticalScrollBarVisibility="Never"
+                HorizontalScrollBarVisibility="Never">
+                <VerticalStackLayout Spacing="20">
 
                     <Label Text="Create Transaction"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="Black"/>
+                           Style="{StaticResource PopupTitleLabelStyle}"/>
 
-                    <Entry x:Name="AmountEntry"
-                           Placeholder="Amount"
-                           Keyboard="Numeric"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           Text="{Binding Amount}"/>
+                    <Grid RowDefinitions="Auto, *"
+                          RowSpacing="5">
 
+                        <Label Grid.Row="0"
+                                Text="Enter Amount"
+                               Style="{StaticResource SectionLabelStyle}"/>
 
-                    <Entry x:Name="DescriptionEntry"
+                        <Entry Grid.Row="1"
+                            x:Name="AmountEntry"
+                            Placeholder="Amount"
+                            Keyboard="Numeric"
+                            Text="{Binding Amount}"/>
+
+                    </Grid>
+
+                    <Grid RowDefinitions="Auto, *"
+                        RowSpacing="5">
+
+                        <Label Grid.Row="0"
+                            Text="Enter Description"
+                           Style="{StaticResource SectionLabelStyle}"/>
+
+                        <Entry Grid.Row="1" 
+                            x:Name="DescriptionEntry"
                            Placeholder="Description"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
                            Text="{Binding Description}"/>
 
+                    </Grid>
+
+                   
 
                     <Picker x:Name="TypePicker"
-                            Title="Transaction Type"
-                            TextColor="Black"
-                            TitleColor="Gray"
+                            Title="Select Transaction Type"
                             ItemsSource="{Binding TransactionTypes}"
                             SelectedItem="{Binding SelectedTransactionType}">
 
@@ -59,39 +76,41 @@
 
                     </Picker>
 
-                    <DatePicker x:Name="TransactionDatePicker"
-                        TextColor="Black"
-                        Format="dd.MM.yyyy"
-                        Date="{Binding Date}"/>
+                    <Grid RowDefinitions="Auto, *"
+                        RowSpacing="5">
+
+                        <Label Grid.Row="0"
+                             Text="Select Date"
+                            Style="{StaticResource SectionLabelStyle}"/>
+
+
+                        <DatePicker  Grid.Row="1" 
+                            x:Name="TransactionDatePicker"
+                            Date="{Binding Date}"/>
+
+                    </Grid>
+
 
                     <Picker x:Name="AccountPicker"
-                            Title="Select account"
-                            TextColor="Black"
-                            TitleColor="Gray"
+                            Title="Select Account"
                             ItemsSource="{Binding Accounts}"
                             ItemDisplayBinding="{Binding Name}"
                             SelectedItem="{Binding SelectedAccount}"/>
 
                     <Picker x:Name="CategoryPicker"
-                            Title="Select category"
-                            TextColor="Black"
-                            TitleColor="Gray"
+                            Title="Select Category"
                             ItemsSource="{Binding Categories}"
                             ItemDisplayBinding="{Binding Name}"
                             SelectedItem="{Binding SelectedCategory}"/>
                     
                     <Picker x:Name="FamilyMemberPicker"
-                            Title="Select family member"
-                            TextColor="Black"
-                            TitleColor="Gray"
+                            Title="Select Family Member"
                             ItemsSource="{Binding FamilyMembers}"
                             ItemDisplayBinding="{Binding Name}"
                             SelectedItem="{Binding SelectedFamilyMember}"/>
 
                     <Picker x:Name="DebtPicker"
-                            Title="Select debt"
-                            TextColor="Black"
-                            TitleColor="Gray"
+                            Title="Select Debt"
                             ItemsSource="{Binding FilteredDebts}"
                             ItemDisplayBinding="{Binding Name}"
                             SelectedItem="{Binding SelectedDebt}"/>
@@ -102,19 +121,17 @@
         </Border>
 
         <Button Grid.Row="1"
-                Grid.Column="0"
+                Grid.Column="1"
             Text="Cancel"
-            BackgroundColor="#9E9E9E"
-            TextColor="White"
-            CornerRadius="8"
-            Command="{Binding CancelCommand}"/>
+            Command="{Binding CancelCommand}"
+            Style="{StaticResource PopupCancelButtonStyle}"
+            Margin="5,10"/>
 
         <Button Grid.Row="1"
-                Grid.Column="1"
+                Grid.Column="0"
             Text="Create"
-            BackgroundColor="#4CAF50"
-            TextColor="White"
-            CornerRadius="8"
-            Command="{Binding CreateCommand}"/>
+            Margin="5,10"
+            Command="{Binding CreateCommand}"
+            Style="{StaticResource PopupConfirmButtonStyle}"/>
     </Grid>
 </toolkit:Popup>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
 
     <!-- ========================= -->
     <!-- COLORS                    -->
@@ -99,10 +100,7 @@
                 Value="{StaticResource PrimaryPurple}" />
 
         <Setter Property="FontSize"
-                Value="20" />
-
-        <Setter Property="FontAttributes"
-                Value="Bold" />
+                Value="15" />
     </Style>
 
     <Style x:Key="MutedLabelStyle"
@@ -259,7 +257,7 @@
                 Value="{StaticResource WhiteText}" />
 
         <Setter Property="TitleColor"
-                Value="{StaticResource MutedText}" />
+                Value="{StaticResource PrimaryPurple}" />
     </Style>
 
     <!-- ========================= -->
@@ -337,6 +335,9 @@
         <Setter Property="BackgroundColor"
             Value="#FF5252"/>
 
+        <Setter Property="BorderColor"
+                Value="#FF5252"/>
+
         <Setter Property="TextColor"
             Value="White"/>
 
@@ -408,5 +409,246 @@
         </Setter>
 
     </Style>
+
+    <Style TargetType="toolkit:Popup">
+
+        <!-- Затемнение фона -->
+        <Setter Property="BackgroundColor"
+            Value="#99000000"/>
+
+        <!-- Закрытие по тапу вне popup -->
+        <Setter Property="CanBeDismissedByTappingOutsideOfPopup"
+                Value="False"/>
+
+    </Style>
+
+    <!-- ========================= -->
+    <!-- POPUP CONTAINER STYLE -->
+    <!-- ========================= -->
+
+    <Style x:Key="PrimaryPopupBorderStyle"
+       TargetType="Border">
+
+        <Setter Property="BackgroundColor"
+            Value="#121212"/>
+
+        <Setter Property="Stroke"
+            Value="#C9A0FF"/>
+
+        <Setter Property="StrokeThickness"
+            Value="2"/>
+
+        <Setter Property="Padding"
+            Value="24"/>
+
+        <Setter Property="Shadow">
+
+            <Setter.Value>
+                <Shadow
+                Brush="#80000000"
+                Offset="0,8"
+                Radius="18"
+                Opacity="0.75"/>
+            </Setter.Value>
+
+        </Setter>
+
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="24"/>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+
+
+    <!-- ========================= -->
+    <!-- POPUP TITLE -->
+    <!-- ========================= -->
+
+    <Style x:Key="PopupTitleLabelStyle"
+       TargetType="Label">
+
+        <Setter Property="TextColor"
+            Value="{StaticResource PrimaryYellow}"/>
+
+        <Setter Property="FontSize"
+            Value="24"/>
+
+        <Setter Property="FontAttributes"
+            Value="Bold"/>
+
+        <Setter Property="HorizontalTextAlignment"
+            Value="Center"/>
+
+    </Style>
+
+
+
+    <!-- ========================= -->
+    <!-- POPUP MESSAGE -->
+    <!-- ========================= -->
+
+    <Style x:Key="PopupMessageLabelStyle"
+       TargetType="Label">
+
+        <Setter Property="TextColor"
+            Value="White"/>
+
+        <Setter Property="FontSize"
+            Value="15"/>
+
+        <Setter Property="LineBreakMode"
+            Value="WordWrap"/>
+
+    </Style>
+
+
+
+    <!-- ========================= -->
+    <!-- CONFIRM BUTTON -->
+    <!-- ========================= -->
+
+    <Style x:Key="PopupConfirmButtonStyle"
+       TargetType="Button">
+
+        <Setter Property="BackgroundColor"
+            Value="{StaticResource PrimaryYellow}" />
+
+        <Setter Property="TextColor"
+            Value="Black" />
+
+        <Setter Property="CornerRadius"
+            Value="14" />
+
+        <Setter Property="Padding"
+            Value="14,10" />
+
+        <Setter Property="FontSize"
+            Value="16" />
+
+        <Setter Property="FontAttributes"
+            Value="Bold" />
+
+        <Setter Property="BorderColor"
+            Value="{StaticResource PrimaryYellow}" />
+
+        <Setter Property="BorderWidth"
+            Value="2" />
+
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+
+                <VisualStateGroup Name="CommonStates">
+
+                    <VisualState Name="Normal"/>
+
+                    <VisualState Name="Pressed">
+                        <VisualState.Setters>
+
+                            <Setter Property="Scale"
+                                Value="0.96"/>
+
+                            <Setter Property="Opacity"
+                                Value="0.85"/>
+
+                        </VisualState.Setters>
+                    </VisualState>
+
+                </VisualStateGroup>
+
+            </VisualStateGroupList>
+        </Setter>
+
+    </Style>
+
+
+
+    <!-- ========================= -->
+    <!-- CANCEL BUTTON -->
+    <!-- ========================= -->
+
+    <Style x:Key="PopupCancelButtonStyle"
+       TargetType="Button">
+
+        <Setter Property="BackgroundColor"
+    Value="#FF5252"/>
+
+        <Setter Property="BorderColor"
+        Value="#FF5252"/>
+
+        <Setter Property="TextColor"
+    Value="White"/>
+
+        <Setter Property="CornerRadius"
+    Value="14"/>
+
+        <Setter Property="Padding"
+    Value="14,10"/>
+
+        <Setter Property="FontSize"
+    Value="16"/>
+
+        <Setter Property="FontAttributes"
+    Value="Bold"/>
+
+
+        <Setter Property="BorderWidth"
+    Value="2"/>
+
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow
+        Brush="#66000000"
+        Offset="0,4"
+        Radius="10"
+        Opacity="0.7"/>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+
+                <VisualStateGroup Name="CommonStates">
+
+                    <!-- NORMAL -->
+                    <VisualState Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="Scale"
+                        Value="1"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <!-- PRESSED -->
+                    <VisualState Name="Pressed">
+                        <VisualState.Setters>
+
+                            <Setter Property="Scale"
+                        Value="0.96"/>
+
+                            <Setter Property="BackgroundColor"
+                        Value="#E53935"/>
+
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <!-- DISABLED -->
+                    <VisualState Name="Disabled">
+                        <VisualState.Setters>
+
+                            <Setter Property="Opacity"
+                        Value="0.5"/>
+
+                        </VisualState.Setters>
+                    </VisualState>
+
+                </VisualStateGroup>
+
+            </VisualStateGroupList>
+        </Setter>
+
+    </Style>
+
 
 </ResourceDictionary>
