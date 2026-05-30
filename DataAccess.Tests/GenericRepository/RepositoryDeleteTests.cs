@@ -146,7 +146,7 @@ namespace DataAccess.Tests.GenericRepository
 
             Func<Task> act = () => repo.Delete(entity);
 
-            await act.Should().ThrowAsync();
+            await act.Should().NotThrowAsync();
         }
 
         [Fact]

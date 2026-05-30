@@ -28,6 +28,12 @@ namespace DataAccess.RepositoriesImplementation
         {
             await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
+            var exists = await dbContext.Set<T>()
+                .AnyAsync(x => x.Id == entity.Id);
+
+            if (!exists)
+                return;
+
             dbContext.Set<T>().Attach(entity);
             dbContext.Set<T>().Remove(entity);
 
