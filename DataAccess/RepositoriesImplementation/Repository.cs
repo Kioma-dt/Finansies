@@ -77,6 +77,17 @@ namespace DataAccess.RepositoriesImplementation
         {
             await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
+            if (entity is null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var exists = await dbContext.Set<T>()
+                .AnyAsync(x => x.Id == entity.Id);
+
+            if (!exists)
+                return;
+
             dbContext.Entry(entity).State = EntityState.Modified;
             await dbContext.SaveChangesAsync();
         }
