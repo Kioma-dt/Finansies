@@ -5,15 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:UI.Views"
     xmlns:local="clr-namespace:UI"
-    Title="UI">
+    Title="Finansies">
 
 
-
-    <FlyoutItem Title="Transactions">
-        <ShellContent
-            Title="Auth"
+    <ShellContent
             ContentTemplate="{DataTemplate views:AuthentificationPage}" />
-    </FlyoutItem>
 
 
 </Shell>

@@ -5,8 +5,7 @@
             xmlns:viewmodel="clr-namespace:UI.ViewModels"
             xmlns:converter="clr-namespace:UI.Converters"
              x:Class="UI.Views.MainPage"
-             x:DataType="viewmodel:MainPageViewModel"
-             Title="MainPage">
+             x:DataType="viewmodel:MainPageViewModel">
     <Grid RowDefinitions="Auto,*"
       ColumnDefinitions="*,4*">
 
