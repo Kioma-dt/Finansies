@@ -9,7 +9,6 @@ namespace DataAccess.RepositoriesImplementation
         : Repository<Category>,
         ICategoryRepository
     {
-        private readonly IDbContextFactory<FinansiesDbContext> _factory;
 
         public CategoryRepository(IDbContextFactory<FinansiesDbContext> factory)
             :base(factory)
@@ -19,7 +18,7 @@ namespace DataAccess.RepositoriesImplementation
 
         public async Task SetParent(Guid userId, Guid id, Category parent)
         {
-            await using var db = await _factory.CreateDbContextAsync();
+            await using var db = await _dbContextFactory.CreateDbContextAsync();
 
             var entity = await db.Categories
                 .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);

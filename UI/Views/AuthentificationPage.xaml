@@ -18,7 +18,7 @@
             <Label
                 Grid.Row="0"
                 Grid.ColumnSpan="2"
-                Text="Authorization"
+                Text="Your Personal Finansies"
                 Style="{StaticResource Headline}"
                 HorizontalOptions="Center"/>
 

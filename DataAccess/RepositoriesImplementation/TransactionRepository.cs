@@ -19,6 +19,16 @@ namespace DataAccess.RepositoriesImplementation
         {
             await using var db = await _dbContextFactory.CreateDbContextAsync();
 
+            var transactions = await db.Transactions.ToListAsync();
+
+            transactions = transactions.Where(x => x.UserId == userId).ToList();
+
+            var tr = await db.Transactions
+                .Where(specification)
+                .Include(x => x.Account)
+                .ToListAsync();
+
+
             return await db.Transactions
                 .Where(x => x.UserId == userId)
                 .Where(specification)
