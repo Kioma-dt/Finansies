@@ -120,7 +120,9 @@ namespace UI.ViewModels
         [RelayCommand]
         private async Task ChangeMode()
         {
-            var action = await Application.Current.MainPage.DisplayActionSheet(
+            if (Application.Current is not null && Application.Current.MainPage is not null)
+            {
+                var action = await Application.Current.MainPage.DisplayActionSheet(
                 "Select mode",
                 "Cancel",
                 null,
@@ -129,31 +131,32 @@ namespace UI.ViewModels
                 "Year",
                 "Custom");
 
-            if (action == "Cancel" || action == null)
-                return;
-
-            Mode = action switch
-            {
-                "Day" => DateRangeMode.Day,
-                "Month" => DateRangeMode.Month,
-                "Year" => DateRangeMode.Year,
-                _ => Mode
-            };
-
-            if (action == "Custom")
-            {
-                var data = await _popupService.ShowPopUp<DateRangeDTO?, DateRangePopUp>();
-
-                if (data is null)
+                if (action == "Cancel" || action == null)
                     return;
 
-                Mode = DateRangeMode.Custom;
-                StartDate = data.StartDate;
-                EndDate = data.EndDate;
-            }
-                
+                Mode = action switch
+                {
+                    "Day" => DateRangeMode.Day,
+                    "Month" => DateRangeMode.Month,
+                    "Year" => DateRangeMode.Year,
+                    _ => Mode
+                };
 
-            this.ResetByMode();
+                if (action == "Custom")
+                {
+                    var data = await _popupService.ShowPopUp<DateRangeDTO?, DateRangePopUp>();
+
+                    if (data is null)
+                        return;
+
+                    Mode = DateRangeMode.Custom;
+                    StartDate = data.StartDate;
+                    EndDate = data.EndDate;
+                }
+
+
+                this.ResetByMode();
+            }
         }
 
     }

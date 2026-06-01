@@ -67,10 +67,14 @@ namespace UI.ViewModels
             }
             catch (ArgumentException ex)
             {
-                await Shell.Current.DisplayAlert(
-                       "Error",
-                       ex.Message,
-                       "OK");
+                if (Shell.Current is not null)
+                {
+                    await Shell.Current.DisplayAlert(
+                           "Error",
+                           ex.Message,
+                           "OK");
+                }
+
             }
         }
 
@@ -111,10 +115,13 @@ namespace UI.ViewModels
             }
             catch (ArgumentException ex)
             {
-                await Shell.Current.DisplayAlert(
+                if (Shell.Current is not null)
+                {
+                    await Shell.Current.DisplayAlert(
                        "Error",
                        ex.Message,
                        "OK");
+                }
             }
         }
 

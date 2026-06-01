@@ -91,10 +91,13 @@ namespace UI.PopUps.ViewModels
             }
             catch (ArgumentException ex)
             {
-                await Shell.Current.DisplayAlert(
-                       "Can't Create Account",
-                       ex.Message,
-                       "OK");
+                if (Shell.Current is not null)
+                {
+                    await Shell.Current.DisplayAlert(
+                      "Can't Create Account",
+                      ex.Message,
+                      "OK");
+                }
             }
             
         }

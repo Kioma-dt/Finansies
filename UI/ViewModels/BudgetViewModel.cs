@@ -109,11 +109,18 @@ namespace UI.ViewModels
             }
             catch (FormatException ex)
             {
-                await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+                if (Application.Current is not null && Application.Current.MainPage is not null)
+                {
+                    await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+                }
+
             }
             catch (ArgumentException ex)
             {
-                await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+                if (Application.Current is not null && Application.Current.MainPage is not null)
+                {
+                    await Application.Current.MainPage.DisplayAlert("Can't Create Budget", $"{ex.Message}", "OK");
+                }
             }
 
         }

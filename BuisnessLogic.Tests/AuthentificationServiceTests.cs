@@ -1,12 +1,14 @@
-﻿using BuisnessLogic.Entities;
-using BuisnessLogic.AuthentificationService;
+﻿using BuisnessLogic.AuthentificationService;
+using BuisnessLogic.Entities;
 using BuisnessLogic.Repositories;
-using FluentAssertions;
 using Moq;
-using Xunit;
 
 namespace BuisnessLogic.Tests;
 
+using FluentAssertions;
+using System;
+using System.Linq;
+using Xunit;
 public class AuthentificationBCryptServiceTests
 {
     private readonly Mock<IUserRepository> _userRepositoryMock;

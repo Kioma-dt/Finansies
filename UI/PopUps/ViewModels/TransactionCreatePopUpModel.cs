@@ -211,10 +211,13 @@ namespace UI.PopUps.ViewModels
             }
             catch (ArgumentException ex)
             {
-                await Shell.Current.DisplayAlert(
+                if (Shell.Current is not null)
+                {
+                    await Shell.Current.DisplayAlert(
                        "Can't Create Transaction",
                        ex.Message,
                        "OK");
+                }
             }
         }
     }
